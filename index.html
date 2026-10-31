@@ -1207,6 +1207,211 @@
       50% { transform: scale(1.5); opacity: 0.35; }
     }
 
+
+    /* ─── MARKET BREADTH & HEALTH REGIME STRIP ─── */
+    .market-breadth-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 9px 16px;
+      background: #090a0f;
+      border: 1px solid #1a1e2d;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .breadth-gauge-cluster {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 240px;
+    }
+    .breadth-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+    .breadth-progress-bar {
+      display: flex;
+      height: 6px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #1e2433;
+      width: 100%;
+    }
+    .breadth-segment.green {
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+    }
+    .breadth-segment.red {
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+    }
+    .regime-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+    }
+    .regime-status-badge.bullish {
+      background: rgba(34, 197, 94, 0.12);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .regime-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+      animation: pingGlow 1.5s infinite ease-in-out;
+    }
+    .confluence-quick-filter-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .confluence-filter-btn {
+      background: #111420;
+      border: 1px solid #1e293b;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .confluence-filter-btn:hover {
+      background: #1a2236;
+      color: #f1f5f9;
+    }
+    .confluence-filter-btn.active {
+      background: #1d4ed8;
+      color: #ffffff;
+      border-color: #2563eb;
+      box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+    }
+    .confluence-filter-btn.grade-a {
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+    .confluence-filter-btn.grade-a.active {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #000;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.45);
+    }
+    .confluence-filter-btn.trap-btn {
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+    .confluence-filter-btn.trap-btn.active {
+      background: #dc2626;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+    }
+
+    /* ─── GRADE A+ TRIPLE CONFLUENCE HERO STRIP ─── */
+    .confluence-hero-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 16px;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.03));
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .confluence-hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .confluence-trophy-badge {
+      font-size: 12px;
+      font-weight: 900;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.5px;
+    }
+    .confluence-desc {
+      font-size: 11px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tag-pill-gold {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fde68a;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .confluence-hero-cards {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .confluence-stock-pill {
+      background: #0f121d;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: all 0.2s ease;
+    }
+    .confluence-stock-pill:hover {
+      background: #1a1e2e;
+      border-color: #f59e0b;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 12px rgba(245, 158, 11, 0.2);
+    }
+    .stock-pill-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .stock-pill-meta {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+    .rfac-gold {
+      color: #fbbf24;
+      font-weight: 800;
+    }
+
+    /* ─── TRAP BADGE HIGHLIGHT ─── */
+    .pill-signal-tag.tag-trap-warning {
+      background: rgba(239, 68, 68, 0.18);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      font-weight: 800;
+      animation: trapPulse 1.8s infinite ease-in-out;
+    }
+    @keyframes trapPulse {
+      0%, 100% { border-color: rgba(239, 68, 68, 0.4); }
+      50% { border-color: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
+    }
+
   </style>
 </head>
 <body>
@@ -1370,6 +1575,76 @@
 
     <!-- ════════════ SCREEN 1: MARKET PULSE (EXACT MATCH VIDEO 5:35-6:33) ════════════ -->
     <div class="view-screen-tab active" id="tab-pulse">
+      <!-- ── 1. LIVE MARKET BREADTH & HEALTH REGIME STRIP ── -->
+      <div class="market-breadth-strip">
+        <div class="breadth-gauge-cluster">
+          <div class="breadth-label">
+            <span style="font-weight:800; color:#cbd5e1;">MARKET BREADTH:</span>
+            <span style="color:#22c55e; font-weight:800;">36 ADVANCES (72%)</span>
+            <span style="color:#475569;">•</span>
+            <span style="color:#ef4444; font-weight:800;">14 DECLINES (28%)</span>
+          </div>
+          <div class="breadth-progress-bar">
+            <div class="breadth-segment green" style="width:72%;"></div>
+            <div class="breadth-segment red" style="width:28%;"></div>
+          </div>
+        </div>
+
+        <div class="regime-badge-container">
+          <span class="regime-status-badge bullish">
+            <span class="regime-dot"></span>
+            MARKET REGIME: STRONG BULLISH (Long Breakouts Active)
+          </span>
+        </div>
+
+        <div class="confluence-quick-filter-btns">
+          <button class="confluence-filter-btn active" id="btnFilterAll" onclick="filterConfluenceGrade('all')">
+            All Stocks (12)
+          </button>
+          <button class="confluence-filter-btn grade-a" id="btnFilterGradeA" onclick="filterConfluenceGrade('gradeA')">
+            🏆 Grade A+ Confluence (2)
+          </button>
+          <button class="confluence-filter-btn trap-btn" id="btnFilterTraps" onclick="filterConfluenceGrade('trap')">
+            🪤 Traps & Exhaustion (1)
+          </button>
+        </div>
+      </div>
+
+      <!-- ── 2. GRADE A+ TRIPLE CONFLUENCE HERO STRIP ── -->
+      <div class="confluence-hero-strip" id="confluenceHeroStrip">
+        <div class="confluence-hero-left">
+          <div class="confluence-trophy-badge">🏆 GRADE A+ TRIPLE CONFLUENCE RADAR</div>
+          <div class="confluence-desc">
+            <span>Triple Institutional Confirmation:</span>
+            <span class="tag-pill-gold">15m ORB Breakout</span>
+            <span class="tag-pill-gold">Sector Leading (#1)</span>
+            <span class="tag-pill-gold">Put Writing Floor (R &ge; 7.5)</span>
+          </div>
+        </div>
+        <div class="confluence-hero-cards">
+          <!-- Stock 1: RVNL -->
+          <div class="confluence-stock-pill" class="beacon-row grade-a-item" onclick="openTradeTicket('RVNL', 585.40, '+12.18%', 9.83, true)">
+            <div class="stock-pill-head">
+              <span class="stock-name">RVNL</span>
+              <span class="stock-pct pos">+12.18%</span>
+            </div>
+            <div class="stock-pill-meta">
+              <span>Infra Sector</span> • <span class="rfac-gold">R: 9.83 LEADER</span> • <span>ORB Cleared</span>
+            </div>
+          </div>
+          <!-- Stock 2: IRFC -->
+          <div class="confluence-stock-pill" class="beacon-row grade-a-item" onclick="openTradeTicket('IRFC', 178.60, '+7.45%', 7.69, true)">
+            <div class="stock-pill-head">
+              <span class="stock-name">IRFC</span>
+              <span class="stock-pct pos">+7.45%</span>
+            </div>
+            <div class="stock-pill-meta">
+              <span>Railway Sector</span> • <span class="rfac-gold">R: 7.69 STRONG</span> • <span>ORB Cleared</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="pulse-grid-layout">
 
         <!-- LEFT CARD: BREAKOUT BEACON -->
@@ -3960,6 +4235,89 @@
           if (rowC) { rowC.innerText = strC; triggerFlash(rowC, isUp); }
         }
       }, 1500);
+    }
+
+
+    // ════════════════════════════════════════════════════════════════
+    // 🔔 SMART MULTI-CHIME AUDIO ALERT ENGINES
+    // ════════════════════════════════════════════════════════════════
+
+    function playConfluenceChime() {
+      if (!audioEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        [587.33, 880, 1174.66, 1760].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.08);
+          gain.gain.setValueAtTime(0.09, ctx.currentTime + idx * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.08 + 0.45);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.08);
+          osc.stop(ctx.currentTime + idx * 0.08 + 0.5);
+        });
+      } catch(e) {}
+    }
+
+    function playTrapWarningSound() {
+      if (!audioEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        [349.23, 261.63].forEach((freq, idx) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.14);
+          gain.gain.setValueAtTime(0.07, ctx.currentTime + idx * 0.14);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.14 + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.14);
+          osc.stop(ctx.currentTime + idx * 0.14 + 0.32);
+        });
+      } catch(e) {}
+    }
+
+    // ── GRADE A+ & TRAP RADAR FILTERS ──
+    function filterConfluenceGrade(grade) {
+      document.querySelectorAll('.confluence-filter-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = grade === 'all' ? document.getElementById('btnFilterAll') :
+                        grade === 'gradeA' ? document.getElementById('btnFilterGradeA') :
+                        document.getElementById('btnFilterTraps');
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const beaconRows = document.querySelectorAll('#body-beacon tr');
+      const boostRows = document.querySelectorAll('#body-boost tr');
+
+      if (grade === 'all') {
+        beaconRows.forEach(r => r.style.display = '');
+        boostRows.forEach(r => r.style.display = '');
+        playChime(640);
+      } else if (grade === 'gradeA') {
+        beaconRows.forEach(r => {
+          const txt = r.innerText;
+          r.style.display = (txt.includes('RVNL') || txt.includes('IRFC')) ? '' : 'none';
+        });
+        boostRows.forEach(r => {
+          const txt = r.innerText;
+          r.style.display = (txt.includes('RVNL') || txt.includes('IRFC')) ? '' : 'none';
+        });
+        playConfluenceChime();
+        showToast('🏆 <strong>Grade A+ Filter:</strong> Showing only stocks with ORB + Sector Lead + High Put Writing (RVNL, IRFC)!');
+      } else if (grade === 'trap') {
+        beaconRows.forEach(r => {
+          const txt = r.innerText;
+          r.style.display = (txt.includes('INDUSTOWER') || txt.includes('ACC')) ? '' : 'none';
+        });
+        boostRows.forEach(r => {
+          const txt = r.innerText;
+          r.style.display = (txt.includes('INDUSTOWER')) ? '' : 'none';
+        });
+        playTrapWarningSound();
+        showToast('🪤 <strong>Trap Radar:</strong> Showing institutional exhaustion & fakeout setups (INDUSTOWER)!');
+      }
     }
 
 </script>
