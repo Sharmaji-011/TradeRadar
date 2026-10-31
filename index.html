@@ -7,6 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet"/>
   <!-- Local TradingView Lightweight Charts (100% Offline & Reliable) -->
   <script src="lightweight-charts.js"></script>
+  <!-- Official TradingView Advanced Real-Time Charting Engine -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+
   <style>
     :root {
       --bg-black: #050608;
@@ -867,7 +870,7 @@
       justify-content: center;
     }
     .drawer-modal {
-      width: 860px;
+      width: 980px; max-width: 95vw;
       max-height: 90vh;
       background: #0e1017;
       border: 1px solid #232738;
@@ -2567,7 +2570,7 @@
       </div>
       
       <!-- EMBEDDED TRADINGVIEW LIGHTWEIGHT CHART -->
-      <div class="tv-chart-viewport" id="tvChartContainer" style="height:310px; width:100%; position:relative;">
+      <div class="tv-chart-viewport" id="tvChartContainer" style="height:440px; width:100%; position:relative; background:#07080c;">
         <div class="modal-chart-tooltip" id="modalChartTooltip" style="display:none;"></div>
       </div>
 
@@ -3203,37 +3206,121 @@
       overlay.style.display = 'flex';
     }
 
-    // ── TRADINGVIEW CHART & EXECUTION TICKET (WITH EXTENSIVE HISTORICAL DATA & LIVE MOVING CANDLES) ──
+    // ── OFFICIAL TRADINGVIEW ADVANCED LIVE CHARTING ENGINE & INSTITUTIONAL EXECUTION ──
     let currentModalSymbol = 'RVNL';
     let currentModalPrice = 585.15;
     let currentModalPct = '+12.09%';
     let currentModalRfac = '9.83';
     let currentModalIsBullish = true;
     let currentModalTf = '5m';
-
-    // Live Chart State
-    let activeModalCandleSeries = null;
-    let activeModalVolumeSeries = null;
-    let modalCurrentCandle = null;
-    let modalCurrentVolume = null;
-    let modalLiveTimer = null;
     let modalStartRefPrice = 585.15;
+    let currentTvWidget = null;
+
+    function getTradingViewSymbol(sym) {
+      if (!sym) return 'BSE:SENSEX';
+      const s = sym.toUpperCase().trim();
+
+      // Real Crypto Stream (Binance 24x7 live websocket)
+      const cryptoMap = {
+        'BTC': 'BINANCE:BTCUSDT',
+        'ETH': 'BINANCE:ETHUSDT',
+        'SOL': 'BINANCE:SOLUSDT',
+        'DOGE': 'BINANCE:DOGEUSDT',
+        'XRP': 'BINANCE:XRPUSDT',
+        'LINK': 'BINANCE:LINKUSDT',
+        'SUI': 'BINANCE:SUIUSDT',
+        'AVAX': 'BINANCE:AVAXUSDT',
+        'BNB': 'BINANCE:BNBUSDT',
+        'ADA': 'BINANCE:ADAUSDT'
+      };
+      if (cryptoMap[s]) return cryptoMap[s];
+
+      // Real Metals & Commodities (TVC / NYMEX / COMEX Spot & Futures)
+      const metalsMap = {
+        'GOLD': 'TVC:GOLD',
+        'XAU': 'TVC:GOLD',
+        'SILVER': 'TVC:SILVER',
+        'XAG': 'TVC:SILVER',
+        'CRUDE': 'NYMEX:CL1!',
+        'CRUDEOIL': 'NYMEX:CL1!',
+        'WTI': 'NYMEX:CL1!',
+        'BRENT': 'TVC:UKOIL',
+        'COPPER': 'COMEX:HG1!',
+        'NATGAS': 'NYMEX:NG1!'
+      };
+      if (metalsMap[s]) return metalsMap[s];
+
+      // Indian Indices & Stocks
+      if (s === 'NIFTY' || s === 'NIFTY50') return 'NSE:NIFTY';
+      if (s === 'BANKNIFTY') return 'NSE:BANKNIFTY';
+      if (s === 'SENSEX') return 'BSE:SENSEX';
+
+      // Indian Equities (BSE provides full historical daily data reliably on free TradingView embed)
+      return `BSE:${s}`;
+    }
+
+    function loadTradingViewWidget(sym, tf = '5m') {
+      const container = document.getElementById('tvChartContainer');
+      if (!container) return;
+
+      container.innerHTML = '<div id="tradingview_active_chart" style="width:100%; height:100%;"></div>';
+
+      const tvSymbol = getTradingViewSymbol(sym);
+      const symUpper = (sym || '').toUpperCase().trim();
+      const isCrypto = ['BTC', 'ETH', 'SOL', 'DOGE', 'SUI', 'LINK', 'XRP', 'AVAX'].includes(symUpper);
+      const isMetal = ['GOLD', 'SILVER', 'CRUDEOIL', 'CRUDE', 'BRENT', 'COPPER', 'NATGAS', 'XAU', 'XAG', 'WTI'].includes(symUpper);
+
+      const intervalMap = {
+        '5m': '5',
+        '15m': '15',
+        '1h': '60',
+        '1d': 'D'
+      };
+
+      let interval = intervalMap[tf] || '15';
+      // For Indian BSE equities, Daily (D) displays complete multi-year historical candles seamlessly
+      if (!isCrypto && !isMetal && (tf === '5m' || tf === '15m')) {
+        interval = 'D';
+      }
+
+      if (typeof TradingView !== 'undefined') {
+        try {
+          currentTvWidget = new TradingView.widget({
+            "autosize": true,
+            "symbol": tvSymbol,
+            "interval": interval,
+            "timezone": "Asia/Kolkata",
+            "theme": "dark",
+            "style": "1",
+            "locale": "en",
+            "toolbar_bg": "#0e1017",
+            "enable_publishing": false,
+            "allow_symbol_change": true,
+            "hide_side_toolbar": false,
+            "container_id": "tradingview_active_chart",
+            "studies": [
+              "Volume@tv-basicstudies",
+              "MASimple@tv-basicstudies"
+            ]
+          });
+        } catch (err) {
+          console.warn('TradingView initialization error:', err);
+        }
+      } else {
+        container.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100%; color:#94a3b8; font-size:13px;">Loading TradingView Chart Engine...</div>';
+      }
+    }
+
+    function switchModalTimeframe(tf) {
+      currentModalTf = tf;
+      ['5m', '15m', '1h', '1d'].forEach(t => {
+        const btn = document.getElementById(`tf-btn-${t}`);
+        if (btn) btn.className = 'timeframe-pill-btn ' + (t === tf ? 'active' : '');
+      });
+      loadTradingViewWidget(currentModalSymbol, tf);
+    }
 
     function openTradeTicket(sym, basePrice, pctStr, rFac, isBullish) {
-      // 1. Reset any running chart & timers
-      if (modalLiveTimer) {
-        clearInterval(modalLiveTimer);
-        modalLiveTimer = null;
-      }
-      if (activeChart) {
-        try { activeChart.remove(); } catch(e) {}
-        activeChart = null;
-      }
-      activeModalCandleSeries = null;
-      activeModalVolumeSeries = null;
-      modalCurrentCandle = null;
-      modalCurrentVolume = null;
-
       currentModalSymbol = sym;
       currentModalPrice = parseFloat(basePrice) || 100;
       modalStartRefPrice = currentModalPrice;
@@ -3257,7 +3344,7 @@
 
       if (!overlay) return;
 
-      const symUpper = sym.toUpperCase();
+      const symUpper = (sym || '').toUpperCase();
       const isMetal = ['GOLD', 'SILVER', 'CRUDEOIL', 'CRUDE', 'BRENT', 'COPPER', 'NATGAS', 'XAU', 'XAG', 'WTI'].includes(symUpper);
       const isCrypto = ['BTC', 'ETH', 'SOL', 'DOGE', 'SUI', 'LINK', 'XRP', 'AVAX'].includes(symUpper);
       const curr = (isMetal || isCrypto) ? '$' : '₹';
@@ -3266,7 +3353,6 @@
       const isGradeA = (symUpper === 'RVNL' || symUpper === 'IRFC');
       const isTrap = (symUpper === 'INDUSTOWER' || symUpper === 'LODHA' || symUpper === 'XRP' || rNum < 0);
       const isSuperBlaster = ['RVNL', 'IRFC', 'HINDPETRO', 'SOL', 'GOLD'].includes(symUpper);
-      const isVideoLeader = ['TECHM', 'PERSISTENT', 'OFSS', 'BTC', 'SILVER'].includes(symUpper);
 
       // Smart Audio Tone
       if (isGradeA) {
@@ -3295,7 +3381,7 @@
       if (heading) heading.textContent = symUpper;
 
       if (segBadge) {
-        segBadge.textContent = isMetal ? 'COMEX SPOT' : isCrypto ? 'COINBASE 24×7' : 'NSE F&O';
+        segBadge.textContent = isMetal ? 'COMEX / TVC SPOT' : isCrypto ? 'BINANCE 24×7 LIVE' : 'BSE / NSE CASH & F&O';
         segBadge.style.background = isMetal ? 'rgba(234,179,8,0.15)' : isCrypto ? 'rgba(168,85,247,0.15)' : 'rgba(37,99,235,0.15)';
         segBadge.style.color = isMetal ? '#eab308' : isCrypto ? '#c084fc' : '#38bdf8';
       }
@@ -3320,12 +3406,12 @@
       }
 
       if (subDesc) {
-        if (isMetal) subDesc.textContent = `${symUpper} • Global Macro & Commodity Exchange Direct Flow`;
-        else if (isCrypto) subDesc.textContent = `${symUpper}/USD • Institutional Spot & Derivatives Order Flow`;
-        else subDesc.textContent = `${symUpper} • Institutional Smart Money Flow & 15m ORB Engine`;
+        if (isMetal) subDesc.textContent = `${symUpper} • Official TradingView Live Commodity Feed & Historical Data`;
+        else if (isCrypto) subDesc.textContent = `${symUpper}/USDT • Official TradingView Live Binance 24x7 Streaming Ticks`;
+        else subDesc.textContent = `${symUpper} • Official TradingView Real-Time Chart & Historical Candlestick Action`;
       }
 
-      // Price & Caps
+      // Price Formatting
       const isCryptoSmall = (symUpper === 'DOGE' || symUpper === 'SUI' || symUpper === 'XRP');
       const fmtPrice = isCryptoSmall ? basePrice.toFixed(4) : basePrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       if (priceText) priceText.textContent = `${curr}${fmtPrice}`;
@@ -3388,7 +3474,7 @@
         } else if (isCrypto) {
           adviceText.innerHTML = `⚡ <strong>CRYPTO LIQUIDATION RADAR:</strong> Institutional perpetual short squeeze active. Volume velocity 3.4x average.`;
         } else if (currentModalIsBullish) {
-          adviceText.innerHTML = `💡 <strong>INSTITUTIONAL SETUP:</strong> High R-Factor efficiency with sustained day low support. Enter with stop loss firmly at 5m Day Low.`;
+          adviceText.innerHTML = `💡 <strong>INSTITUTIONAL SETUP:</strong> High R-Factor efficiency with sustained day low support. Enter with stop loss firmly at Key Support.`;
         } else {
           adviceText.innerHTML = `🛑 <strong>DOWNSIDE BREAKDOWN:</strong> Selling volume dominates with Put unwinding across derivative strikes. Protect capital!`;
         }
@@ -3407,340 +3493,45 @@
       });
 
       overlay.style.display = 'flex';
-      setTimeout(() => renderModalChart('5m'), 50);
+      setTimeout(() => loadTradingViewWidget(sym, '5m'), 50);
     }
 
-    function switchModalTimeframe(tf) {
-      currentModalTf = tf;
-      ['5m', '15m', '1h', '1d'].forEach(t => {
-        const btn = document.getElementById(`tf-btn-${t}`);
-        if (btn) btn.className = 'timeframe-pill-btn ' + (t === tf ? 'active' : '');
-      });
-      renderModalChart(tf);
-    }
-
-    function renderModalChart(tf = '5m') {
-      const container = document.getElementById('tvChartContainer');
-      if (!container) return;
-
-      if (modalLiveTimer) {
-        clearInterval(modalLiveTimer);
-        modalLiveTimer = null;
-      }
-
-      if (activeChart) {
-        try { activeChart.remove(); } catch(e) {}
-        activeChart = null;
-      }
-
-      container.innerHTML = '<div class="modal-chart-tooltip" id="modalChartTooltip" style="display:none;"></div>';
-      const tooltipEl = document.getElementById('modalChartTooltip');
-
-      if (typeof LightweightCharts === 'undefined') {
-        container.innerHTML = '<div style="color:#ef4444; padding:20px; text-align:center;">TradingView Charts library loading...</div>';
-        return;
-      }
-
-      const chartW = container.clientWidth || 820;
-      const chartH = 310;
-
-      activeChart = LightweightCharts.createChart(container, {
-        width: chartW,
-        height: chartH,
-        layout: {
-          background: { color: '#08090d' },
-          textColor: '#94a3b8',
-        },
-        grid: {
-          vertLines: { color: '#13151f' },
-          horzLines: { color: '#13151f' },
-        },
-        crosshair: {
-          mode: LightweightCharts.CrosshairMode.Normal,
-        },
-        rightPriceScale: {
-          borderColor: '#1e2433',
-        },
-        timeScale: {
-          borderColor: '#1e2433',
-          timeVisible: true,
-          secondsVisible: false,
-        },
-      });
-
-      const candleSeries = activeChart.addCandlestickSeries({
-        upColor: '#22c55e',
-        downColor: '#ef4444',
-        borderVisible: false,
-        wickUpColor: '#22c55e',
-        wickDownColor: '#ef4444',
-      });
-
-      const volumeSeries = activeChart.addHistogramSeries({
-        color: '#22c55e',
-        priceFormat: { type: 'volume' },
-        priceScaleId: '',
-        scaleMargins: {
-          top: 0.80,
-          bottom: 0,
-        },
-      });
-
-      activeModalCandleSeries = candleSeries;
-      activeModalVolumeSeries = volumeSeries;
-
-      // ── DEEP HISTORICAL CANDLE GENERATOR (HUNDREDS OF CANDLES FROM THE START) ──
-      const basePrice = currentModalPrice;
-      const isBull = currentModalIsBullish;
-      let count = 240; // Default 240 candles (20 hours of continuous trading session history)
-      let stepSec = 300; // 5m
-
-      if (tf === '15m') { count = 200; stepSec = 900; }     // 50 hours (~8 trading days)
-      else if (tf === '1h') { count = 180; stepSec = 3600; } // 180 hours (~3-4 weeks)
-      else if (tf === '1d') { count = 120; stepSec = 86400; }// 120 trading days (~6 months)
-
-      const nowTs = Math.floor(Date.now() / 1000);
-      const startTs = nowTs - (count * stepSec);
-
-      // Multi-wave authentic market structure from the start
-      const startRatio = isBull ? (tf === '1d' ? 0.72 : 0.88) : (tf === '1d' ? 1.35 : 1.14);
-      let cur = basePrice * startRatio;
-      const candleData = [];
-      const volumeData = [];
-
-      for (let i = 0; i < count; i++) {
-        const time = startTs + (i * stepSec);
-        const progress = i / (count - 1);
-        const open = cur;
-
-        // Wave cycles (Elliott wave cycle with pullbacks)
-        const wave = Math.sin(progress * Math.PI * 3.5) * 0.035;
-        const trend = progress * (isBull ? 0.15 : -0.15);
-        const noise = (Math.random() - 0.49) * 0.012;
-        
-        let targetClose;
-        if (i === count - 1) {
-          targetClose = basePrice;
-        } else {
-          targetClose = open * (1 + (isBull ? 0.0006 : -0.0006) + wave * 0.15 + noise);
-        }
-
-        const close = targetClose;
-        const candleRange = Math.abs(close - open);
-        const wickExpansion = candleRange * (0.3 + Math.random() * 0.7);
-
-        let high = Math.max(open, close) + wickExpansion;
-        let low = Math.min(open, close) - wickExpansion;
-
-        // Ensure proper high/low bounds
-        if (low <= 0) low = open * 0.99;
-
-        const isUp = close >= open;
-        const isSpike = (i === Math.floor(count * 0.82)) || (i === count - 1);
-        const baseVol = 20000 + Math.random() * 35000;
-        const volVal = isSpike ? baseVol * 5.2 : (isUp ? baseVol * 1.6 : baseVol * 1.0);
-
-        candleData.push({ time, open, high, low, close });
-        volumeData.push({
-          time,
-          value: Math.round(volVal),
-          color: isUp ? 'rgba(34, 197, 94, 0.45)' : 'rgba(239, 68, 68, 0.45)'
-        });
-
-        cur = close;
-      }
-
-      // Ensure last candle is exactly current live price
-      candleData[candleData.length - 1].close = basePrice;
-      if (basePrice > candleData[candleData.length - 1].high) candleData[candleData.length - 1].high = basePrice;
-      if (basePrice < candleData[candleData.length - 1].low) candleData[candleData.length - 1].low = basePrice;
-
-      candleSeries.setData(candleData);
-      volumeSeries.setData(volumeData);
-
-      // Save live candle state for real-time tick streaming
-      modalCurrentCandle = { ...candleData[candleData.length - 1] };
-      modalCurrentVolume = { ...volumeData[volumeData.length - 1] };
-
-      // ── PRICE LINES (TARGET, STOP, KEY SUPPORT) ──
-      const stopVal = isBull ? (basePrice * 0.985) : (basePrice * 1.015);
-      const targetVal = isBull ? (basePrice * 1.035) : (basePrice * 0.965);
-      const dayLowRef = isBull ? (basePrice * 0.978) : (basePrice * 1.022);
-
-      candleSeries.createPriceLine({
-        price: targetVal,
-        color: '#22c55e',
-        lineWidth: 2,
-        lineStyle: LightweightCharts.LineStyle.Dashed,
-        axisLabelVisible: true,
-        title: 'Target 1 (1:2.5 R:R)',
-      });
-
-      candleSeries.createPriceLine({
-        price: stopVal,
-        color: '#ef4444',
-        lineWidth: 2,
-        lineStyle: LightweightCharts.LineStyle.Dashed,
-        axisLabelVisible: true,
-        title: 'Stop Loss',
-      });
-
-      candleSeries.createPriceLine({
-        price: dayLowRef,
-        color: '#38bdf8',
-        lineWidth: 1.5,
-        lineStyle: LightweightCharts.LineStyle.Dotted,
-        axisLabelVisible: true,
-        title: isBull ? 'Key Day Low Support' : 'Key Resistance Ceiling',
-      });
-
-      // ── CROSSHAIR HOVER TOOLTIP ──
-      activeChart.subscribeCrosshairMove(param => {
-        if (!tooltipEl) return;
-        if (!param || !param.time || !param.seriesData.get(candleSeries)) {
-          tooltipEl.style.display = 'none';
-          return;
-        }
-        const data = param.seriesData.get(candleSeries);
-        const vol = param.seriesData.get(volumeSeries);
-        if (data) {
-          const dateObj = new Date(param.time * 1000);
-          const dateStr = (tf === '1d') 
-            ? dateObj.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })
-            : dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          tooltipEl.style.display = 'flex';
-          tooltipEl.innerHTML = `
-            <span><strong>Time:</strong> ${dateStr}</span>
-            <span><strong>O:</strong> ${data.open.toFixed(2)}</span>
-            <span><strong>H:</strong> ${data.high.toFixed(2)}</span>
-            <span><strong>L:</strong> ${data.low.toFixed(2)}</span>
-            <span style="color:${data.close >= data.open ? '#22c55e' : '#ef4444'};"><strong>C:</strong> ${data.close.toFixed(2)}</span>
-            ${vol ? `<span><strong>Vol:</strong> ${vol.value.toLocaleString()}</span>` : ''}
-          `;
-        }
-      });
-
-      // Set visible range to show the current active breakout zone with room to scroll back into hundreds of past candles
-      activeChart.timeScale().setVisibleLogicalRange({
-        from: Math.max(0, count - 65),
-        to: count + 3
-      });
-
-      // ── ⚡ REAL-TIME MOVING CANDLE & PRICE TICK ENGINE (750ms TICK-BY-TICK) ──
-      startModalLiveEngine();
-    }
-
-    // ── LIVE TICK STREAM DISPATCHER FOR MODAL CHART ──
+    // ── LIVE TICK STREAM DISPATCHER FOR MODAL HEADER ──
     function onModalLivePriceUpdate(newPrice) {
-      if (!activeModalCandleSeries || !modalCurrentCandle) return;
       const overlay = document.getElementById('appModal');
       if (!overlay || overlay.style.display === 'none') return;
 
-      const symUpper = currentModalSymbol.toUpperCase();
+      const priceText = document.getElementById('modalPriceText');
+      const pctBadge = document.getElementById('modalPctBadge');
+      if (!priceText) return;
+
+      const isUp = newPrice >= currentModalPrice;
+      currentModalPrice = newPrice;
+
+      const symUpper = (currentModalSymbol || '').toUpperCase();
       const isMetal = ['GOLD', 'SILVER', 'CRUDEOIL', 'CRUDE', 'BRENT', 'COPPER', 'NATGAS', 'XAU', 'XAG', 'WTI'].includes(symUpper);
       const isCrypto = ['BTC', 'ETH', 'SOL', 'DOGE', 'SUI', 'LINK', 'XRP', 'AVAX'].includes(symUpper);
       const curr = (isMetal || isCrypto) ? '$' : '₹';
       const isCryptoSmall = (symUpper === 'DOGE' || symUpper === 'SUI' || symUpper === 'XRP');
 
-      const oldClose = modalCurrentCandle.close;
-      const isUp = newPrice >= oldClose;
+      priceText.textContent = `${curr}${isCryptoSmall ? newPrice.toFixed(4) : newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      triggerFlash(priceText, isUp);
 
-      // 1. Move the current candle in real-time
-      modalCurrentCandle.close = newPrice;
-      if (newPrice > modalCurrentCandle.high) modalCurrentCandle.high = newPrice;
-      if (newPrice < modalCurrentCandle.low) modalCurrentCandle.low = newPrice;
-
-      // Update TradingView candlestick series
-      activeModalCandleSeries.update(modalCurrentCandle);
-
-      // 2. Accumulate volume and color
-      if (activeModalVolumeSeries && modalCurrentVolume) {
-        modalCurrentVolume.value += Math.round(25 + Math.random() * 75);
-        modalCurrentVolume.color = (modalCurrentCandle.close >= modalCurrentCandle.open) 
-          ? 'rgba(34, 197, 94, 0.55)' 
-          : 'rgba(239, 68, 68, 0.55)';
-        activeModalVolumeSeries.update(modalCurrentVolume);
-      }
-
-      // 3. Update Modal Header Price with Live Green/Red Pulse
-      const priceText = document.getElementById('modalPriceText');
-      if (priceText) {
-        const fmtPrice = isCryptoSmall 
-          ? newPrice.toFixed(4) 
-          : newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        priceText.textContent = `${curr}${fmtPrice}`;
-        triggerFlash(priceText, isUp);
-      }
-
-      // 4. Update Modal Percentage
-      const pctBadge = document.getElementById('modalPctBadge');
       if (pctBadge && modalStartRefPrice > 0) {
-        const livePct = ((newPrice - modalStartRefPrice) / modalStartRefPrice) * 100;
-        const sign = livePct >= 0 ? '+' : '';
-        pctBadge.textContent = `${sign}${livePct.toFixed(2)}%`;
-        pctBadge.className = 'pill-percent-capsule ' + (livePct >= 0 ? 'pos' : 'neg');
+        const diffPct = ((newPrice - modalStartRefPrice) / modalStartRefPrice) * 100;
+        const sign = diffPct >= 0 ? '+' : '';
+        pctBadge.textContent = `${sign}${diffPct.toFixed(2)}%`;
+        pctBadge.className = 'pill-percent-capsule ' + (diffPct >= 0 ? 'pos' : 'neg');
       }
-
-      currentModalPrice = newPrice;
-    }
-
-    function startModalLiveEngine() {
-      if (modalLiveTimer) clearInterval(modalLiveTimer);
-
-      const symUpper = currentModalSymbol.toUpperCase();
-      const isCryptoSmall = (symUpper === 'DOGE' || symUpper === 'SUI' || symUpper === 'XRP');
-
-      modalLiveTimer = setInterval(() => {
-        const overlay = document.getElementById('appModal');
-        if (!overlay || overlay.style.display === 'none') {
-          clearInterval(modalLiveTimer);
-          modalLiveTimer = null;
-          return;
-        }
-
-        // Generate realistic micro price fluctuation according to asset volatility
-        let delta = 0;
-        if (symUpper === 'BTC') {
-          delta = (Math.random() - 0.48) * (8.5 + Math.random() * 12.0);
-        } else if (symUpper === 'ETH') {
-          delta = (Math.random() - 0.48) * (0.65 + Math.random() * 0.95);
-        } else if (symUpper === 'SOL') {
-          delta = (Math.random() - 0.48) * (0.08 + Math.random() * 0.12);
-        } else if (symUpper === 'DOGE') {
-          delta = (Math.random() - 0.48) * 0.00025;
-        } else if (symUpper === 'GOLD' || symUpper === 'XAU') {
-          delta = (Math.random() - 0.48) * (0.35 + Math.random() * 0.55);
-        } else if (symUpper === 'SILVER' || symUpper === 'XAG') {
-          delta = (Math.random() - 0.47) * (0.04 + Math.random() * 0.08);
-        } else if (symUpper.includes('CRUDE') || symUpper === 'BRENT') {
-          delta = (Math.random() - 0.48) * (0.06 + Math.random() * 0.10);
-        } else {
-          // Indian stock micro-tick (0.02% to 0.06% movement)
-          const baseStep = currentModalPrice * 0.00045;
-          delta = (Math.random() - 0.47) * baseStep;
-        }
-
-        const newP = +(currentModalPrice + delta).toFixed(isCryptoSmall ? 4 : 2);
-        onModalLivePriceUpdate(newP);
-      }, 750);
     }
 
     function closeModal(e) {
       if (!e || e.target.id === 'appModal' || e.target.classList.contains('drawer-close-btn')) {
         const overlay = document.getElementById('appModal');
         if (overlay) overlay.style.display = 'none';
-        if (modalLiveTimer) {
-          clearInterval(modalLiveTimer);
-          modalLiveTimer = null;
-        }
-        if (activeChart) {
-          try { activeChart.remove(); } catch(err) {}
-          activeChart = null;
-        }
-        activeModalCandleSeries = null;
-        activeModalVolumeSeries = null;
-        modalCurrentCandle = null;
-        modalCurrentVolume = null;
+        const container = document.getElementById('tvChartContainer');
+        if (container) container.innerHTML = '';
+        currentTvWidget = null;
       }
     }
 
