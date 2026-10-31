@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TradeFinder Pro - Institutional Smart Money Flow Terminal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+  <!-- Local TradingView Lightweight Charts (100% Offline & Reliable) -->
+  <script src="lightweight-charts.js"></script>
+  <style>
+    :root {
+      --bg-black: #050608;
+      --bg-sidebar: #090a0e;
+      --bg-card: #101116;
+      --bg-card-hover: #151720;
+      --border-color: #1a1c26;
+      --border-subtle: #13141c;
+      --text-white: #ffffff;
+      --text-gray: #8b92a2;
+      --text-muted: #555d6e;
+      --blue-brand: #3b82f6;
+      --blue-glow: rgba(59, 130, 246, 0.25);
+      --pill-green-bg: #bbf7d0;
+      --pill-green-txt: #14532d;
+      --pill-red-bg: #fecdd3;
+      --pill-red-txt: #881337;
+      --green-accent: #22c55e;
+      --red-accent: #ef4444;
+      --cyan-accent: #38bdf8;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; user-select:none; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-black);
+      color: var(--text-white);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* ══════════════════════════════════════════════════
+       LEFT SIDEBAR (MATCHING SCREENSHOTS 2 & 3)
+       ══════════════════════════════════════════════════ */
+    .sidebar {
+      width: 220px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+    .sidebar-brand {
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .brand-circle-logo {
+      width: 28px;
+      height: 28px;
+      border: 3.5px solid var(--blue-brand);
+      border-radius: 50%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 0 12px var(--blue-glow);
+    }
+    .brand-circle-logo::after {
+      content: '';
+      position: absolute;
+      width: 3.5px;
+      height: 14px;
+      background: var(--blue-brand);
+    }
+    .brand-name-text {
+      font-size: 17.5px;
+      font-weight: 900;
+      letter-spacing: -0.4px;
+      color: #ffffff;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 10px 8px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
+    .sidebar-nav::-webkit-scrollbar-thumb { background: #262936; border-radius: 4px; }
+
+    .nav-btn-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #8b92a2;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .nav-btn-link:hover {
+      background: #141620;
+      color: #f1f5f9;
+    }
+    .nav-btn-link.active {
+      background: #141824;
+      color: var(--blue-brand);
+      font-weight: 600;
+      border-left: 2.5px solid var(--blue-brand);
+    }
+    .nav-btn-link.active svg {
+      stroke: var(--blue-brand);
+    }
+    .nav-icon-slot {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    /* ══════════════════════════════════════════════════
+       MAIN WORKSPACE & TOP BAR
+       ══════════════════════════════════════════════════ */
+    .workspace-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg-black);
+      padding: 10px 16px;
+      position: relative;
+    }
+
+    .top-utility-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 38px;
+      margin-bottom: 10px;
+      padding: 0 4px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .top-tickers-cluster {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .market-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #22c55e;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+    .pulse-green-dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulseAnim 1.5s infinite;
+    }
+    @keyframes pulseAnim {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
+    }
+
+    .index-ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .index-ticker-title {
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .top-actions-cluster {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-top-util {
+      background: #12131a;
+      border: 1px solid var(--border-color);
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-top-util:hover {
+      background: #1a1c26;
+      color: white;
+      border-color: #3b82f6;
+    }
+
+    .view-screen-tab {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow: hidden;
+      height: calc(100% - 48px);
+    }
+    .view-screen-tab.active {
+      display: flex;
+    }
+
+    /* ══════════════════════════════════════════════════
+       VIEW 1: MARKET PULSE (DUAL SCANNER)
+       ══════════════════════════════════════════════════ */
+    .pulse-grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+      height: 100%;
+      overflow: hidden;
+    }
+    .scanner-panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .panel-header-strip {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .header-left-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .bars-graphic {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 16px;
+    }
+    .bar-line {
+      width: 3px;
+      border-radius: 1px;
+    }
+    .panel-title-text {
+      font-size: 13.5px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      color: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-how-to-use {
+      color: var(--blue-brand);
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-how-to-use:hover { text-decoration: underline; }
+    .blue-play-dot {
+      width: 13px;
+      height: 13px;
+      background: var(--blue-brand);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 7px;
+    }
+    .pill-badge-live {
+      background: #e11d48;
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 6px;
+      white-space: nowrap;
+      letter-spacing: 0.4px;
+    }
+    .pill-badge-live::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      background: white;
+      border-radius: 50%;
+      animation: pulseAnim 1.2s infinite;
+    }
+
+    .pill-search-container {
+      position: relative;
+    }
+    .pill-search-container input {
+      background: #090a0d;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 5px 30px 5px 12px;
+      color: #ffffff;
+      font-size: 11.5px;
+      outline: none;
+      width: 125px;
+      transition: width 0.2s, border-color 0.2s;
+    }
+    .pill-search-container input:focus {
+      width: 165px;
+      border-color: var(--blue-brand);
+    }
+    .search-lens-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: #64748b;
+      pointer-events: none;
+    }
+
+    /* 3 FILTERS BAR */
+    .filter-pills-row {
+      padding: 8px 16px;
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+      background: #0c0d12;
+      position: relative;
+    }
+    .custom-select-pill {
+      background: #171822;
+      border: 1px solid #232634;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .custom-select-pill:hover {
+      background: #1e2230;
+      border-color: #3b82f6;
+    }
+    .custom-select-pill.active-pill {
+      background: #162035;
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    /* DROPDOWN POPUP MENU */
+    .dropdown-menu-popover {
+      position: absolute;
+      top: 40px;
+      background: #151722;
+      border: 1px solid #2a2e40;
+      border-radius: 8px;
+      padding: 4px;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 200;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.8);
+      min-width: 130px;
+    }
+    .dropdown-item-opt {
+      padding: 6px 10px;
+      font-size: 11px;
+      color: #cbd5e1;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .dropdown-item-opt:hover {
+      background: #2563eb;
+      color: white;
+    }
+
+    .table-scroll-wrap {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 4px;
+    }
+    .table-scroll-wrap::-webkit-scrollbar { width: 5px; }
+    .table-scroll-wrap::-webkit-scrollbar-thumb { background: #262936; border-radius: 4px; }
+
+    .fin-grid-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .fin-grid-table th {
+      padding: 10px 14px;
+      color: #64748b;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      background: var(--bg-card);
+      z-index: 10;
+    }
+    .fin-grid-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid #13151c;
+      font-size: 12.5px;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .fin-grid-table tr:hover td {
+      background: var(--bg-card-hover);
+    }
+    .tick-flash-green {
+      animation: flashGreen 0.7s ease-out;
+    }
+    .tick-flash-red {
+      animation: flashRed 0.7s ease-out;
+    }
+    @keyframes flashGreen {
+      0% { background-color: rgba(34, 197, 94, 0.35); }
+      100% { background-color: transparent; }
+    }
+    @keyframes flashRed {
+      0% { background-color: rgba(239, 68, 68, 0.35); }
+      100% { background-color: transparent; }
+    }
+
+    .cell-symbol-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .co-circle-logo {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8.5px;
+      font-weight: 800;
+      color: white;
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+    }
+    .co-symbol-text {
+      font-weight: 700;
+      font-size: 12px;
+      color: #f8fafc;
+      letter-spacing: 0.1px;
+    }
+
+    .cell-icons-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dual-candles {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .candle-stick {
+      width: 3px;
+      border-radius: 1px;
+    }
+    .bookmark-ribbon-icon {
+      width: 16px;
+      height: 18px;
+      background: #2563eb;
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 75%, 0% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.15s;
+    }
+    .bookmark-ribbon-icon:hover { transform: scale(1.2); }
+    .bookmark-ribbon-icon.bookmarked {
+      background: #eab308;
+      color: black;
+    }
+
+    .pill-percent-capsule {
+      display: inline-block;
+      min-width: 60px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .pill-percent-capsule.pos {
+      background: var(--pill-green-bg);
+      color: var(--pill-green-txt);
+    }
+    .pill-percent-capsule.neg {
+      background: var(--pill-red-bg);
+      color: var(--pill-red-txt);
+    }
+
+    .cell-numeric-val {
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: #cbd5e1;
+      font-weight: 600;
+    }
+
+    /* ══════════════════════════════════════════════════
+       VIEW 2: SECTOR SCOPE (HEATMAP TOP -> WATERFALL MIDDLE -> SECTOR BOXES BOTTOM)
+       ══════════════════════════════════════════════════ */
+    #tab-sector {
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      gap: 16px;
+      padding-right: 6px;
+      padding-bottom: 50px;
+    }
+    #tab-sector::-webkit-scrollbar { width: 6px; }
+    #tab-sector::-webkit-scrollbar-thumb { background: #262c3e; border-radius: 4px; }
+
+    .sector-scope-top-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+      flex-shrink: 0;
+    }
+    .scope-heading-bold {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      color: #ffffff;
+    }
+    .active-tag-blue {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #38bdf8;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .blue-dot-bullet {
+      width: 7px;
+      height: 7px;
+      background: #38bdf8;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+
+    /* HEATMAP STAGE (TOP) */
+    .treemap-canvas-stage {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      min-height: 230px;
+      height: 230px;
+      flex-shrink: 0;
+    }
+    .treemap-sector-box {
+      background: #090b10;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .treemap-sector-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #cbd5e1;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      cursor: pointer;
+      padding-bottom: 3px;
+      border-bottom: 1px solid #171922;
+    }
+    .treemap-sector-title:hover {
+      color: #38bdf8;
+    }
+    .treemap-inner-grid {
+      flex: 1;
+      display: grid;
+      gap: 4px;
+    }
+    .treemap-stock-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10.5px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+      padding: 2px;
+      text-align: center;
+    }
+    .treemap-stock-box:hover {
+      filter: brightness(1.25);
+      transform: scale(1.02);
+      z-index: 5;
+    }
+    .clr-green-pos { background: #14532d; color: #bbf7d0; border: 1px solid #22c55e; }
+    .clr-mid-red   { background: #4c0519; color: #fecdd3; border: 1px solid #e11d48; }
+    .clr-dark-red  { background: #2f0412; color: #fecdd3; border: 1px solid #9f1239; }
+    .clr-deep-red  { background: #1a0209; color: #fda4af; border: 1px solid #881337; }
+
+    /* WATERFALL STAGE (MIDDLE) */
+    .waterfall-canvas-stage {
+      display: flex !important;
+      min-height: 270px;
+      height: 270px;
+      flex-shrink: 0;
+      background: #090a0d;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      padding: 10px 14px 10px 6px;
+    }
+    .waterfall-y-numbers {
+      width: 48px;
+      height: 70%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #64748b;
+      font-size: 10.5px;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: right;
+      padding-right: 12px;
+      padding-top: 10px;
+      padding-bottom: 4px;
+    }
+    .waterfall-bars-deck {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      height: 100%;
+    }
+    .waterfall-chart-body-zone {
+      height: 70%;
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1px solid #334155;
+    }
+    .waterfall-zero-baseline {
+      position: absolute;
+      top: 25%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #1e293b;
+      z-index: 1;
+    }
+    .waterfall-column-unit {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .waterfall-column-unit:hover {
+      background: rgba(255,255,255,0.02);
+    }
+    .waterfall-capsule-bar {
+      width: 22px;
+      border-radius: 12px;
+      position: absolute;
+      z-index: 2;
+      transition: transform 0.15s, filter 0.15s;
+    }
+    .waterfall-column-unit:hover .waterfall-capsule-bar {
+      transform: scaleX(1.15);
+      filter: brightness(1.25);
+    }
+    .waterfall-capsule-bar.pos {
+      background: #5b8ff9;
+      bottom: 75%;
+    }
+    .waterfall-capsule-bar.neg {
+      background: #e55c70;
+      top: 25%;
+    }
+    .waterfall-labels-row {
+      height: 30%;
+      display: flex;
+      position: relative;
+    }
+    .waterfall-label-unit {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .sector-vertical-text {
+      position: absolute;
+      top: 14px;
+      transform: rotate(-90deg);
+      transform-origin: center top;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: #94a3b8;
+      white-space: nowrap;
+      text-align: right;
+    }
+    .waterfall-label-unit:hover .sector-vertical-text {
+      color: #38bdf8;
+    }
+
+    /* SECTOR CARDS GRID (BOTTOM - INTRADAY BOOST STYLE) */
+    .sector-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 16px;
+      width: 100%;
+    }
+    .sector-constituent-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .sector-constituent-card:hover {
+      border-color: #273046;
+    }
+    @keyframes sectorCardPulse {
+      0% { box-shadow: 0 0 0px #38bdf8; border-color: #38bdf8; }
+      50% { box-shadow: 0 0 28px rgba(56, 189, 248, 0.7); border-color: #60a5fa; transform: scale(1.015); }
+      100% { box-shadow: 0 0 0px #38bdf8; border-color: var(--border-color); transform: scale(1); }
+    }
+    .sector-highlight-pulse {
+      animation: sectorCardPulse 2.4s ease-out;
+    }
+
+    
+    /* Beacon & Boost Video Exact Styles */
+    .beacon-signal-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .beacon-signal-badge.bull {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      box-shadow: 0 0 6px rgba(34, 197, 94, 0.25);
+    }
+    .beacon-signal-badge.bear {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      box-shadow: 0 0 6px rgba(239, 68, 68, 0.25);
+    }
+
+    .boost-badge-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .boost-signal-arrow {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .boost-signal-arrow.up {
+      color: #22c55e;
+      text-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+    }
+    .boost-signal-arrow.down {
+      color: #ef4444;
+      text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+    }
+
+    /* ══════════════════════════════════════════════════
+       TRADINGVIEW CHART & TRADE TICKET MODAL
+       ══════════════════════════════════════════════════ */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      backdrop-filter: blur(6px);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .drawer-modal {
+      width: 860px;
+      max-height: 90vh;
+      background: #0e1017;
+      border: 1px solid #232738;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95);
+      overflow: hidden;
+    }
+    .drawer-header {
+      padding: 12px 18px;
+      border-bottom: 1px solid #1a1e2b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #131622;
+    }
+    .drawer-title {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .drawer-close-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+    .drawer-close-btn:hover { color: #ffffff; }
+
+    /* TV CHART EMBEDDED CONTAINER */
+    .tv-chart-viewport {
+      height: 320px;
+      background: #07080c;
+      border-bottom: 1px solid #1a1e2b;
+      position: relative;
+    }
+
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      padding: 14px 18px;
+    }
+    .ticket-stat-box {
+      background: #090a0e;
+      border: 1px solid #1c1f2b;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .ticket-label {
+      font-size: 10px;
+      color: #717b91;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .ticket-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Floating Tooltip */
+    .floating-tooltip-card {
+      position: absolute;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      pointer-events: none;
+      display: none;
+      z-index: 400;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast-alert-badge {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e293b;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: white;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      z-index: 500;
+      display: none;
+      animation: slideInToast 0.3s ease-out;
+    }
+    @keyframes slideInToast {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════ LEFT SIDEBAR ════════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-circle-logo"></div>
+      <div class="brand-name-text">TradeFinder</div>
+    </div>
+
+    <div class="sidebar-nav">
+      <a class="nav-btn-link active" id="menu-pulse" onclick="showScreen('pulse')">
+        <span class="nav-icon-slot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </span>
+        Market Pulse
+      </a>
+
+      <a class="nav-btn-link" id="menu-insider" onclick="showScreen('insider')">
+        <span class="nav-icon-slot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20M5 5l14 14"/></svg>
+        </span>
+        Insider Strategy
+      </a>
+
+      <a class="nav-btn-link" id="menu-sector" onclick="showScreen('sector')">
+        <span class="nav-icon-slot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+        </span>
+        Sector Scope
+      </a>
+
+      <a class="nav-btn-link" id="menu-fii" onclick="showScreen('fii')">
+        <span class="nav-icon-slot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        </span>
+        FII / DII
+      </a>
+
+      <a class="nav-btn-link" id="menu-mover" onclick="showScreen('mover')">
+        <span class="nav-icon-slot">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 3 7 7-3 3 9 1-1-9-3 3-7-7Z"/></svg>
+        </span>
+        Index Mover
+      </a>
+    </div>
+  </aside>
+
+  <!-- ════════════════════ MAIN WORKSPACE ════════════════════ -->
+  <main class="workspace-area">
+
+    <!-- ── TOP LIVE UTILITY BAR ── -->
+    <header class="top-utility-bar">
+      <div class="top-tickers-cluster">
+        <div class="market-status-pill">
+          <div class="pulse-green-dot"></div>
+          <span>NSE LIVE</span>
+          <span style="color:#94a3b8; font-family:'JetBrains Mono'; font-size:10.5px;" id="liveClock">09:47:15</span>
+        </div>
+        <div class="index-ticker-item">
+          <span class="index-ticker-title">NIFTY 50:</span>
+          <span style="color:#22c55e; font-weight:800;" id="niftyLtp">24,562.80</span>
+          <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="niftyPct">+0.48%</span>
+        </div>
+        <div class="index-ticker-item">
+          <span class="index-ticker-title">BANK NIFTY:</span>
+          <span style="color:#22c55e; font-weight:800;" id="bankLtp">51,840.10</span>
+          <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="bankPct">+0.32%</span>
+        </div>
+      </div>
+
+      <div class="top-actions-cluster">
+        <button class="btn-top-util" id="btnAudioToggle" onclick="toggleAudio()">
+          <span id="audioIcon">🔔</span> <span id="audioLabel">Sound ON</span>
+        </button>
+        <button class="btn-top-util" onclick="openWatchlistDrawer()">
+          <span>⭐</span> Watchlist (<span id="watchCount">0</span>)
+        </button>
+      </div>
+    </header>
+
+    <!-- ════════════ SCREEN 1: MARKET PULSE (EXACT MATCH VIDEO 5:35-6:33) ════════════ -->
+    <div class="view-screen-tab active" id="tab-pulse">
+      <div class="pulse-grid-layout">
+
+        <!-- LEFT CARD: BREAKOUT BEACON -->
+        <div class="scanner-panel-card">
+          <div class="panel-header-strip">
+            <div class="header-left-cluster">
+              <div class="bars-graphic">
+                <div class="bar-line" style="height:6px; background:#ef4444;"></div>
+                <div class="bar-line" style="height:12px; background:#22c55e;"></div>
+                <div class="bar-line" style="height:16px; background:#22c55e;"></div>
+              </div>
+              <span class="panel-title-text" id="left-panel-title">BREAKOUT BEACON 💡</span>
+              <span class="pill-badge-live">LIVE</span>
+            </div>
+            
+            <div class="pill-search-container">
+              <input type="text" id="searchBeacon" placeholder="Search..." oninput="filterBeacon(this.value)"/>
+              <span class="search-lens-icon">🔍</span>
+            </div>
+          </div>
+
+          <!-- BEACON FILTER PILLS ROW -->
+          <div class="filter-pills-row" style="position:relative; margin-bottom:8px;">
+            <div class="custom-select-pill" id="filter-beacon-dir" onclick="toggleBeaconDropdown('dir')">
+              ↓↑ <span id="beacon-dir-label">Neutral</span> ▾
+            </div>
+            <div class="custom-select-pill" id="filter-beacon-univ" onclick="toggleBeaconDropdown('univ')">
+              🌐 <span id="beacon-univ-label">All</span> ▾
+            </div>
+
+            <!-- Beacon Direction Popover -->
+            <div class="dropdown-menu-popover" id="pop-beacon-dir" style="left:16px;">
+              <div class="dropdown-item-opt" onclick="setBeaconDirFilter('Neutral')">↓↑ Neutral (All)</div>
+              <div class="dropdown-item-opt" onclick="setBeaconDirFilter('Bullish')" style="color:#22c55e;">🟢 Bullish (BULL Only)</div>
+              <div class="dropdown-item-opt" onclick="setBeaconDirFilter('Bearish')" style="color:#ef4444;">🔴 Bearish (BEAR Only)</div>
+            </div>
+
+            <!-- Beacon Universe Popover -->
+            <div class="dropdown-menu-popover" id="pop-beacon-univ" style="left:110px;">
+              <div class="dropdown-item-opt" onclick="setBeaconUnivFilter('All')">🌐 All Equities</div>
+              <div class="dropdown-item-opt" onclick="setBeaconUnivFilter('FNO')">⚡ F&O Universe</div>
+              <div class="dropdown-item-opt" onclick="setBeaconUnivFilter('NIFTY50')">📈 Nifty 50</div>
+            </div>
+          </div>
+
+          <div class="table-scroll-wrap">
+            <table class="fin-grid-table">
+              <thead>
+                <tr id="left-table-head">
+                  <th style="width:16%;">Signal</th>
+                  <th style="width:34%;">Symbol</th>
+                  <th style="width:18%;">%</th>
+                  <th style="width:18%; text-align:right;">Signal % ˅</th>
+                  <th style="width:14%; text-align:right;">Time</th>
+                </tr>
+              </thead>
+              <tbody id="body-beacon"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT CARD: INTRADAY BOOST -->
+        <div class="scanner-panel-card">
+          <div class="panel-header-strip">
+            <div class="header-left-cluster">
+              <span class="boost-badge-icon">BOOST 🚀</span>
+              <span class="panel-title-text">INTRADAY BOOST ✨</span>
+              <span class="pill-badge-live">LIVE</span>
+            </div>
+            <div class="pill-search-container">
+              <input type="text" id="searchBoost" placeholder="Search..." oninput="filterBoost(this.value)"/>
+              <span class="search-lens-icon">🔍</span>
+            </div>
+          </div>
+
+          <!-- BOOST 4 INTERACTIVE FILTER PILLS WITH POPOVERS -->
+          <div class="filter-pills-row" style="position:relative; margin-bottom:8px;">
+            <div class="custom-select-pill" id="filter-dir" onclick="toggleDropdown('dir')">
+              ↓↑ <span id="dir-label">Neutral</span> ▾
+            </div>
+            <div class="custom-select-pill" id="filter-cap" onclick="toggleDropdown('cap')">
+              ₹ <span id="cap-label">All</span> ▾
+            </div>
+            <div class="custom-select-pill" id="filter-beta" onclick="toggleDropdown('beta')">
+              β <span id="beta-label">Neutral</span> ▾
+            </div>
+            <div class="custom-select-pill" id="filter-boost-univ" onclick="toggleDropdown('univ')">
+              🌐 <span id="boost-univ-label">All</span> ▾
+            </div>
+
+            <!-- Direction Dropdown -->
+            <div class="dropdown-menu-popover" id="pop-dir" style="left:16px;">
+              <div class="dropdown-item-opt" onclick="setDirectionFilter('Neutral')">↓↑ Neutral (All)</div>
+              <div class="dropdown-item-opt" onclick="setDirectionFilter('Bullish')" style="color:#22c55e;">🟢 Bullish Only</div>
+              <div class="dropdown-item-opt" onclick="setDirectionFilter('Bearish')" style="color:#ef4444;">🔴 Bearish Only</div>
+            </div>
+
+            <!-- Cap Dropdown -->
+            <div class="dropdown-menu-popover" id="pop-cap" style="left:110px;">
+              <div class="dropdown-item-opt" onclick="setCapFilter('All')">₹ All Caps</div>
+              <div class="dropdown-item-opt" onclick="setCapFilter('Large')">₹ Large Cap (>₹1000)</div>
+              <div class="dropdown-item-opt" onclick="setCapFilter('Mid')">₹ Mid Cap (&lt;₹1000)</div>
+            </div>
+
+            <!-- Beta Dropdown -->
+            <div class="dropdown-menu-popover" id="pop-beta" style="left:185px;">
+              <div class="dropdown-item-opt" onclick="setBetaFilter('Neutral')">β Neutral</div>
+              <div class="dropdown-item-opt" onclick="setBetaFilter('High')">β High Beta (>1.5)</div>
+              <div class="dropdown-item-opt" onclick="setBetaFilter('Low')">β Low Beta (&lt;1.0)</div>
+            </div>
+
+            <!-- Universe Dropdown -->
+            <div class="dropdown-menu-popover" id="pop-univ" style="left:265px;">
+              <div class="dropdown-item-opt" onclick="setBoostUnivFilter('All')">🌐 All Equities</div>
+              <div class="dropdown-item-opt" onclick="setBoostUnivFilter('FNO')">⚡ F&O Universe</div>
+              <div class="dropdown-item-opt" onclick="setBoostUnivFilter('NIFTY50')">📈 Nifty 50</div>
+            </div>
+          </div>
+
+          <div class="table-scroll-wrap">
+            <table class="fin-grid-table">
+              <thead>
+                <tr>
+                  <th style="width:38%;">Symbol</th>
+                  <th style="width:22%;">%</th>
+                  <th style="width:22%; text-align:right;">R.Fac ˅</th>
+                  <th style="width:18%; text-align:center;">Signal</th>
+                </tr>
+              </thead>
+              <tbody id="body-boost"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════════════ SCREEN 2: SECTOR SCOPE (HEATMAP TOP -> WATERFALL MIDDLE -> SECTOR BOXES BOTTOM) ════════════ -->
+    <div class="view-screen-tab" id="tab-sector">
+      <!-- Sector Scope Top Strip with Jump Chips -->
+      <div class="sector-scope-top-strip">
+        <span class="scope-heading-bold">SECTOR SCOPE</span>
+        <div class="active-tag-blue">
+          <div class="blue-dot-bullet"></div>
+          ACTIVE
+        </div>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span style="font-size:11px; color:#64748b; font-weight:600;">⚡ Jump to Sector:</span>
+          <button class="custom-select-pill" onclick="scrollToSector('IT')">IT 🚀</button>
+          <button class="custom-select-pill" onclick="scrollToSector('CEMENT')">CEMENT</button>
+          <button class="custom-select-pill" onclick="scrollToSector('BANK')">BANK</button>
+          <button class="custom-select-pill" onclick="scrollToSector('PHARMA')">PHARMA</button>
+          <button class="custom-select-pill" onclick="scrollToSector('AUTO')">AUTO</button>
+          <button class="custom-select-pill" onclick="scrollToSector('METAL')">METAL</button>
+          <button class="custom-select-pill" onclick="scrollToSector('REALTY')">REALTY</button>
+          <button class="custom-select-pill" onclick="scrollToSector('FMCG')">FMCG</button>
+          <button class="custom-select-pill" onclick="scrollToSector('ENERGY')">ENERGY</button>
+        </div>
+      </div>
+
+      <!-- SECTION 1: TREEMAP HEATMAP (TOP) -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:2px;">
+        <span style="font-size:12px; font-weight:800; color:#cbd5e1; letter-spacing:0.3px;">🗺️ SECTOR TREEMAP HEATMAP</span>
+        <span style="font-size:10.5px; color:#94a3b8;">Click any sector tile to jump to its constituent card below</span>
+      </div>
+      <div class="treemap-canvas-stage" id="stage-treemap">
+        <!-- IT Sector -->
+        <div class="treemap-sector-box">
+          <div class="treemap-sector-title" onclick="scrollToSector('IT')">
+            <span>IT (Smart Money Accumulation 🚀)</span> <span>↗</span>
+          </div>
+          <div class="treemap-inner-grid" style="grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr);">
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'TECHM', '+3.45%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('TECHM', 1680.00, '+3.45%', 4.85, true)" style="grid-column: span 2; grid-row: span 2; font-weight:800; font-size:12px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+              TECHM<span style="font-size:9.5px; opacity:0.85; font-weight:500;">R.Fac: 4.85 🔥</span>
+            </div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'PERSISTENT', '+4.20%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('PERSISTENT', 5420.00, '+4.20%', 4.60, true)" style="grid-column: span 2; font-weight:800; font-size:11.5px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+              PERSISTENT<span style="font-size:9px; opacity:0.85; font-weight:500;">R.Fac: 4.60 🔥</span>
+            </div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'OFSS', '+5.10%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('OFSS', 11850.00, '+5.10%', 4.35, true)" style="grid-column: span 2; font-weight:800; font-size:11.5px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+              OFSS<span style="font-size:9px; opacity:0.85; font-weight:500;">R.Fac: 4.35 🔥</span>
+            </div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'COFORGE', '+2.10%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('COFORGE', 7890.00, '+2.10%', 3.40, true)">COFORGE</div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'LTIM', '+1.60%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('LTIM', 5840.00, '+1.60%', 2.90, true)">LTIM</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'TCS', '+0.50%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('TCS', 4120.00, '+0.50%', 1.60, false)">TCS (1.6)</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'INFY', '+0.40%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('INFY', 1880.00, '+0.40%', 1.45, false)">INFY (1.4)</div>
+          </div>
+        </div>
+
+        <!-- REALTY Sector -->
+        <div class="treemap-sector-box">
+          <div class="treemap-sector-title" onclick="scrollToSector('REALTY')">
+            <span>REALTY</span> <span>↗</span>
+          </div>
+          <div class="treemap-inner-grid" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr);">
+            <div class="treemap-stock-box clr-dark-red" onmouseenter="showTooltip(event, 'LODHA', '-3.60%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('LODHA', 1240.00, '-3.60%', 4.10, false)" style="grid-column: span 2;">LODHA</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'IRB', '-1.40%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('IRB', 62.40, '-1.40%', 2.20, false)">IRB</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'PRESTIGE', '-2.70%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('PRESTIGE', 1780.00, '-2.70%', 2.90, false)">PRESTIGE</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'PHOENIXLTD', '-1.90%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('PHOENIXLTD', 1840.00, '-1.90%', 2.10, false)">PHOENIXLTD</div>
+            <div class="treemap-stock-box clr-deep-red" onmouseenter="showTooltip(event, 'DLF', '-3.80%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('DLF', 810.00, '-3.80%', 3.90, false)">DLF</div>
+          </div>
+        </div>
+
+        <!-- AUTO Sector -->
+        <div class="treemap-sector-box">
+          <div class="treemap-sector-title" onclick="scrollToSector('AUTO')">
+            <span>AUTO</span> <span>↗</span>
+          </div>
+          <div class="treemap-inner-grid" style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);">
+            <div class="treemap-stock-box clr-deep-red" onmouseenter="showTooltip(event, 'TITAGARH', '-4.10%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('TITAGARH', 1120.00, '-4.10%', 4.20, false)">TITAGARH</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'SONACOMS', '-1.85%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('SONACOMS', 680.00, '-1.85%', 2.50, false)">SONACOMS</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'TVSMOTOR', '-1.50%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('TVSMOTOR', 2410.00, '-1.50%', 2.40, false)">TVSMOTOR</div>
+            <div class="treemap-stock-box clr-dark-red" onmouseenter="showTooltip(event, 'M&M', '-2.67%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('M&M', 2840.00, '-2.67%', 3.80, false)" style="grid-column: span 2;">M&M</div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'HEROMOTOCO', '+1.20%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('HEROMOTOCO', 4920.00, '+1.20%', 2.30, true)">HEROMOTO</div>
+            <div class="treemap-stock-box clr-dark-red" onmouseenter="showTooltip(event, 'MARUTI', '-1.98%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('MARUTI', 11840.00, '-1.98%', 3.07, false)" style="grid-column: span 2;">MARUTI</div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'TATAMOTORS', '+0.71%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('TATAMOTORS', 925.00, '+0.71%', 1.95, true)">TATAMOTORS</div>
+          </div>
+        </div>
+
+        <!-- METAL Sector -->
+        <div class="treemap-sector-box">
+          <div class="treemap-sector-title" onclick="scrollToSector('METAL')">
+            <span>METAL</span> <span>↗</span>
+          </div>
+          <div class="treemap-inner-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'NATIONALUM', '-1.20%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('NATIONALUM', 215.00, '-1.20%', 2.40, false)">NATIONALUM</div>
+            <div class="treemap-stock-box clr-dark-red" onmouseenter="showTooltip(event, 'ADANIENT', '-2.80%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('ADANIENT', 2980.00, '-2.80%', 3.60, false)">ADANIENT</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'TATASTEEL', '-1.60%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('TATASTEEL', 148.00, '-1.60%', 2.50, false)">TATASTEEL</div>
+          </div>
+        </div>
+
+        <!-- CEMENT Sector -->
+        <div class="treemap-sector-box">
+          <div class="treemap-sector-title" onclick="scrollToSector('CEMENT')">
+            <span>CEMENT</span> <span>↗</span>
+          </div>
+          <div class="treemap-inner-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'SHREECEM', '+1.90%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('SHREECEM', 26400.00, '+1.90%', 2.40, true)">SHREECEM</div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'RAMCOCEM', '+1.10%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('RAMCOCEM', 910.00, '+1.10%', 1.85, true)">RAMCOCEM</div>
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'ACC', '-0.97%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('ACC', 2420.00, '-0.97%', 3.15, false)">ACC</div>
+          </div>
+        </div>
+
+        <!-- PHARMA Sector -->
+        <div class="treemap-sector-box">
+          <div class="treemap-sector-title" onclick="scrollToSector('PHARMA')">
+            <span>PHARMA</span> <span>↗</span>
+          </div>
+          <div class="treemap-inner-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="treemap-stock-box clr-mid-red" onmouseenter="showTooltip(event, 'CIPLA', '-1.10%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('CIPLA', 1520.00, '-1.10%', 1.80, false)">CIPLA</div>
+            <div class="treemap-stock-box clr-green-pos" onmouseenter="showTooltip(event, 'DIVISLAB', '+1.40%')" onmouseleave="hideTooltip()" onclick="openTradeTicket('DIVISLAB', 5940.00, '+1.40%', 3.80, true)">DIVISLAB</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: WATERFALL CAPSULE BARS (MIDDLE) -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
+        <span style="font-size:12px; font-weight:800; color:#cbd5e1; letter-spacing:0.3px;">📊 SECTOR WATERFALL CAPSULE BARS (NET CAPITAL BIAS)</span>
+        <span style="font-size:10.5px; color:#38bdf8;">👉 Click any sector bar to jump directly to its box below!</span>
+      </div>
+      <div class="waterfall-canvas-stage" id="stage-waterfall">
+        <div class="waterfall-y-numbers">
+          <div>1.00</div>
+          <div>0.00</div>
+          <div>-1.00</div>
+          <div>-2.00</div>
+          <div>-3.00</div>
+        </div>
+
+        <div class="waterfall-bars-deck">
+          <div class="waterfall-chart-body-zone" id="wfBodyZone">
+            <div class="waterfall-zero-baseline"></div>
+          </div>
+          <div class="waterfall-labels-row" id="wfLabelsZone"></div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: ALL SECTOR COLUMNS / BOXES (BOTTOM - MATCHING INTRADAY BOOST) -->
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-top:10px;">
+        <div>
+          <span style="font-size:13px; font-weight:900; color:#ffffff; letter-spacing:0.3px;">🏢 ALL SECTOR INSTRUMENT BOXES</span>
+          <span style="font-size:11px; color:#94a3b8; margin-left:8px;">Live prices, % changes, R-Factor efficiency, and bullish/bearish signals</span>
+        </div>
+        <span style="font-size:11px; color:#22c55e; font-weight:700;">🟢 Live Real-Time Constituent Feeds</span>
+      </div>
+      
+      <div class="sector-cards-grid" id="sectorCardsContainer">
+        <!-- Rendered dynamically via renderSectorBoxes() -->
+      </div>
+    </div>
+
+    <!-- ════════════ SCREEN 3: INSIDER STRATEGY ════════════ -->
+    <div class="view-screen-tab" id="tab-insider">
+      <div class="scanner-panel-card" style="height:100%; padding:16px;">
+        <div class="panel-header-strip" style="border:none; padding:0 0 14px 0;">
+          <span class="panel-title-text" style="font-size:16px;">INSIDER STRATEGY 🕵️</span>
+          <span style="color:#94a3b8; font-size:11px;">Institutional Supply-Demand Contraction & High Delivery Traps</span>
+        </div>
+        <div class="table-scroll-wrap">
+          <table class="fin-grid-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Setup Pattern</th>
+                <th>Day 1 Rule</th>
+                <th>Delivery %</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="body-insider"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ SCREEN 4: FII / DII ════════════ -->
+    <div class="view-screen-tab" id="tab-fii">
+      <div class="scanner-panel-card" style="height:100%; padding:16px;">
+        <div class="panel-header-strip" style="border:none; padding:0 0 14px 0;">
+          <span class="panel-title-text" style="font-size:16px;">FII / DII ACTIVITY 🏛️</span>
+          <span style="color:#94a3b8; font-size:11px;">Cash Market & Index Derivative Net Contracts</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div style="background:#090a0e; border:1px solid #1e293b; padding:14px; border-radius:8px;">
+            <div style="font-size:11px; color:#94a3b8;">FII CASH NET</div>
+            <div style="font-size:22px; font-weight:900; color:#22c55e; margin-top:4px;">+ ₹1,842.50 Cr</div>
+          </div>
+          <div style="background:#090a0e; border:1px solid #1e293b; padding:14px; border-radius:8px;">
+            <div style="font-size:11px; color:#94a3b8;">DII CASH NET</div>
+            <div style="font-size:22px; font-weight:900; color:#22c55e; margin-top:4px;">+ ₹2,104.10 Cr</div>
+          </div>
+        </div>
+        <div class="table-scroll-wrap">
+          <table class="fin-grid-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>FII Cash (Cr)</th>
+                <th>DII Cash (Cr)</th>
+                <th>FII Index Futures</th>
+                <th>Net Market Bias</th>
+              </tr>
+            </thead>
+            <tbody id="body-fii"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════ SCREEN 5: INDEX MOVER ════════════ -->
+    <div class="view-screen-tab" id="tab-mover">
+      <div class="scanner-panel-card" style="height:100%; padding:16px;">
+        <div class="panel-header-strip" style="border:none; padding:0 0 14px 0;">
+          <span class="panel-title-text" style="font-size:16px;">INDEX MOVER ⚖️</span>
+          <span style="color:#94a3b8; font-size:11px;">Real-Time Heavyweight Points Impact on Nifty 50</span>
+        </div>
+        <div class="table-scroll-wrap">
+          <table class="fin-grid-table">
+            <thead>
+              <tr>
+                <th>Heavyweight Stock</th>
+                <th>Weightage</th>
+                <th>Price Change</th>
+                <th>Points Impact</th>
+              </tr>
+            </thead>
+            <tbody id="body-mover"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ════════════ TRADINGVIEW CHART & EXECUTION MODAL ════════════ -->
+  <div class="drawer-overlay" id="appModal" onclick="closeModal(event)">
+    <div class="drawer-modal" onclick="event.stopPropagation()">
+      <div class="drawer-header">
+        <div class="drawer-title" id="modalTitle">
+          <span id="modalIcon">📈</span>
+          <span id="modalHeading">SYMBOL DETAILS</span>
+        </div>
+        <button class="drawer-close-btn" onclick="closeModal()">✕</button>
+      </div>
+      
+      <!-- Embedded TradingView Lightweight Chart -->
+      <div class="tv-chart-viewport" id="tvChartContainer"></div>
+
+      <!-- Execution Ticket Stats -->
+      <div class="ticket-grid" id="ticketStatsGrid"></div>
+
+      <!-- Strategy Advice Strip -->
+      <div id="modalFooter" style="padding:10px 18px 14px; background:#0c0d14; border-top:1px solid #1a1e2b; font-size:11px; color:#94a3b8; display:flex; justify-content:space-between; align-items:center;">
+        <div id="modalAdviceText">
+          💡 <strong>Execution Advice:</strong> Buy recommended ITM strike at 5m candle confirmation. Never average losing trades!
+        </div>
+        <button id="modalActionBtn" class="btn-top-util" style="background:#2563eb; color:white; border-color:#3b82f6; font-weight:700;" onclick="executeMockOrder()">
+          🚀 Place Paper Trade
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="floating-tooltip-card" id="floatingCardTip"></div>
+  <div class="toast-alert-badge" id="toastBadge"></div>
+
+  <script>
+    // ══════════════════════════════════════════════════
+    //   MASTER DATA ENGINE (AUTHENTIC REPLICA FROM SCREENSHOTS & VIDEOS)
+    // ══════════════════════════════════════════════════
+    let HIGH_POW_DATA = [
+      { sym: 'BSE',        price: 4620.00, logoText: 'BSE', logoBg: '#0284c7', pct: 15.96, to: 9013.4,  pos: true,  rf: 5.40 },
+      { sym: 'HDFCBANK',   price: 1682.40, logoText: 'HDF', logoBg: '#1e3a8a', pct: 0.01,  to: 2579.39, pos: true,  rf: 2.10 },
+      { sym: 'RELIANCE',   price: 2984.50, logoText: 'R',   logoBg: '#b45309', pct: -0.33, to: 2304.12, pos: false, rf: 1.80 },
+      { sym: 'M&M',        price: 2840.10, logoText: 'MM',  logoBg: '#dc2626', pct: -2.67, to: 1666.8,  pos: false, rf: 3.80 },
+      { sym: 'ZOMATO',     price: 268.40,  logoText: 'Z',   logoBg: '#e11d48', pct: -2.46, to: 1573.83, pos: false, rf: 2.40 },
+      { sym: 'CDSL',       price: 1540.00, logoText: 'CDS', logoBg: '#0369a1', pct: 2.72,  to: 1383.0,  pos: true,  rf: 3.10 },
+      { sym: 'HAL',        price: 4520.00, logoText: 'HAL', logoBg: '#475569', pct: 0.46,  to: 1308.13, pos: true,  rf: 2.05 },
+      { sym: 'ICICIBANK',  price: 1245.80, logoText: 'ICI', logoBg: '#991b1b', pct: 0.85,  to: 1100.95, pos: true,  rf: 1.95 },
+      { sym: 'TATAMOTORS', price: 925.10,  logoText: 'TM',  logoBg: '#1d4ed8', pct: 0.71,  to: 1096.53, pos: true,  rf: 1.95 },
+      { sym: 'RVNL',       price: 585.40,  logoText: 'RVN', logoBg: '#059669', pct: 7.45,  to: 1045.20, pos: true,  rf: 4.85 },
+      { sym: 'SIEMENS',    price: 6850.00, logoText: 'SIE', logoBg: '#0891b2', pct: 4.80,  to: 980.15,  pos: true,  rf: 4.20 }
+    ];
+
+    let BREAKOUT_BEACON_DATA = [
+      { sym: 'RVNL',       price: 585.40,  pct: 12.09, signalPct: '10.77', time: '09:25', pos: true,  rf: 9.83, logoBg: '#059669', logoText: 'RVN', type: '15m ORB Breakout',    univ: 'FNO' },
+      { sym: 'IRFC',       price: 194.20,  pct: 9.89,  signalPct: '8.15',  time: '09:30', pos: true,  rf: 7.69, logoBg: '#0284c7', logoText: 'IRF', type: '15m ORB Breakout',    univ: 'FNO' },
+      { sym: 'HINDPETRO',  price: 495.20,  pct: 6.40,  signalPct: '5.40',  time: '09:18', pos: true,  rf: 6.53, logoBg: '#0284c7', logoText: 'HP',  type: 'High Vol ORB Surge',   univ: 'FNO' },
+      { sym: 'BHEL',       price: 284.50,  pct: 6.40,  signalPct: '5.14',  time: '09:30', pos: true,  rf: 4.50, logoBg: '#059669', logoText: 'BHL', type: '15m ORB Breakout',    univ: 'FNO' },
+      { sym: 'NBCC',       price: 168.40,  pct: 5.26,  signalPct: '3.20',  time: '09:25', pos: true,  rf: 3.40, logoBg: '#0d9488', logoText: 'NBC', type: 'Multi-Day High Surge', univ: 'FNO' },
+      { sym: 'TITAGARH',   price: 1180.00, pct: 4.96,  signalPct: '3.76',  time: '09:30', pos: true,  rf: 3.68, logoBg: '#b91c1c', logoText: 'TW',  type: '15m Range Expansion', univ: 'FNO' },
+      { sym: 'IRCTC',      price: 1012.00, pct: 3.91,  signalPct: '4.26',  time: '09:25', pos: true,  rf: 5.26, logoBg: '#0891b2', logoText: 'CTC', type: 'PDH Breakout',         univ: 'FNO' },
+      { sym: 'CANBK',      price: 104.20,  pct: 3.84,  signalPct: '3.04',  time: '09:50', pos: true,  rf: 3.80, logoBg: '#0284c7', logoText: 'CB',  type: '15m ORB Breakout',    univ: 'FNO' },
+      { sym: 'TATASTEEL',  price: 154.20,  pct: 3.57,  signalPct: '2.83',  time: '09:30', pos: true,  rf: 3.90, logoBg: '#1d4ed8', logoText: 'TS',  type: '15m ORB Breakout',    univ: 'NIFTY50' },
+      { sym: 'COALINDIA',  price: 492.60,  pct: 3.24,  signalPct: '2.96',  time: '09:25', pos: true,  rf: 3.60, logoBg: '#0891b2', logoText: 'CIL', type: 'PDH Breakout',         univ: 'NIFTY50' },
+      { sym: 'LODHA',      price: 1240.00, pct: -3.60, signalPct: '3.20',  time: '09:40', pos: false, rf: 4.10, logoBg: '#dc2626', logoText: 'LOD', type: 'Realty Breakdown',     univ: 'FNO' },
+      { sym: 'ACC',        price: 2420.00, pct: -0.97, signalPct: '2.10',  time: '09:45', pos: false, rf: 3.15, logoBg: '#e11d48', logoText: 'ACC', type: 'Resistance Rejection', univ: 'FNO' }
+    ];
+
+    let BOOST_DATA = [
+      { sym: 'RVNL',       price: 585.40,  pct: 12.18, rFac: 9.83, pos: true,  cap: 'MID',   beta: 'HIGH', univ: 'FNO',     logoBg: '#059669', logoText: 'RVN', note: 'Top 1 Smart Money Flow (20+ Strikes Put Writing) 🔥' },
+      { sym: 'IRFC',       price: 194.20,  pct: 8.45,  rFac: 7.69, pos: true,  cap: 'MID',   beta: 'HIGH', univ: 'FNO',     logoBg: '#0284c7', logoText: 'IRF', note: 'Equally Good as RVNL, Massive Put Floor 🚀' },
+      { sym: 'HINDPETRO',  price: 495.20,  pct: 6.40,  rFac: 6.53, pos: true,  cap: 'MID',   beta: 'HIGH', univ: 'FNO',     logoBg: '#0284c7', logoText: 'HP',  note: 'Aggressive Call Buying + Put Unwinding' },
+      { sym: 'IRCTC',      price: 1012.00, pct: 3.85,  rFac: 5.26, pos: true,  cap: 'LARGE', beta: 'NEU',  univ: 'FNO',     logoBg: '#0891b2', logoText: 'CTC', note: 'Moderate Rail Flow, Secondary Expansion' },
+      { sym: 'TECHM',      price: 1680.00, pct: 3.45,  rFac: 4.85, pos: true,  cap: 'LARGE', beta: 'HIGH', univ: 'NIFTY50', logoBg: '#0891b2', logoText: 'TM',  note: '5m Low Sustained + 10 AM Breakout' },
+      { sym: 'INDUSTOWER', price: 342.80,  pct: -0.25, rFac: 4.41, pos: false, cap: 'MID',   beta: 'HIGH', univ: 'FNO',     logoBg: '#b91c1c', logoText: 'IND', note: 'Heavy Institutional Short Build (Downside)' },
+      { sym: 'SBILIFE',    price: 1540.00, pct: 1.78,  rFac: 4.03, pos: true,  cap: 'LARGE', beta: 'NEU',  univ: 'NIFTY50', logoBg: '#059669', logoText: 'SBI', note: 'Steady Call Buying Flow' },
+      { sym: 'BPCL',       price: 612.40,  pct: 3.84,  rFac: 3.96, pos: true,  cap: 'LARGE', beta: 'HIGH', univ: 'FNO',     logoBg: '#0891b2', logoText: 'BPC', note: 'Energy Sector Institutional Bid' },
+      { sym: 'TITAGARH',   price: 1180.00, pct: 4.65,  rFac: 3.68, pos: true,  cap: 'MID',   beta: 'HIGH', univ: 'FNO',     logoBg: '#b91c1c', logoText: 'TW',  note: 'Wagon Manufacturer Expansion' },
+      { sym: 'DALBHARAT',  price: 1840.00, pct: 2.54,  rFac: 2.79, pos: true,  cap: 'LARGE', beta: 'NEU',  univ: 'FNO',     logoBg: '#059669', logoText: 'DB',  note: 'Cement Sector Accumulation' },
+      { sym: 'IREDA',      price: 228.40,  pct: 3.24,  rFac: 2.78, pos: true,  cap: 'MID',   beta: 'HIGH', univ: 'FNO',     logoBg: '#0d9488', logoText: 'IRD', note: 'Renewable Energy Momentum' },
+      { sym: 'TATASTEEL',  price: 148.00,  pct: -1.60, rFac: 2.50, pos: false, cap: 'LARGE', beta: 'HIGH', univ: 'NIFTY50', logoBg: '#dc2626', logoText: 'TS',  note: 'Metal Sector Friction' }
+    ];
+
+    const WATERFALL_SECTORS = [
+      { name: 'IT',              val: 0.88,  pos: true  },
+      { name: 'CEMENT',          val: 0.48,  pos: true  },
+      { name: 'FMCG',            val: 0.35,  pos: true  },
+      { name: 'FIN SERVICE',     val: 0.15,  pos: true  },
+      { name: 'PVT BANK',        val: 0.08,  pos: true  },
+      { name: 'NIFTY MID SELECT',val: 0.02,  pos: true  },
+      { name: 'BANK',            val: 0.01,  pos: true  },
+      { name: 'SENSEX',          val: -0.32, pos: false },
+      { name: 'NIFTY 50',        val: -0.48, pos: false },
+      { name: 'PSU BANK',        val: -0.48, pos: false },
+      { name: 'ENERGY',          val: -0.50, pos: false },
+      { name: 'PHARMA',          val: -0.52, pos: false },
+      { name: 'METAL',           val: -0.80, pos: false },
+      { name: 'AUTO',            val: -1.18, pos: false },
+      { name: 'REALTY',          val: -1.85, pos: false }
+    ];
+
+    const SECTOR_CONSTITUENTS_MAP = {
+      'IT': [
+        { sym: 'TECHM',      price: 1680.0, dir: 'UP',   pct: '+3.45%', rFac: '4.85', pos: true,  bias: 'BULLISH', logoBg: '#0891b2', logoText: 'TM',  note: 'Smart money heavy accumulation, 5m Low sustained' },
+        { sym: 'PERSISTENT', price: 5420.0, dir: 'UP',   pct: '+4.20%', rFac: '4.60', pos: true,  bias: 'BULLISH', logoBg: '#0284c7', logoText: 'PS',  note: 'Day 1 Low = Open Low held all day, 10:00 AM breakout' },
+        { sym: 'OFSS',       price: 11850., dir: 'UP',   pct: '+5.10%', rFac: '4.35', pos: true,  bias: 'BULLISH', logoBg: '#059669', logoText: 'OFS', note: 'Massive ORB breakout at 10:00 AM, zero energy waste' },
+        { sym: 'COFORGE',    price: 7890.0, dir: 'UP',   pct: '+2.10%', rFac: '3.40', pos: true,  bias: 'BULLISH', logoBg: '#475569', logoText: 'COF', note: 'Steady trend following IT sector momentum' },
+        { sym: 'LTIM',       price: 5840.0, dir: 'UP',   pct: '+1.60%', rFac: '2.90', pos: true,  bias: 'BULLISH', logoBg: '#d97706', logoText: 'LTM', note: 'Moderate buying, trailing leaders' },
+        { sym: 'TCS',        price: 4120.0, dir: 'UP',   pct: '+0.50%', rFac: '1.60', pos: true,  bias: 'BULLISH', logoBg: '#1e293b', logoText: 'TCS', note: 'Big players present but heavy friction / energy wasted' },
+        { sym: 'INFY',       price: 1880.0, dir: 'UP',   pct: '+0.40%', rFac: '1.45', pos: true,  bias: 'BULLISH', logoBg: '#1d4ed8', logoText: 'INF', note: 'Slow momentum, high churn, poor relative efficiency' }
+      ],
+      'CEMENT': [
+        { sym: 'SHREECEM',   price: 26400., dir: 'UP',   pct: '+1.90%', rFac: '2.40', pos: true,  bias: 'BULLISH', logoBg: '#059669', logoText: 'SC',  note: 'Leading cement breakout setup' },
+        { sym: 'RAMCOCEM',   price: 910.0,  dir: 'UP',   pct: '+1.10%', rFac: '1.85', pos: true,  bias: 'BULLISH', logoBg: '#0284c7', logoText: 'RC',  note: 'Institutional supply clearance' },
+        { sym: 'JKCEMENT',   price: 4320.0, dir: 'UP',   pct: '+0.80%', rFac: '2.75', pos: true,  bias: 'BULLISH', logoBg: '#0d9488', logoText: 'JK',  note: 'Moderate consolidation above VWAP' },
+        { sym: 'AMBUJACEM',  price: 615.0,  dir: 'DOWN', pct: '-0.40%', rFac: '1.20', pos: false, bias: 'BEARISH', logoBg: '#b91c1c', logoText: 'AC',  note: 'Selling pressure near day high' },
+        { sym: 'ACC',        price: 2420.0, dir: 'DOWN', pct: '-0.97%', rFac: '3.15', pos: false, bias: 'BEARISH', logoBg: '#e11d48', logoText: 'ACC', note: 'Heavy call writing, downward momentum' }
+      ],
+      'BANK': [
+        { sym: 'HDFCBANK',   price: 1682.4, dir: 'UP',   pct: '+0.01%', rFac: '2.10', pos: true,  bias: 'BULLISH', logoBg: '#1e3a8a', logoText: 'HDF', note: 'Heavyweight anchor holding Nifty positive' },
+        { sym: 'ICICIBANK',  price: 1245.8, dir: 'UP',   pct: '+0.85%', rFac: '1.95', pos: true,  bias: 'BULLISH', logoBg: '#991b1b', logoText: 'ICI', note: 'Sustained buying above morning pivot' },
+        { sym: 'SBIN',       price: 818.5,  dir: 'DOWN', pct: '-0.45%', rFac: '1.70', pos: false, bias: 'BEARISH', logoBg: '#0369a1', logoText: 'SBI', note: 'PSU Bank profit booking' },
+        { sym: 'KOTAKBANK',  price: 1780.0, dir: 'DOWN', pct: '-0.50%', rFac: '1.40', pos: false, bias: 'BEARISH', logoBg: '#dc2626', logoText: 'KB',  note: 'Range-bound sideways distribution' },
+        { sym: 'AXISBANK',   price: 1140.0, dir: 'DOWN', pct: '-0.80%', rFac: '1.35', pos: false, bias: 'BEARISH', logoBg: '#7f1d1d', logoText: 'AX',  note: 'Resistance near Day 1 Open' },
+        { sym: 'FEDERALBNK', price: 184.5,  dir: 'DOWN', pct: '-2.42%', rFac: '2.97', pos: false, bias: 'BEARISH', logoBg: '#ea580c', logoText: 'FB',  note: 'Short aggressive build-up' }
+      ],
+      'PHARMA': [
+        { sym: 'SPL',        price: 412.0,  dir: 'UP',   pct: '+6.20%', rFac: '3.50', pos: true,  bias: 'BULLISH', logoBg: '#059669', logoText: 'SPL', note: 'Clean ORB expansion breakout' },
+        { sym: 'DIVISLAB',   price: 5940.0, dir: 'UP',   pct: '+1.40%', rFac: '3.80', pos: true,  bias: 'BULLISH', logoBg: '#0891b2', logoText: 'DIV', note: 'Top institutional accumulation' },
+        { sym: 'SUNPHARMA',  price: 1740.0, dir: 'DOWN', pct: '-0.65%', rFac: '1.50', pos: false, bias: 'BEARISH', logoBg: '#b91c1c', logoText: 'SUN', note: 'Overhead supply absorption' },
+        { sym: 'DRREDDY',    price: 6640.0, dir: 'DOWN', pct: '-0.90%', rFac: '1.30', pos: false, bias: 'BEARISH', logoBg: '#991b1b', logoText: 'DRR', note: 'Weak relative strength' },
+        { sym: 'CIPLA',      price: 1520.0, dir: 'DOWN', pct: '-1.10%', rFac: '1.80', pos: false, bias: 'BEARISH', logoBg: '#7f1d1d', logoText: 'CIP', note: 'Consistent lower highs on 5m' }
+      ],
+      'AUTO': [
+        { sym: 'HEROMOTOCO', price: 4920.0, dir: 'UP',   pct: '+1.20%', rFac: '2.30', pos: true,  bias: 'BULLISH', logoBg: '#059669', logoText: 'HM',  note: 'Strong momentum in 2W space' },
+        { sym: 'TATAMOTORS', price: 925.1,  dir: 'UP',   pct: '+0.71%', rFac: '1.95', pos: true,  bias: 'BULLISH', logoBg: '#1d4ed8', logoText: 'TM',  note: 'Holding day open baseline' },
+        { sym: 'TVSMOTOR',   price: 2410.0, dir: 'DOWN', pct: '-1.50%', rFac: '2.40', pos: false, bias: 'BEARISH', logoBg: '#ea580c', logoText: 'TVS', note: 'Pullback below morning VWAP' },
+        { sym: 'MARUTI',     price: 11840., dir: 'DOWN', pct: '-1.98%', rFac: '3.07', pos: false, bias: 'BEARISH', logoBg: '#b91c1c', logoText: 'MS',  note: 'Institutional hedging flow' },
+        { sym: 'M&M',        price: 2840.1, dir: 'DOWN', pct: '-2.67%', rFac: '3.80', pos: false, bias: 'BEARISH', logoBg: '#dc2626', logoText: 'MM',  note: 'Aggressive call writers active' },
+        { sym: 'TITAGARH',   price: 1120.0, dir: 'DOWN', pct: '-4.10%', rFac: '4.20', pos: false, bias: 'BEARISH', logoBg: '#7f1d1d', logoText: 'TT',  note: 'High volume distribution' }
+      ],
+      'REALTY': [
+        { sym: 'PHOENIXLTD', price: 1840.0, dir: 'DOWN', pct: '-1.90%', rFac: '2.10', pos: false, bias: 'BEARISH', logoBg: '#ea580c', logoText: 'PHX', note: 'Gradual downward drift' },
+        { sym: 'PRESTIGE',   price: 1780.0, dir: 'DOWN', pct: '-2.70%', rFac: '2.90', pos: false, bias: 'BEARISH', logoBg: '#b91c1c', logoText: 'PRE', note: 'Break below yesterday support' },
+        { sym: 'LODHA',      price: 1240.0, dir: 'DOWN', pct: '-3.60%', rFac: '4.10', pos: false, bias: 'BEARISH', logoBg: '#dc2626', logoText: 'LOD', note: 'Heavy institutional offloading' },
+        { sym: 'DLF',        price: 810.0,  dir: 'DOWN', pct: '-3.80%', rFac: '3.90', pos: false, bias: 'BEARISH', logoBg: '#7f1d1d', logoText: 'DLF', note: 'Persistent selling on all bounces' }
+      ],
+      'METAL': [
+        { sym: 'NATIONALUM', price: 215.0,  dir: 'DOWN', pct: '-1.20%', rFac: '2.40', pos: false, bias: 'BEARISH', logoBg: '#ea580c', logoText: 'NAL', note: 'Metal index under pressure' },
+        { sym: 'TATASTEEL',  price: 148.0,  dir: 'DOWN', pct: '-1.60%', rFac: '2.50', pos: false, bias: 'BEARISH', logoBg: '#b91c1c', logoText: 'TS',  note: 'Global commodity headwinds' },
+        { sym: 'HINDALCO',   price: 660.0,  dir: 'DOWN', pct: '-2.10%', rFac: '3.10', pos: false, bias: 'BEARISH', logoBg: '#dc2626', logoText: 'HIN', note: 'Failure at morning pivot' },
+        { sym: 'ADANIENT',   price: 2980.0, dir: 'DOWN', pct: '-2.80%', rFac: '3.60', pos: false, bias: 'BEARISH', logoBg: '#7f1d1d', logoText: 'ADE', note: 'High volatility rejection' }
+      ],
+      'FMCG': [
+        { sym: 'ITC',        price: 492.0,  dir: 'UP',   pct: '+0.95%', rFac: '2.10', pos: true,  bias: 'BULLISH', logoBg: '#059669', logoText: 'ITC', note: 'Defensive buying in FMCG' },
+        { sym: 'TATACONSUM', price: 1080.0, dir: 'UP',   pct: '+0.60%', rFac: '1.80', pos: true,  bias: 'BULLISH', logoBg: '#0891b2', logoText: 'TC',  note: 'Steady higher lows pattern' },
+        { sym: 'HINDUNILVR', price: 2540.0, dir: 'UP',   pct: '+0.15%', rFac: '1.50', pos: true,  bias: 'BULLISH', logoBg: '#0284c7', logoText: 'HUL', note: 'Mild accumulation at support' },
+        { sym: 'NESTLEIND',  price: 2280.0, dir: 'DOWN', pct: '-0.40%', rFac: '1.30', pos: false, bias: 'BEARISH', logoBg: '#b91c1c', logoText: 'NES', note: 'Lack of follow-through buyers' }
+      ],
+      'ENERGY': [
+        { sym: 'RVNL',       price: 585.4,  dir: 'UP',   pct: '+7.45%', rFac: '4.85', pos: true,  bias: 'BULLISH', logoBg: '#059669', logoText: 'RVN', note: 'Massive ORB expansion + Rail infra surge' },
+        { sym: 'IRFC',       price: 194.2,  dir: 'UP',   pct: '+5.80%', rFac: '4.40', pos: true,  bias: 'BULLISH', logoBg: '#0891b2', logoText: 'IRF', note: 'Heavy call buying & liquidity breakout' },
+        { sym: 'POWERINDIA', price: 14200., dir: 'UP',   pct: '+4.10%', rFac: '4.10', pos: true,  bias: 'BULLISH', logoBg: '#0d9488', logoText: 'PWR', note: 'High efficiency institutional spring' },
+        { sym: 'NTPC',       price: 412.0,  dir: 'UP',   pct: '+0.80%', rFac: '2.10', pos: true,  bias: 'BULLISH', logoBg: '#0284c7', logoText: 'NTP', note: 'Moderate power grid momentum' },
+        { sym: 'ONGC',       price: 292.0,  dir: 'DOWN', pct: '-0.90%', rFac: '1.60', pos: false, bias: 'BEARISH', logoBg: '#b91c1c', logoText: 'ONG', note: 'Crude price contraction' }
+      ]
+    };
+
+    // ── STATE ──
+    let filterDir = 'Neutral';
+    let filterCap = 'All';
+    let filterBeta = 'Neutral';
+    let isBeaconMode = false;
+    let audioEnabled = true;
+    let myWatchlist = new Set(JSON.parse(localStorage.getItem('traderadar_watch') || '["BSE","RVNL"]'));
+    let activeChart = null;
+
+    // ── AUDIO CHIME SYNTHESIZER ──
+    function playChime(freq = 880, type = 'sine') {
+      if (!audioEnabled) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } catch(e) {}
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('audioLabel').textContent = audioEnabled ? 'Sound ON' : 'Sound OFF';
+      document.getElementById('audioIcon').textContent = audioEnabled ? '🔔' : '🔕';
+      if (audioEnabled) playChime(980);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastBadge');
+      toast.innerHTML = msg;
+      toast.style.display = 'block';
+      playChime(1046);
+      setTimeout(() => { toast.style.display = 'none'; }, 3200);
+    }
+
+    // ── RENDER TABLES ──
+    // Filter states
+    let beaconDirFilter = 'Neutral';
+    let beaconUnivFilter = 'All';
+    let boostDirFilter = 'Neutral';
+    let boostCapFilter = 'All';
+    let boostBetaFilter = 'Neutral';
+    let boostUnivFilter = 'All';
+
+    // ── RENDER BREAKOUT BEACON ──
+    function filterBeacon(val) {
+      renderBeacon(val);
+    }
+    function filterHighPow(val) {
+      renderBeacon(val);
+    }
+
+    function toggleBeaconDropdown(kind) {
+      const popDir = document.getElementById('pop-beacon-dir');
+      const popUniv = document.getElementById('pop-beacon-univ');
+      if (kind === 'dir') {
+        popDir?.classList.toggle('active');
+        popUniv?.classList.remove('active');
+      } else {
+        popUniv?.classList.toggle('active');
+        popDir?.classList.remove('active');
+      }
+    }
+
+    function setBeaconDirFilter(dir) {
+      beaconDirFilter = dir;
+      const el = document.getElementById('beacon-dir-label');
+      if (el) el.textContent = dir;
+      document.getElementById('pop-beacon-dir')?.classList.remove('active');
+      renderBeacon();
+    }
+
+    function setBeaconUnivFilter(univ) {
+      beaconUnivFilter = univ;
+      const el = document.getElementById('beacon-univ-label');
+      if (el) el.textContent = univ === 'All' ? 'All' : (univ === 'FNO' ? 'F&O' : 'Nifty 50');
+      document.getElementById('pop-beacon-univ')?.classList.remove('active');
+      renderBeacon();
+    }
+
+    function renderBeacon(filter = null) {
+      if (filter === null) {
+        const el = document.getElementById('searchBeacon') || document.getElementById('searchHighPow');
+        filter = el ? el.value : '';
+      }
+      const tbody = document.getElementById('body-beacon') || document.getElementById('body-high-pow');
+      if (!tbody) return;
+
+      let list = BREAKOUT_BEACON_DATA.slice();
+      if (beaconDirFilter === 'Bullish') list = list.filter(s => s.pos);
+      if (beaconDirFilter === 'Bearish') list = list.filter(s => !s.pos);
+      if (beaconUnivFilter !== 'All') list = list.filter(s => s.univ === beaconUnivFilter);
+      if (filter) list = list.filter(s => s.sym.includes(filter.toUpperCase()));
+
+      // Sort by signalPct descending
+      list.sort((a, b) => parseFloat(b.signalPct) - parseFloat(a.signalPct));
+
+      tbody.innerHTML = list.map(s => {
+        const isBookmarked = myWatchlist.has(s.sym);
+        return `
+          <tr onclick="openTradeTicket('${s.sym}', ${s.price}, '${s.pct > 0 ? '+' : ''}${s.pct.toFixed(2)}%', ${s.rf}, ${s.pos})">
+            <td>
+              <span class="beacon-signal-badge ${s.pos ? 'bull' : 'bear'}">${s.pos ? 'BULL' : 'BEAR'}</span>
+            </td>
+            <td>
+              <div class="cell-symbol-wrap">
+                <div class="co-circle-logo" style="background:${s.logoBg}">${s.logoText}</div>
+                <div>
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span class="co-symbol-text">${s.sym}</span>
+                    <div class="dual-candles">
+                      <div class="candle-stick" style="height:10px; background:${s.pos ? '#22c55e' : '#ef4444'};"></div>
+                      <div class="candle-stick" style="height:6px; background:${s.pos ? '#ef4444' : '#22c55e'};"></div>
+                    </div>
+                    <div class="bookmark-ribbon-icon ${isBookmarked ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleWatchlist('${s.sym}')">+</div>
+                  </div>
+                  <div style="font-size:9.5px; color:#94a3b8;">${s.type}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="pill-percent-capsule ${s.pos ? 'pos' : 'neg'}">${s.pct > 0 ? '+' : ''}${s.pct.toFixed(2)}%</span>
+            </td>
+            <td class="cell-numeric-val" style="text-align:right; font-weight:800; color:#cbd5e1;">
+              ${s.signalPct}
+            </td>
+            <td class="cell-numeric-val" style="text-align:right; color:#94a3b8; font-size:11px;">
+              ${s.time}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderHighPow() {
+      renderBeacon();
+    }
+
+    // ── RENDER INTRADAY BOOST ──
+    function filterBoost(val) {
+      renderBoost(val);
+    }
+
+    function toggleDropdown(kind) {
+      const popDir = document.getElementById('pop-dir');
+      const popCap = document.getElementById('pop-cap');
+      const popBeta = document.getElementById('pop-beta');
+      const popUniv = document.getElementById('pop-univ');
+      [popDir, popCap, popBeta, popUniv].forEach(p => p && p.classList.remove('active'));
+
+      if (kind === 'dir') popDir?.classList.toggle('active');
+      else if (kind === 'cap') popCap?.classList.toggle('active');
+      else if (kind === 'beta') popBeta?.classList.toggle('active');
+      else if (kind === 'univ') popUniv?.classList.toggle('active');
+    }
+
+    function setDirectionFilter(dir) {
+      boostDirFilter = dir;
+      const el = document.getElementById('dir-label');
+      if (el) el.textContent = dir;
+      document.getElementById('pop-dir')?.classList.remove('active');
+      renderBoost();
+    }
+
+    function setCapFilter(cap) {
+      boostCapFilter = cap;
+      const el = document.getElementById('cap-label');
+      if (el) el.textContent = cap;
+      document.getElementById('pop-cap')?.classList.remove('active');
+      renderBoost();
+    }
+
+    function setBetaFilter(beta) {
+      boostBetaFilter = beta;
+      const el = document.getElementById('beta-label');
+      if (el) el.textContent = beta;
+      document.getElementById('pop-beta')?.classList.remove('active');
+      renderBoost();
+    }
+
+    function setBoostUnivFilter(univ) {
+      boostUnivFilter = univ;
+      const el = document.getElementById('boost-univ-label');
+      if (el) el.textContent = univ === 'All' ? 'All' : (univ === 'FNO' ? 'F&O' : 'Nifty 50');
+      document.getElementById('pop-univ')?.classList.remove('active');
+      renderBoost();
+    }
+
+    function renderBoost(search = null) {
+      if (search === null) {
+        const el = document.getElementById('searchBoost');
+        search = el ? el.value : '';
+      }
+      const tbody = document.getElementById('body-boost');
+      if (!tbody) return;
+
+      let list = BOOST_DATA.slice();
+      if (boostDirFilter === 'Bullish') list = list.filter(s => s.pos);
+      if (boostDirFilter === 'Bearish') list = list.filter(s => !s.pos);
+      if (boostCapFilter !== 'All') list = list.filter(s => s.cap === boostCapFilter.toUpperCase());
+      if (boostBetaFilter !== 'Neutral') list = list.filter(s => s.beta === boostBetaFilter.toUpperCase());
+      if (boostUnivFilter !== 'All') list = list.filter(s => s.univ === boostUnivFilter);
+      if (search) list = list.filter(s => s.sym.includes(search.toUpperCase()));
+
+      // Sort by R.Fac descending
+      list.sort((a, b) => b.rFac - a.rFac);
+
+      tbody.innerHTML = list.map(s => {
+        const isBookmarked = myWatchlist.has(s.sym);
+        const rNum = s.rFac;
+        const isLeader = rNum >= 4.0;
+        const effColor = isLeader ? '#22c55e' : (rNum >= 3.0 ? '#38bdf8' : '#eab308');
+
+        return `
+          <tr onclick="openTradeTicket('${s.sym}', ${s.price}, '${s.pct > 0 ? '+' : ''}${s.pct.toFixed(2)}%', ${s.rFac}, ${s.pos})">
+            <td>
+              <div class="cell-symbol-wrap">
+                <div class="co-circle-logo" style="background:${s.logoBg}">${s.logoText}</div>
+                <div>
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span class="co-symbol-text">${s.sym}</span>
+                    <div class="dual-candles">
+                      <div class="candle-stick" style="height:10px; background:${s.pos ? '#22c55e' : '#ef4444'};"></div>
+                      <div class="candle-stick" style="height:6px; background:${s.pos ? '#ef4444' : '#22c55e'};"></div>
+                    </div>
+                    <div class="bookmark-ribbon-icon ${isBookmarked ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleWatchlist('${s.sym}')">+</div>
+                  </div>
+                  <div style="font-size:9.5px; color:#94a3b8;">${s.note}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div style="font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:700;">₹${s.price.toFixed(2)}</div>
+              <span class="pill-percent-capsule ${s.pos ? 'pos' : 'neg'}" style="margin-top:2px;">${s.pct > 0 ? '+' : ''}${s.pct.toFixed(2)}%</span>
+            </td>
+            <td class="cell-numeric-val" style="color:${effColor}; font-weight:800; text-align:right;">
+              <div style="font-size:13.5px;">${s.rFac.toFixed(2)}</div>
+              <div style="font-size:8.5px; color:#64748b;">${isLeader ? 'LEADER' : (rNum >= 3.0 ? 'MODERATE' : 'LAGGARD')}</div>
+            </td>
+            <td style="text-align:center;">
+              <span class="boost-signal-arrow ${s.pos ? 'up' : 'down'}" title="${s.pos ? 'Bullish Call Accumulation' : 'Bearish Short Build'}">${s.pos ? '⬆' : '⬇'}</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.onclick = function(e) {
+      if (!e.target.closest('.filter-pills-row')) {
+        document.querySelectorAll('.dropdown-menu-popover').forEach(p => p.classList.remove('active'));
+      }
+    };
+
+    // ── WATERFALL BUILDER & SECTOR JUMP CONTROLLER ──
+    function scrollToSector(secName) {
+      let key = secName.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      if (key.includes('IT')) key = 'IT';
+      else if (key.includes('CEMENT')) key = 'CEMENT';
+      else if (key.includes('BANK')) key = 'BANK';
+      else if (key.includes('PHARMA')) key = 'PHARMA';
+      else if (key.includes('AUTO')) key = 'AUTO';
+      else if (key.includes('METAL')) key = 'METAL';
+      else if (key.includes('REALTY')) key = 'REALTY';
+      else if (key.includes('FMCG')) key = 'FMCG';
+      else if (key.includes('ENERGY')) key = 'ENERGY';
+
+      let el = document.getElementById('sector-box-' + key);
+      if (!el) {
+        el = Array.from(document.querySelectorAll('.sector-constituent-card')).find(c =>
+          c.id.toUpperCase().includes(key) || key.includes(c.id.replace('sector-box-', '').toUpperCase())
+        );
+      }
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('sector-highlight-pulse');
+        playChime(820);
+        showToast(`📍 Scrolled down to <strong>${secName}</strong> Sector Box`);
+        setTimeout(() => el.classList.remove('sector-highlight-pulse'), 2500);
+      } else {
+        openSectorConstituents(secName);
+      }
+    }
+
+    function buildWaterfallChart() {
+      const bodyZone = document.getElementById('wfBodyZone');
+      const labelsZone = document.getElementById('wfLabelsZone');
+      if (!bodyZone || !labelsZone) return;
+
+      bodyZone.innerHTML = '<div class="waterfall-zero-baseline"></div>';
+      labelsZone.innerHTML = '';
+      const totalH = bodyZone.clientHeight || 260;
+
+      WATERFALL_SECTORS.forEach(sec => {
+        const col = document.createElement('div');
+        col.className = 'waterfall-column-unit';
+        col.title = `${sec.name}: ${sec.val > 0 ? '+' : ''}${sec.val}% Net Bias (Click to Jump to Sector Box)`;
+        col.onclick = () => scrollToSector(sec.name);
+
+        const bar = document.createElement('div');
+        bar.className = 'waterfall-capsule-bar ' + (sec.pos ? 'pos' : 'neg');
+
+        let barPx = 0;
+        if (sec.pos) {
+          barPx = Math.max(10, (sec.val / 1.0) * (totalH * 0.25));
+        } else {
+          barPx = Math.max(14, (Math.abs(sec.val) / 3.0) * (totalH * 0.75));
+        }
+        bar.style.height = barPx + 'px';
+        col.appendChild(bar);
+        bodyZone.appendChild(col);
+
+        const lblUnit = document.createElement('div');
+        lblUnit.className = 'waterfall-label-unit';
+        lblUnit.onclick = () => scrollToSector(sec.name);
+
+        const txt = document.createElement('div');
+        txt.className = 'sector-vertical-text';
+        txt.textContent = sec.name;
+        lblUnit.appendChild(txt);
+        labelsZone.appendChild(lblUnit);
+      });
+    }
+
+    // ── RENDER ALL SECTOR COLUMNS / BOXES (INTRADAY BOOST STYLE) ──
+    function renderSectorBoxes() {
+      const container = document.getElementById('sectorCardsContainer');
+      if (!container) return;
+
+      const sectorMeta = {
+        'IT':     { icon: '💻', bias: '+0.88% Net Inflow', pos: true,  efficiency: 'Top Smart Money Flow 🚀' },
+        'CEMENT': { icon: '🏗️', bias: '+0.48% Net Inflow', pos: true,  efficiency: 'Moderate Inflow' },
+        'BANK':   { icon: '🏦', bias: '+0.01% Neutral Bias',pos: true,  efficiency: 'Balanced Rotation' },
+        'PHARMA': { icon: '💊', bias: '-0.52% Outflow',     pos: false, efficiency: 'Selective Accumulation' },
+        'AUTO':   { icon: '🚗', bias: '-1.18% Outflow',     pos: false, efficiency: 'Heavy Call Writing' },
+        'REALTY': { icon: '🏢', bias: '-1.85% Outflow',     pos: false, efficiency: 'Consistent Selling' },
+        'METAL':  { icon: '⛏️', bias: '-0.80% Outflow',     pos: false, efficiency: 'Commodity Pressure' },
+        'FMCG':   { icon: '🛒', bias: '+0.35% Net Inflow', pos: true,  efficiency: 'Defensive Accumulation' },
+        'ENERGY': { icon: '⚡', bias: '+1.45% Super Surge', pos: true,  efficiency: 'High Volume Expansion 🔥' }
+      };
+
+      const sectors = Object.keys(SECTOR_CONSTITUENTS_MAP);
+      container.innerHTML = sectors.map(secKey => {
+        const meta = sectorMeta[secKey] || { icon: '📊', bias: 'Active Feed', pos: true, efficiency: 'Sector Activity' };
+        const stocks = SECTOR_CONSTITUENTS_MAP[secKey];
+
+        return `
+          <div class="scanner-panel-card sector-constituent-card" id="sector-box-${secKey}">
+            <div class="panel-header-strip">
+              <div class="header-left-cluster">
+                <span style="font-size:16px;">${meta.icon}</span>
+                <span class="panel-title-text" style="font-size:13.5px;">${secKey} SECTOR</span>
+                <span class="pill-percent-capsule ${meta.pos ? 'pos' : 'neg'}" style="font-size:9.5px;">${meta.bias}</span>
+              </div>
+              <div style="font-size:11px; font-weight:700; color:${meta.pos ? '#38bdf8' : '#fda4af'};">
+                ${meta.efficiency}
+              </div>
+            </div>
+
+            <div class="table-scroll-wrap" style="max-height: 290px;">
+              <table class="fin-grid-table">
+                <thead>
+                  <tr>
+                    <th style="width:34%;">Symbol</th>
+                    <th style="width:14%;"></th>
+                    <th style="width:24%;">LTP & %</th>
+                    <th style="width:14%; text-align:right;">R.Fac ˅</th>
+                    <th style="width:14%; text-align:center;">Signal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${stocks.map(s => {
+                    const rNum = parseFloat(s.rFac) || 2.0;
+                    const isHighEff = rNum >= 3.5;
+                    const effColor = isHighEff ? '#22c55e' : (rNum >= 2.5 ? '#38bdf8' : '#eab308');
+                    const isBookmarked = myWatchlist.has(s.sym);
+                    return `
+                      <tr onclick="openTradeTicket('${s.sym}', ${s.price}, '${s.pct}', ${s.rFac}, ${s.pos})">
+                        <td>
+                          <div class="cell-symbol-wrap">
+                            <div class="co-circle-logo" style="background:${s.logoBg}">${s.logoText}</div>
+                            <div>
+                              <div class="co-symbol-text">${s.sym}</div>
+                              <div style="font-size:9px; color:#94a3b8;">${s.note || (s.pos ? 'Accumulation' : 'Distribution')}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="cell-icons-wrap">
+                            <div class="dual-candles">
+                              <div class="candle-stick" style="height:10px; background:${s.pos ? '#22c55e' : '#ef4444'};"></div>
+                              <div class="candle-stick" style="height:6px; background:${s.pos ? '#ef4444' : '#22c55e'};"></div>
+                            </div>
+                            <div class="bookmark-ribbon-icon ${isBookmarked ? 'bookmarked' : ''}" onclick="event.stopPropagation(); toggleWatchlist('${s.sym}')">+</div>
+                          </div>
+                        </td>
+                        <td>
+                          <div style="font-family:'JetBrains Mono', monospace; font-size:12px; font-weight:700;">₹${s.price.toFixed(2)}</div>
+                          <span class="pill-percent-capsule ${s.pos ? 'pos' : 'neg'}" style="margin-top:2px;">${s.pct}</span>
+                        </td>
+                        <td class="cell-numeric-val" style="color:${effColor}; font-weight:800; text-align:right;">
+                          <div>${s.rFac}</div>
+                          <div style="font-size:8.5px; color:#64748b;">${isHighEff ? 'LEADER' : (rNum >= 2.5 ? 'MODERATE' : 'LAGGARD')}</div>
+                        </td>
+                        <td style="text-align:center;">
+                          <span style="font-size:10px; font-weight:800; color:${s.pos ? '#22c55e' : '#ef4444'}; background:${s.pos ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)'}; padding:2px 6px; border-radius:4px; border:1px solid ${s.pos ? 'rgba(34,197,94,0.25)' : 'rgba(239,68,68,0.25)'}; display:inline-block; white-space:nowrap;">
+                            ${s.bias === 'BULLISH' ? 'BULL ↗' : 'BEAR ↘'}
+                          </span>
+                        </td>
+                      </tr>
+                    `;
+                  }).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ── SECTOR CONSTITUENTS MODAL ──
+    function openSectorConstituents(secName) {
+      const overlay = document.getElementById('appModal');
+      const title = document.getElementById('modalHeading');
+      const icon = document.getElementById('modalIcon');
+      const tvContainer = document.getElementById('tvChartContainer');
+      const statsGrid = document.getElementById('ticketStatsGrid');
+      
+      icon.textContent = '🏢';
+      title.textContent = `${secName} CONSTITUENTS (R-FACTOR RANKED)`;
+      tvContainer.style.display = 'none';
+
+      const stocks = SECTOR_CONSTITUENTS_MAP[secName] || [
+        { sym: secName + '-LDR', price: 1540.0, dir: 'UP', pct: '+1.50%', rFac: '3.20', pos: true },
+        { sym: secName + '-MID', price: 820.0,  dir: 'UP', pct: '+0.80%', rFac: '2.10', pos: true },
+        { sym: secName + '-LAG', price: 410.0,  dir: 'DOWN', pct: '-1.20%', rFac: '1.40', pos: false }
+      ];
+
+      statsGrid.style.gridTemplateColumns = '1fr';
+      statsGrid.innerHTML = `
+        <div style="padding:4px 0;">
+          <div style="font-size:11.5px; color:#94a3b8; margin-bottom:12px;">
+            Institutional capital allocation within <strong>${secName}</strong> sector. Click any stock to launch its real-time candlestick chart.
+          </div>
+          <table class="fin-grid-table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Signal</th>
+                <th>% Chg</th>
+                <th style="text-align:right;">R.Fac ˅</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${stocks.map(s => `
+                <tr onclick="openTradeTicket('${s.sym}', ${s.price}, '${s.pct}', ${s.rFac}, ${s.pos})">
+                  <td><strong style="color:white;">${s.sym}</strong></td>
+                  <td>
+                    <span style="font-weight:800; font-size:12px; color:${s.pos ? '#22c55e' : '#ef4444'};">
+                      ${s.dir === 'UP' ? '🟢 ↗ CALL ACCUMULATION' : '🔴 ↘ PUT AGGRESSION'}
+                    </span>
+                  </td>
+                  <td><span class="pill-percent-capsule ${s.pos ? 'pos' : 'neg'}">${s.pct}</span></td>
+                  <td class="cell-numeric-val" style="font-size:13px; font-weight:800; color:#38bdf8;">${s.rFac}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      playChime(720);
+      overlay.style.display = 'flex';
+    }
+
+    // ── TRADINGVIEW CHART & EXECUTION TICKET ──
+    function openTradeTicket(sym, basePrice, pctStr, rFac, isBullish) {
+      if (activeChart) {
+        try { activeChart.remove(); } catch(e) {}
+        activeChart = null;
+      }
+      const overlay = document.getElementById('appModal');
+      const title = document.getElementById('modalHeading');
+      const icon = document.getElementById('modalIcon');
+      const tvContainer = document.getElementById('tvChartContainer');
+      const statsGrid = document.getElementById('ticketStatsGrid');
+      const adviceText = document.getElementById('modalAdviceText');
+      const actionBtn = document.getElementById('modalActionBtn');
+      
+      const rNum = parseFloat(rFac) || 2.0;
+      const isSuperBlaster = ['RVNL', 'IRFC', 'HINDPETRO'].includes(sym);
+      const isVideoLeader = ['TECHM', 'PERSISTENT', 'OFSS'].includes(sym);
+      const isVideoLaggard = ['TCS', 'INFY'].includes(sym);
+
+      icon.textContent = isBullish ? '🚀' : '🔻';
+      title.textContent = `${sym} — ₹${basePrice.toFixed(2)} (${pctStr}) | R-Factor: ${rFac}`;
+      tvContainer.style.display = 'block';
+
+      if (isSuperBlaster) {
+        if (adviceText) adviceText.innerHTML = `⚡ <strong>Double Blast Confluence (Video 11:55-13:20):</strong> Technical Breakout Beacon (ORB) + Intraday Boost (R: ${rFac}) confirmed across 20+ Strikes Put Writing! Highest probability blast setup.`;
+      } else if (isVideoLeader) {
+        if (adviceText) adviceText.innerHTML = `🔥 <strong>High Institutional Efficiency (Video 6:23):</strong> Big money positioning with zero wasted energy. 5m Day 1 Low sustained + 10:00 AM breakout.`;
+      } else if (isVideoLaggard) {
+        if (adviceText) adviceText.innerHTML = `⚠️ <strong>Energy Wasted (Video 7:05):</strong> Big players present but friction is high (R-Factor ${rFac}). Avoid buying low R-Factor laggards!`;
+      } else if (!isBullish) {
+        if (adviceText) adviceText.innerHTML = `🔴 <strong>Institutional Downside Position Build:</strong> Heavy Call Writing / Put Unwinding detected across derivative strikes. Avoid long trades!`;
+      } else {
+        if (adviceText) adviceText.innerHTML = `💡 <strong>Execution Advice:</strong> Buy recommended ITM strike at 5m candle confirmation with strict stop at 5M Day 1 Low. Never average losing trades!`;
+      }
+
+      if (actionBtn) {
+        actionBtn.style.display = 'inline-flex';
+        actionBtn.textContent = isVideoLaggard ? '⚠️ High Risk Paper Trade' : '🚀 Place Paper Trade';
+        actionBtn.style.background = isVideoLaggard ? '#b91c1c' : '#2563eb';
+      }
+
+      // Setup Metrics
+      const isPositive = isBullish;
+      const strikeType = isPositive ? 'CE' : 'PE';
+      const strikeRound = Math.round(basePrice / 50) * 50;
+      const recOption = `${sym} ${strikeRound} ${strikeType}`;
+      const stopPrice = isPositive ? (basePrice * 0.985).toFixed(2) : (basePrice * 1.015).toFixed(2);
+      const targetPrice = isPositive ? (basePrice * 1.035).toFixed(2) : (basePrice * 0.965).toFixed(2);
+
+      statsGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      statsGrid.innerHTML = `
+        <div class="ticket-stat-box">
+          <div class="ticket-label">5m Day 1 Rule</div>
+          <div class="ticket-val" style="color:${isVideoLaggard ? '#eab308' : '#22c55e'}; font-size:11.5px;">
+            ${isVideoLeader ? '5m Low Sustained All Day ✅' : (isPositive ? 'Day Low = Open Low ✅' : 'Day High = Open High ✅')}
+          </div>
+        </div>
+        <div class="ticket-stat-box">
+          <div class="ticket-label">Recommended ITM</div>
+          <div class="ticket-val" style="color:#38bdf8; font-size:12px;">${recOption}</div>
+        </div>
+        <div class="ticket-stat-box">
+          <div class="ticket-label">Stop Loss (5m Low)</div>
+          <div class="ticket-val" style="color:#ef4444; font-size:12px;">₹${stopPrice}</div>
+        </div>
+        <div class="ticket-stat-box">
+          <div class="ticket-label">${isVideoLeader ? '10:00 AM Breakout Target' : 'Target (1:2.5 R:R)'}</div>
+          <div class="ticket-val" style="color:#22c55e; font-size:12px;">₹${targetPrice}</div>
+        </div>
+      `;
+
+      playChime(isPositive ? 880 : 440);
+      overlay.style.display = 'flex';
+
+      // Render TradingView Candlestick Chart
+      setTimeout(() => {
+        tvContainer.innerHTML = '';
+        if (typeof LightweightCharts !== 'undefined') {
+          activeChart = LightweightCharts.createChart(tvContainer, {
+            width: tvContainer.clientWidth || 820,
+            height: 320,
+            layout: {
+              background: { color: '#07080c' },
+              textColor: '#8b92a2',
+            },
+            grid: {
+              vertLines: { color: '#141620' },
+              horzLines: { color: '#141620' },
+            },
+            crosshair: {
+              mode: LightweightCharts.CrosshairMode.Normal,
+            },
+            timeScale: {
+              borderColor: '#1e2230',
+              timeVisible: true,
+            },
+          });
+
+          const candleSeries = activeChart.addCandlestickSeries({
+            upColor: '#22c55e',
+            downColor: '#ef4444',
+            borderVisible: false,
+            wickUpColor: '#22c55e',
+            wickDownColor: '#ef4444',
+          });
+
+          // Generate authentic 5-minute candles matching Aakash video scenario
+          const candleData = [];
+          const nowTs = Math.floor(Date.now() / 1000) - (20 * 300);
+          const dayLowRef = basePrice * 0.985;
+          let curP = isVideoLeader ? dayLowRef * 1.002 : (basePrice * (isPositive ? 0.975 : 1.025));
+
+          for (let i = 0; i < 20; i++) {
+            let open = curP;
+            let close, high, low;
+
+            if (isVideoLeader) {
+              // 5m Candle 1 (i=0): Day Low = Open Low
+              if (i === 0) {
+                open = dayLowRef;
+                low = dayLowRef;
+                close = open + (basePrice * 0.006);
+                high = close + (basePrice * 0.002);
+              } else if (i < 9) {
+                // Consolidation above Day Low
+                const drift = (Math.random() - 0.4) * (basePrice * 0.003);
+                close = open + drift;
+                low = Math.max(dayLowRef * 1.001, Math.min(open, close) - (basePrice * 0.001));
+                high = Math.max(open, close) + (basePrice * 0.002);
+              } else if (i === 9) {
+                // 10:00 AM Breakout Candle!
+                close = open + (basePrice * 0.012);
+                high = close + (basePrice * 0.002);
+                low = open - (basePrice * 0.001);
+              } else {
+                // Sustained run to basePrice
+                const step = (basePrice - curP) / (20 - i);
+                close = open + (step * 0.9) + ((Math.random() - 0.4) * (basePrice * 0.002));
+                high = Math.max(open, close) + (basePrice * 0.002);
+                low = Math.min(open, close) - (basePrice * 0.001);
+              }
+            } else if (isVideoLaggard) {
+              // Choppy candles with high upper wicks (energy waste)
+              const drift = (Math.random() - 0.5) * (basePrice * 0.004);
+              close = open + drift;
+              high = Math.max(open, close) + (basePrice * 0.008); // large upper wick
+              low = Math.min(open, close) - (basePrice * 0.004);
+            } else {
+              const step = (basePrice - curP) / (20 - i);
+              close = open + (step * 0.85) + ((Math.random() - 0.45) * (basePrice * 0.005));
+              high = Math.max(open, close) + (Math.random() * (basePrice * 0.003));
+              low = Math.min(open, close) - (Math.random() * (basePrice * 0.003));
+            }
+
+            candleData.push({ time: nowTs + (i * 300), open, high, low, close });
+            curP = close;
+          }
+          candleData[candleData.length - 1].close = basePrice;
+          candleSeries.setData(candleData);
+
+          // Add Day 1 Open/Low Reference Line
+          candleSeries.createPriceLine({
+            price: isVideoLeader ? dayLowRef : (isPositive ? basePrice * 0.985 : basePrice * 1.015),
+            color: '#38bdf8',
+            lineWidth: 2,
+            lineStyle: LightweightCharts.LineStyle.Dashed,
+            axisLabelVisible: true,
+            title: isVideoLeader ? '5m Day Low Sustained (09:15-09:20)' : (isPositive ? 'Day Low (Open Low)' : 'Day High (Open High)'),
+          });
+
+          // Add 10:00 AM Breakout Line for Video Leaders
+          if (isVideoLeader) {
+            candleSeries.createPriceLine({
+              price: basePrice * 0.992,
+              color: '#f59e0b',
+              lineWidth: 1,
+              lineStyle: LightweightCharts.LineStyle.Dotted,
+              axisLabelVisible: true,
+              title: '10:00 AM Breakout Line',
+            });
+          }
+
+          // Add Target Price Line
+          candleSeries.createPriceLine({
+            price: parseFloat(targetPrice),
+            color: '#22c55e',
+            lineWidth: 2,
+            lineStyle: LightweightCharts.LineStyle.Solid,
+            axisLabelVisible: true,
+            title: 'Target (1:2.5)',
+          });
+
+          activeChart.timeScale().fitContent();
+        }
+      }, 50);
+    }
+    function closeModal(e) {
+      if (!e || e.target.id === 'appModal' || e.target.classList.contains('drawer-close-btn')) {
+        document.getElementById('appModal').style.display = 'none';
+        if (activeChart) {
+          try { activeChart.remove(); } catch(err) {}
+          activeChart = null;
+        }
+      }
+    }
+    function closeTradeTicket() {
+      const overlay = document.getElementById('appModal');
+      if (overlay) overlay.style.display = 'none';
+      if (activeChart) {
+        try { activeChart.remove(); } catch(err) {}
+        activeChart = null;
+      }
+    }
+
+    function executeMockOrder() {
+      playChime(1174, 'triangle');
+      showToast('🎉 <strong>Paper Trade Executed:</strong> Bracket order sent with automated stoploss & take-profit targets!');
+      closeModal();
+    }
+
+    // ── WATCHLIST ──
+    function toggleWatchlist(sym) {
+      if (myWatchlist.has(sym)) {
+        myWatchlist.delete(sym);
+        showToast(`Removed <strong>${sym}</strong> from Watchlist`);
+      } else {
+        myWatchlist.add(sym);
+        showToast(`⭐ Added <strong>${sym}</strong> to Watchlist`);
+      }
+      localStorage.setItem('traderadar_watch', JSON.stringify(Array.from(myWatchlist)));
+      document.getElementById('watchCount').textContent = myWatchlist.size;
+      renderBeacon();
+      renderBoost();
+    }
+
+    function openWatchlistDrawer() {
+      if (myWatchlist.size === 0) {
+        showToast('Your watchlist is empty! Click the <strong>+ ribbon</strong> on any stock to bookmark it.');
+        return;
+      }
+      const overlay = document.getElementById('appModal');
+      const title = document.getElementById('modalHeading');
+      const icon = document.getElementById('modalIcon');
+      const tvContainer = document.getElementById('tvChartContainer');
+      const statsGrid = document.getElementById('ticketStatsGrid');
+
+      icon.textContent = '⭐';
+      title.textContent = `SAVED WATCHLIST (${myWatchlist.size} STOCKS)`;
+      tvContainer.style.display = 'none';
+
+      const list = BOOST_DATA.filter(s => myWatchlist.has(s.sym));
+      statsGrid.style.gridTemplateColumns = '1fr';
+      statsGrid.innerHTML = `
+        <table class="fin-grid-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Price</th>
+              <th>% Chg</th>
+              <th style="text-align:right;">R.Fac</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${list.map(s => `
+              <tr onclick="openTradeTicket('${s.sym}', ${s.price}, '${s.pct > 0 ? '+' : ''}${s.pct}%', ${s.rFac}, ${s.pos})">
+                <td><strong>${s.sym}</strong></td>
+                <td>₹${s.price.toFixed(2)}</td>
+                <td><span class="pill-percent-capsule ${s.pos ? 'pos' : 'neg'}">${s.pct > 0 ? '+' : ''}${s.pct}%</span></td>
+                <td style="text-align:right; font-weight:800; color:#38bdf8;">${s.rFac.toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+      overlay.style.display = 'flex';
+    }
+
+    // ── LIVE TICK SIMULATION ENGINE (MAKES TERMINAL FEEL ALIVE) ──
+    function runLiveTickCycle() {
+      // 1. Pick a random stock in Breakout Beacon
+      if (typeof BREAKOUT_BEACON_DATA !== 'undefined' && BREAKOUT_BEACON_DATA.length > 0) {
+        const idx = Math.floor(Math.random() * BREAKOUT_BEACON_DATA.length);
+        const stock = BREAKOUT_BEACON_DATA[idx];
+        const delta = (Math.random() - 0.48) * (stock.price * 0.0015);
+        stock.price += delta;
+        stock.pct += (Math.random() - 0.48) * 0.05;
+      }
+
+      // 2. Pick a random stock in Intraday Boost
+      if (typeof BOOST_DATA !== 'undefined' && BOOST_DATA.length > 0) {
+        const bIdx = Math.floor(Math.random() * BOOST_DATA.length);
+        const bStock = BOOST_DATA[bIdx];
+        bStock.price += (Math.random() - 0.48) * (bStock.price * 0.0015);
+        bStock.pct += (Math.random() - 0.48) * 0.05;
+        bStock.rFac = Math.max(1.1, bStock.rFac + ((Math.random() - 0.48) * 0.03));
+      }
+
+      // 2. Tick random stock in Sector Constituents
+      const secKeys = Object.keys(SECTOR_CONSTITUENTS_MAP);
+      const randSec = secKeys[Math.floor(Math.random() * secKeys.length)];
+      const secList = SECTOR_CONSTITUENTS_MAP[randSec];
+      if (secList && secList.length > 0) {
+        const randStock = secList[Math.floor(Math.random() * secList.length)];
+        randStock.price += (Math.random() - 0.48) * (randStock.price * 0.0015);
+        const rVal = Math.max(1.1, parseFloat(randStock.rFac) + ((Math.random() - 0.48) * 0.04));
+        randStock.rFac = rVal.toFixed(2);
+      }
+
+      // Re-render
+      renderBeacon();
+      renderBoost();
+      renderSectorBoxes();
+
+      // Update Nifty / BankNifty
+      const niftyEl = document.getElementById('niftyLtp');
+      if (niftyEl) {
+        const curNifty = parseFloat(niftyEl.textContent.replace(',', '')) + ((Math.random() - 0.48) * 1.5);
+        niftyEl.textContent = curNifty.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      // Update Live Clock
+      const now = new Date();
+      document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-IN');
+    }
+    // ── OTHER SCREENS (INSIDER, FII, MOVER) ──
+    function buildOtherScreens() {
+      // Insider Strategy
+      const insider = document.getElementById('body-insider');
+      if (insider) {
+        insider.innerHTML = `
+          <tr onclick="openTradeTicket('POLYCAB', 6480.00, '+3.80%', 4.40, true)">
+            <td><strong style="color:white;">POLYCAB</strong></td>
+            <td>Accumulation Spring</td>
+            <td><strong style="color:#22c55e;">Day Low = Open Low ✅</strong></td>
+            <td><span class="pill-percent-capsule pos">72.4%</span></td>
+            <td><strong style="color:#22c55e;">Active Breakout</strong></td>
+          </tr>
+          <tr onclick="openTradeTicket('DIXON', 11450.00, '+2.90%', 3.90, true)">
+            <td><strong style="color:white;">DIXON</strong></td>
+            <td>Absorption High</td>
+            <td><strong style="color:#22c55e;">Day Low = Open Low ✅</strong></td>
+            <td><span class="pill-percent-capsule pos">68.1%</span></td>
+            <td><strong style="color:#22c55e;">Ready to Pop</strong></td>
+          </tr>
+          <tr onclick="openTradeTicket('TRENT', 6820.00, '+1.80%', 3.50, true)">
+            <td><strong style="color:white;">TRENT</strong></td>
+            <td>Demand Liquidity Trap</td>
+            <td><strong style="color:#22c55e;">Day Low = Open Low ✅</strong></td>
+            <td><span class="pill-percent-capsule pos">64.5%</span></td>
+            <td><strong style="color:#38bdf8;">Consolidating</strong></td>
+          </tr>
+        `;
+      }
+
+      // FII / DII
+      const fii = document.getElementById('body-fii');
+      if (fii) {
+        fii.innerHTML = `
+          <tr>
+            <td>Today (Provisional)</td>
+            <td style="color:#22c55e; font-weight:700;">+ ₹1,842.5 Cr</td>
+            <td style="color:#22c55e; font-weight:700;">+ ₹2,104.1 Cr</td>
+            <td>+18,400 Contracts Long</td>
+            <td><span class="pill-percent-capsule pos">STRONG BULLISH</span></td>
+          </tr>
+          <tr>
+            <td>Yesterday</td>
+            <td style="color:#ef4444; font-weight:700;">- ₹480.2 Cr</td>
+            <td style="color:#22c55e; font-weight:700;">+ ₹1,290.4 Cr</td>
+            <td>-3,200 Contracts Short</td>
+            <td><span class="pill-percent-capsule pos">MILD BULLISH</span></td>
+          </tr>
+        `;
+      }
+
+      // Index Mover
+      const mover = document.getElementById('body-mover');
+      if (mover) {
+        mover.innerHTML = `
+          <tr onclick="openTradeTicket('HDFCBANK', 1682.40, '+0.85%', 2.10, true)">
+            <td><strong style="color:white;">HDFCBANK</strong></td>
+            <td>11.45%</td>
+            <td style="color:#22c55e;">+0.85%</td>
+            <td style="color:#22c55e; font-weight:800; font-size:13px;">+38.4 Pts</td>
+          </tr>
+          <tr onclick="openTradeTicket('RELIANCE', 2984.50, '+0.60%', 1.80, true)">
+            <td><strong style="color:white;">RELIANCE</strong></td>
+            <td>9.20%</td>
+            <td style="color:#22c55e;">+0.60%</td>
+            <td style="color:#22c55e; font-weight:800; font-size:13px;">+24.1 Pts</td>
+          </tr>
+          <tr onclick="openTradeTicket('ICICIBANK', 1245.80, '+0.92%', 1.95, true)">
+            <td><strong style="color:white;">ICICIBANK</strong></td>
+            <td>7.80%</td>
+            <td style="color:#22c55e;">+0.92%</td>
+            <td style="color:#22c55e; font-weight:800; font-size:13px;">+22.6 Pts</td>
+          </tr>
+          <tr onclick="openTradeTicket('TCS', 4120.00, '-0.70%', 1.60, false)">
+            <td><strong style="color:white;">TCS</strong></td>
+            <td>4.10%</td>
+            <td style="color:#ef4444;">-0.70%</td>
+            <td style="color:#ef4444; font-weight:800; font-size:13px;">-8.5 Pts</td>
+          </tr>
+        `;
+      }
+    }
+
+    // ── NAVIGATION CONTROLLER ──
+    function showScreen(screenId) {
+      document.querySelectorAll('.view-screen-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-btn-link').forEach(b => b.classList.remove('active'));
+
+      const tab = document.getElementById('tab-' + screenId);
+      const menu = document.getElementById('menu-' + screenId);
+
+      if (tab) tab.classList.add('active');
+      if (menu) menu.classList.add('active');
+
+      playChime(520);
+      if (screenId === 'sector') {
+        setTimeout(buildWaterfallChart, 50);
+      }
+    }
+
+    function toggleSectorView(mode) {
+      const btnWf = document.getElementById('btn-wf');
+      const btnTm = document.getElementById('btn-tm');
+      if (mode === 'wf') {
+        document.getElementById('stage-waterfall').style.display = 'flex';
+        document.getElementById('stage-treemap').style.display = 'none';
+        btnWf.classList.add('active');
+        btnTm.classList.remove('active');
+        buildWaterfallChart();
+      } else {
+        document.getElementById('stage-waterfall').style.display = 'none';
+        document.getElementById('stage-treemap').style.display = 'grid';
+        btnTm.classList.add('active');
+        btnWf.classList.remove('active');
+      }
+      playChime(620);
+    }
+
+    // Shorthands already defined in render section
+
+    const tooltip = document.getElementById('floatingCardTip');
+    function showTooltip(e, sym, pct) {
+      const isPos = !pct.startsWith('-');
+      const col = isPos ? '#22c55e' : '#ef4444';
+      tooltip.innerHTML = `<strong>${sym}</strong><br><span style="color:${col}; font-weight:700;">% chg: ${pct}</span><br><span style="color:#38bdf8; font-size:10px;">Click to view chart</span>`;
+      tooltip.style.left = (e.clientX + 14) + 'px';
+      tooltip.style.top = (e.clientY + 14) + 'px';
+      tooltip.style.display = 'block';
+    }
+    function hideTooltip() { tooltip.style.display = 'none'; }
+
+// modal guide removed
+
+    // ── BOOTSTRAP INITIALIZATION ──
+    document.getElementById('watchCount').textContent = myWatchlist.size;
+    renderBeacon();
+    renderBoost();
+    renderSectorBoxes();
+    buildOtherScreens();
+    setTimeout(buildWaterfallChart, 80);
+    window.addEventListener('resize', buildWaterfallChart);
+
+    // Run realistic market pulse simulation every 2.5 seconds
+    setInterval(runLiveTickCycle, 2500);
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+.env
+*.py
+*.txt
+*.json
+*.vtt
+*.bat
+*.png
+transcripts/
+index_backup*
