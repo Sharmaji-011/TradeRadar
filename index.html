@@ -3528,31 +3528,250 @@
       });
     }
 
-    // 24x7 Real-time Micro Ticks Simulator for Crypto & Metals
-    setInterval(() => {
-      const now = new Date();
-      const timeStr = now.toTimeString().split(' ')[0];
-      const elCrypto = document.getElementById('liveClockCrypto');
-      const elMetals = document.getElementById('liveClockMetals');
-      if (elCrypto) elCrypto.innerText = timeStr;
-      if (elMetals) elMetals.innerText = timeStr;
+    
+    // ════════════════════════════════════════════════════════════════
+    // 📡 100% GENUINE REAL-TIME LIVE MARKET DATA ENGINES
+    // ════════════════════════════════════════════════════════════════
 
-      // Micro variation for BTC & SOL
-      const btcEl = document.getElementById('cryptoBtcLtp');
-      const solEl = document.getElementById('cryptoSolLtp');
-      if (btcEl && Math.random() > 0.6) {
-        const delta = (Math.random() - 0.48) * 15;
-        const currentVal = parseFloat(btcEl.innerText.replace('$', '').replace(',', '')) || 68620;
-        const newVal = (currentVal + delta).toFixed(2);
-        btcEl.innerText = '$' + Number(newVal).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+    let realUsdInr = 84.80;
+
+    // 1. LIVE USD/INR EXCHANGE RATE
+    async function fetchUsdInrRate() {
+      try {
+        const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=INR');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.rates && data.rates.INR) {
+            realUsdInr = data.rates.INR;
+          }
+        }
+      } catch (err) {
+        console.warn('USD/INR fetch fallback:', err);
       }
-      if (solEl && Math.random() > 0.6) {
-        const delta = (Math.random() - 0.45) * 0.35;
-        const currentVal = parseFloat(solEl.innerText.replace('$', '')) || 182.40;
-        const newVal = (currentVal + delta).toFixed(2);
-        solEl.innerText = '$' + newVal;
+    }
+
+    // 2. LIVE METALS & COMMODITY DATA (GOLD, SILVER, CRUDE)
+    async function fetchLiveMetalsData() {
+      try {
+        // Fetch Real Gold (XAU) & Silver (XAG)
+        const [resGold, resSilver] = await Promise.all([
+          fetch('https://api.gold-api.com/price/XAU').then(r => r.json()).catch(() => null),
+          fetch('https://api.gold-api.com/price/XAG').then(r => r.json()).catch(() => null)
+        ]);
+
+        if (resGold && resGold.price) {
+          const goldSpot = parseFloat(resGold.price);
+          // 1 Troy Ounce = 31.1035g. Indian 24K 10g estimate: (goldSpot / 31.1035) * 10 * USDINR * (1 + 0.15 duty/gst)
+          const goldInr10g = Math.round((goldSpot / 31.1035) * 10 * realUsdInr * 1.06);
+
+          // Update Top Tickers
+          const topGold = document.getElementById('goldLtp');
+          if (topGold) topGold.innerText = '₹' + goldInr10g.toLocaleString('en-IN');
+
+          // Update Ribbon
+          const ribGold = document.getElementById('ribbonGold');
+          if (ribGold) ribGold.innerText = '₹' + goldInr10g.toLocaleString('en-IN');
+          const goldSub = ribGold?.parentElement?.querySelector('.metric-card-sub span:first-child');
+          if (goldSub) goldSub.innerText = `Spot: $${goldSpot.toFixed(2)}/oz`;
+
+          // Update Beacon Table
+          const goldBeaconRow = document.querySelector('#metalsBeaconBody tr:nth-child(1)');
+          if (goldBeaconRow) {
+            const priceCell = goldBeaconRow.querySelector('td:nth-child(3)');
+            const descCell = goldBeaconRow.querySelector('.cell-sub-desc');
+            if (priceCell) priceCell.innerText = '₹' + goldInr10g.toLocaleString('en-IN');
+            if (descCell) descCell.innerText = `10g • Comex $${goldSpot.toFixed(2)}`;
+          }
+        }
+
+        if (resSilver && resSilver.price) {
+          const silverSpot = parseFloat(resSilver.price);
+          // 1kg Silver: (silverSpot / 31.1035) * 1000 * USDINR * 1.10
+          const silverInr1kg = Math.round((silverSpot / 31.1035) * 1000 * realUsdInr * 1.10);
+
+          // Update Top Tickers
+          const topSilver = document.getElementById('silverLtp');
+          if (topSilver) topSilver.innerText = '₹' + silverInr1kg.toLocaleString('en-IN');
+
+          // Update Ribbon
+          const ribSilver = document.getElementById('ribbonSilver');
+          if (ribSilver) ribSilver.innerText = '₹' + silverInr1kg.toLocaleString('en-IN');
+          const silSub = ribSilver?.parentElement?.querySelector('.metric-card-sub span:first-child');
+          if (silSub) silSub.innerText = `Spot: $${silverSpot.toFixed(2)}/oz`;
+
+          // Update Beacon Table
+          const silBeaconRow = document.querySelector('#metalsBeaconBody tr:nth-child(2)');
+          if (silBeaconRow) {
+            const priceCell = silBeaconRow.querySelector('td:nth-child(3)');
+            const descCell = silBeaconRow.querySelector('.cell-sub-desc');
+            if (priceCell) priceCell.innerText = '₹' + silverInr1kg.toLocaleString('en-IN');
+            if (descCell) descCell.innerText = `1kg • Comex $${silverSpot.toFixed(2)}`;
+          }
+        }
+      } catch (err) {
+        console.warn('Metals live data error:', err);
       }
-    }, 2500);
+    }
+
+    // 3. LIVE CRYPTO DATA (COINGECKO GENUINE MARKET TICKS)
+    async function fetchLiveCryptoData() {
+      try {
+        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,dogecoin,ripple,sui,avalanche-2,chainlink&vs_currencies=usd&include_24hr_change=true';
+        const res = await fetch(url);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // Helper formatting
+        const fmtPct = (val) => {
+          if (val === undefined || val === null) return '+0.00%';
+          const sign = val >= 0 ? '+' : '';
+          return `${sign}${val.toFixed(2)}%`;
+        };
+        const applyCapsule = (el, val) => {
+          if (!el) return;
+          el.innerText = fmtPct(val);
+          el.className = 'pill-percent-capsule ' + (val >= 0 ? 'pos' : 'neg');
+        };
+
+        // BTC
+        if (data.bitcoin) {
+          const btcP = data.bitcoin.usd;
+          const btcC = data.bitcoin.usd_24h_change;
+          const topBtc = document.getElementById('btcLtp');
+          const topBtcP = document.getElementById('btcPct');
+          const ribBtc = document.getElementById('cryptoBtcLtp');
+          const ribBtcP = document.getElementById('cryptoBtcPct');
+
+          const strPrice = '$' + btcP.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          if (topBtc) topBtc.innerText = '$' + Math.round(btcP).toLocaleString('en-US');
+          if (ribBtc) ribBtc.innerText = strPrice;
+          applyCapsule(topBtcP, btcC);
+          applyCapsule(ribBtcP, btcC);
+
+          // Update Beacon Table BTC row
+          const btcRow = document.querySelector('#cryptoBeaconBody tr:nth-child(3)');
+          if (btcRow) {
+            const pCell = btcRow.querySelector('td:nth-child(3)');
+            const cCell = btcRow.querySelector('td:nth-child(4) .pill-percent-capsule');
+            if (pCell) pCell.innerText = strPrice;
+            applyCapsule(cCell, btcC);
+          }
+          // Update Boost Table BTC row
+          const btcBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(3)');
+          if (btcBoostRow) {
+            const cCell = btcBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
+            applyCapsule(cCell, btcC);
+          }
+        }
+
+        // SOL
+        if (data.solana) {
+          const solP = data.solana.usd;
+          const solC = data.solana.usd_24h_change;
+          const topSol = document.getElementById('solLtp');
+          const ribSol = document.getElementById('cryptoSolLtp');
+          const ribSolP = document.getElementById('cryptoSolPct');
+
+          const strPrice = '$' + solP.toFixed(2);
+          if (topSol) topSol.innerText = strPrice;
+          if (ribSol) ribSol.innerText = strPrice;
+          applyCapsule(ribSolP, solC);
+
+          // Update Beacon Table SOL row
+          const solRow = document.querySelector('#cryptoBeaconBody tr:nth-child(1)');
+          if (solRow) {
+            const pCell = solRow.querySelector('td:nth-child(3)');
+            const cCell = solRow.querySelector('td:nth-child(4) .pill-percent-capsule');
+            if (pCell) pCell.innerText = strPrice;
+            applyCapsule(cCell, solC);
+          }
+          const solBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(1)');
+          if (solBoostRow) {
+            const cCell = solBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
+            applyCapsule(cCell, solC);
+          }
+        }
+
+        // ETH
+        if (data.ethereum) {
+          const ethP = data.ethereum.usd;
+          const ethC = data.ethereum.usd_24h_change;
+          const topEth = document.getElementById('ethLtp');
+          const ribEth = document.getElementById('cryptoEthLtp');
+          const ribEthP = document.getElementById('cryptoEthPct');
+
+          const strPrice = '$' + ethP.toFixed(2);
+          if (topEth) topEth.innerText = '$' + Math.round(ethP);
+          if (ribEth) ribEth.innerText = strPrice;
+          applyCapsule(ribEthP, ethC);
+
+          const ethRow = document.querySelector('#cryptoBeaconBody tr:nth-child(5)');
+          if (ethRow) {
+            const pCell = ethRow.querySelector('td:nth-child(3)');
+            const cCell = ethRow.querySelector('td:nth-child(4) .pill-percent-capsule');
+            if (pCell) pCell.innerText = strPrice;
+            applyCapsule(cCell, ethC);
+          }
+        }
+
+        // DOGE
+        if (data.dogecoin) {
+          const dogeP = data.dogecoin.usd;
+          const dogeC = data.dogecoin.usd_24h_change;
+          const strPrice = '$' + dogeP.toFixed(4);
+
+          const dogeRow = document.querySelector('#cryptoBeaconBody tr:nth-child(2)');
+          if (dogeRow) {
+            const pCell = dogeRow.querySelector('td:nth-child(3)');
+            const cCell = dogeRow.querySelector('td:nth-child(4) .pill-percent-capsule');
+            if (pCell) pCell.innerText = strPrice;
+            applyCapsule(cCell, dogeC);
+          }
+          const dogeBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(2)');
+          if (dogeBoostRow) {
+            const cCell = dogeBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
+            applyCapsule(cCell, dogeC);
+          }
+        }
+
+        // SUI
+        if (data.sui) {
+          const suiP = data.sui.usd;
+          const suiC = data.sui.usd_24h_change;
+          const strPrice = '$' + suiP.toFixed(3);
+
+          const suiRow = document.querySelector('#cryptoBeaconBody tr:nth-child(4)');
+          if (suiRow) {
+            const pCell = suiRow.querySelector('td:nth-child(3)');
+            const cCell = suiRow.querySelector('td:nth-child(4) .pill-percent-capsule');
+            if (pCell) pCell.innerText = strPrice;
+            applyCapsule(cCell, suiC);
+          }
+          const suiBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(4)');
+          if (suiBoostRow) {
+            const cCell = suiBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
+            applyCapsule(cCell, suiC);
+          }
+        }
+      } catch (err) {
+        console.warn('Crypto live data error:', err);
+      }
+    }
+
+    // Initialize Real Live Feeds on Load & Set Periodic Refresh
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchUsdInrRate();
+      fetchLiveMetalsData();
+      fetchLiveCryptoData();
+
+      // Refresh Crypto every 12 seconds
+      setInterval(fetchLiveCryptoData, 12000);
+
+      // Refresh Metals & Currency every 30 seconds
+      setInterval(fetchLiveMetalsData, 30000);
+      setInterval(fetchUsdInrRate, 120000);
+    });
+
 
 </script>
 </body>
