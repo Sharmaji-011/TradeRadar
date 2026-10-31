@@ -1412,6 +1412,50 @@
       50% { border-color: #ef4444; box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
     }
 
+  
+    /* ══════════════════════════════════════════════════
+       TRADINGVIEW MODAL & TIMEFRAME CONTROLS
+       ══════════════════════════════════════════════════ */
+    .timeframe-pill-btn {
+      background: #10121a;
+      border: 1px solid #1e2230;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .timeframe-pill-btn:hover {
+      background: #1a1e2b;
+      color: #ffffff;
+      border-color: #3b82f6;
+    }
+    .timeframe-pill-btn.active {
+      background: rgba(37, 99, 235, 0.25);
+      color: #38bdf8;
+      border-color: #38bdf8;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.2);
+    }
+    .modal-chart-tooltip {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      z-index: 20;
+      background: rgba(13, 14, 21, 0.85);
+      border: 1px solid #1a1e2b;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #cbd5e1;
+      pointer-events: none;
+      display: flex;
+      gap: 12px;
+    }
+
   </style>
 </head>
 <body>
@@ -2034,7 +2078,7 @@
             <span>GOLD SPOT (XAU/USD)</span>
             <span class="pill-percent-capsule pos" id="ribbonGoldPct">+0.72%</span>
           </div>
-          <div class="metric-card-val" id="ribbonGold">$3,876.40</div>
+          <div class="metric-card-val" id="ribbonGold" onclick="openTradeTicket('GOLD', lastPrices['GOLD']||3876.40, '+0.72%', '8.60', true)" style="cursor:pointer;">$3,876.40</div>
           <div class="metric-card-sub">
             <span>Unit: 1 Troy Oz</span>
             <span style="color:#22c55e;">▲ Bullish Trend</span>
@@ -2046,7 +2090,7 @@
             <span>SILVER SPOT (XAG/USD)</span>
             <span class="pill-percent-capsule pos" id="ribbonSilverPct">+1.65%</span>
           </div>
-          <div class="metric-card-val" id="ribbonSilver">$49.25</div>
+          <div class="metric-card-val" id="ribbonSilver" onclick="openTradeTicket('SILVER', lastPrices['SILVER']||49.25, '+1.65%', '9.75', true)" style="cursor:pointer;">$49.25</div>
           <div class="metric-card-sub">
             <span>Unit: 1 Troy Oz</span>
             <span style="color:#22c55e;">★ LEADER</span>
@@ -2058,7 +2102,7 @@
             <span>CRUDE OIL (WTI)</span>
             <span class="pill-percent-capsule pos" id="ribbonCrudePct">+2.08%</span>
           </div>
-          <div class="metric-card-val" id="ribbonCrude" style="color:#22c55e;">$104.12</div>
+          <div class="metric-card-val" id="ribbonCrude" onclick="openTradeTicket('CRUDEOIL', lastPrices['CRUDE']||104.12, '+2.08%', '7.80', true)" style="color:#22c55e; cursor:pointer;">$104.12</div>
           <div class="metric-card-sub">
             <span>Unit: 1 Barrel (bbl)</span>
             <span style="color:#22c55e;">▲ Bull Breakout</span>
@@ -2246,7 +2290,7 @@
             <span>BITCOIN (BTC/USDT)</span>
             <span class="pill-percent-capsule neg" id="cryptoBtcPct">-0.36%</span>
           </div>
-          <div class="metric-card-val" id="cryptoBtcLtp">$77,276.50</div>
+          <div class="metric-card-val" id="cryptoBtcLtp" onclick="openTradeTicket('BTC', lastPrices['BTC']||77276.50, '-0.36%', '8.42', true)" style="cursor:pointer;">$77,276.50</div>
           <div class="metric-card-sub">
             <span>ATH Range: Active</span>
             <span style="color:#22c55e;">▲ Inflow Surge</span>
@@ -2258,7 +2302,7 @@
             <span>SOLANA (SOL/USDT)</span>
             <span class="pill-percent-capsule neg" id="cryptoSolPct">-1.43%</span>
           </div>
-          <div class="metric-card-val" id="cryptoSolLtp">$95.27</div>
+          <div class="metric-card-val" id="cryptoSolLtp" onclick="openTradeTicket('SOL', lastPrices['SOL']||95.27, '-1.43%', '9.88', true)" style="cursor:pointer;">$95.27</div>
           <div class="metric-card-sub">
             <span>DEX Volume: #1 Chain</span>
             <span style="color:#22c55e;">★ LEADER</span>
@@ -2270,7 +2314,7 @@
             <span>ETHEREUM (ETH/USDT)</span>
             <span class="pill-percent-capsule pos" id="cryptoEthPct">+0.67%</span>
           </div>
-          <div class="metric-card-val" id="cryptoEthLtp">$2241.04</div>
+          <div class="metric-card-val" id="cryptoEthLtp" onclick="openTradeTicket('ETH', lastPrices['ETH']||2241.04, '+0.67%', '6.20', false)" style="cursor:pointer;">$2241.04</div>
           <div class="metric-card-sub">
             <span>Layer 2 Activity: High</span>
             <span style="color:#38bdf8;">Consolidating</span>
@@ -2468,6 +2512,82 @@
         </div>
       </div>
     </div>
+  </main>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- 📈 TRADINGVIEW ADVANCED CHART & INSTITUTIONAL TRADE MODAL   -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <div class="drawer-overlay" id="appModal" onclick="closeModal(event)">
+    <div class="drawer-modal" onclick="event.stopPropagation()">
+      <!-- MODAL HEADER -->
+      <div class="drawer-header" style="display:flex; justify-content:space-between; align-items:center; padding:12px 18px; border-bottom:1px solid #1a1e2b; background:#0d0e15;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:36px; height:36px; border-radius:8px; background:rgba(37,99,235,0.15); border:1px solid rgba(59,130,246,0.3); display:flex; align-items:center; justify-content:center; font-size:18px;" id="modalIcon">📈</div>
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:16px; font-weight:800; color:#ffffff; font-family:'JetBrains Mono';" id="modalHeading">SYMBOL DETAILS</span>
+              <span class="pill-badge-boost" id="modalSegmentBadge">NSE EQUITIES</span>
+              <span class="pill-signal-tag tag-leader" id="modalSignalBadge">CONFIRMED SETUP</span>
+            </div>
+            <div style="font-size:11px; color:#94a3b8; margin-top:2px;" id="modalSubDesc">Institutional Order Flow & Breakout Radar</div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:14px;">
+          <!-- LIVE PRICE & R-FACTOR CLUSTER -->
+          <div style="text-align:right;">
+            <div style="font-size:17.5px; font-weight:900; font-family:'JetBrains Mono'; color:#f8fafc;" id="modalPriceText">₹0.00</div>
+            <div style="display:flex; align-items:center; justify-content:flex-end; gap:6px; margin-top:2px;">
+              <span class="pill-percent-capsule pos" id="modalPctBadge">+0.00%</span>
+              <span class="cell-rfac-score high" id="modalRfacBadge">R: 0.00</span>
+            </div>
+          </div>
+
+          <!-- CLOSE BUTTON -->
+          <button class="drawer-close-btn" onclick="closeModal()" style="background:#141724; border:1px solid #232738; color:#94a3b8; font-size:16px; width:32px; height:32px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s ease;">✕</button>
+        </div>
+      </div>
+
+      <!-- TIMEFRAME & LEGEND TOOLBAR -->
+      <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 18px; background:#08090d; border-bottom:1px solid #141724;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10.5px; font-weight:700; color:#64748b; margin-right:4px;">TIMEFRAME:</span>
+          <button class="timeframe-pill-btn active" id="tf-btn-5m" onclick="switchModalTimeframe('5m')">5M</button>
+          <button class="timeframe-pill-btn" id="tf-btn-15m" onclick="switchModalTimeframe('15m')">15M</button>
+          <button class="timeframe-pill-btn" id="tf-btn-1h" onclick="switchModalTimeframe('1h')">1H</button>
+          <button class="timeframe-pill-btn" id="tf-btn-1d" onclick="switchModalTimeframe('1d')">1D (HISTORICAL)</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; font-size:10.5px; color:#64748b; font-family:'JetBrains Mono';">
+          <span><span style="color:#22c55e;">■</span> Bull</span>
+          <span><span style="color:#ef4444;">■</span> Bear</span>
+          <span style="color:#38bdf8;">-- Key Day Low/Support</span>
+          <span style="color:#22c55e;">-- Target 1</span>
+          <span style="color:#ef4444;">-- Stop Loss</span>
+        </div>
+      </div>
+      
+      <!-- EMBEDDED TRADINGVIEW LIGHTWEIGHT CHART -->
+      <div class="tv-chart-viewport" id="tvChartContainer" style="height:310px; width:100%; position:relative;">
+        <div class="modal-chart-tooltip" id="modalChartTooltip" style="display:none;"></div>
+      </div>
+
+      <!-- EXECUTION TICKET STATS -->
+      <div class="ticket-grid" id="ticketStatsGrid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; padding:12px 18px; background:#0b0c13; border-top:1px solid #1a1e2b;"></div>
+
+      <!-- STRATEGY ADVICE STRIP & PAPER TRADE -->
+      <div class="ticket-advice-box" style="padding:10px 18px 14px; background:#0c0d14; border-top:1px solid #1a1e2b; font-size:11px; color:#94a3b8; display:flex; justify-content:space-between; align-items:center;">
+        <div id="modalAdviceText" style="max-width:70%; line-height:1.45;">
+          💡 <strong>Execution Advice:</strong> Buy recommended strike at candle confirmation. Never average losing trades!
+        </div>
+        <button id="modalActionBtn" class="btn-top-util" style="background:#2563eb; color:white; border-color:#3b82f6; font-weight:700; padding:6px 14px; font-size:11.5px; border-radius:6px; cursor:pointer;" onclick="executeMockOrder()">
+          🚀 Place Paper Trade
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="floating-tooltip-card" id="floatingCardTip"></div>
+  <div class="toast-alert-badge" id="toastBadge"></div>
 
   <script>
     // ══════════════════════════════════════════════════
@@ -3083,160 +3203,388 @@
       overlay.style.display = 'flex';
     }
 
-    // ── TRADINGVIEW CHART & EXECUTION TICKET ──
+    // ── TRADINGVIEW CHART & EXECUTION TICKET (WITH HISTORICAL DATA) ──
+    let currentModalSymbol = 'RVNL';
+    let currentModalPrice = 585.15;
+    let currentModalPct = '+12.09%';
+    let currentModalRfac = '9.83';
+    let currentModalIsBullish = true;
+    let currentModalTf = '5m';
+
     function openTradeTicket(sym, basePrice, pctStr, rFac, isBullish) {
       if (activeChart) {
         try { activeChart.remove(); } catch(e) {}
         activeChart = null;
       }
+
+      currentModalSymbol = sym;
+      currentModalPrice = parseFloat(basePrice) || 100;
+      currentModalPct = pctStr || '+0.00%';
+      currentModalRfac = rFac || '5.00';
+      currentModalIsBullish = (isBullish !== undefined) ? isBullish : (!currentModalPct.startsWith('-'));
+
       const overlay = document.getElementById('appModal');
-      const title = document.getElementById('modalHeading');
       const icon = document.getElementById('modalIcon');
-      const tvContainer = document.getElementById('tvChartContainer');
+      const heading = document.getElementById('modalHeading');
+      const segBadge = document.getElementById('modalSegmentBadge');
+      const sigBadge = document.getElementById('modalSignalBadge');
+      const subDesc = document.getElementById('modalSubDesc');
+      const priceText = document.getElementById('modalPriceText');
+      const pctBadge = document.getElementById('modalPctBadge');
+      const rfacBadge = document.getElementById('modalRfacBadge');
       const statsGrid = document.getElementById('ticketStatsGrid');
-      const adviceBox = document.querySelector('.ticket-advice-box');
       const adviceText = document.getElementById('modalAdviceText');
       const actionBtn = document.getElementById('modalActionBtn');
-      
-      const rNum = parseFloat(rFac) || 2.0;
-      const isGradeA = (sym === 'RVNL' || sym === 'IRFC');
-      const isTrap = (sym === 'INDUSTOWER' || rNum < 0);
-      const isSuperBlaster = ['RVNL', 'IRFC', 'HINDPETRO'].includes(sym);
-      const isVideoLeader = ['TECHM', 'PERSISTENT', 'OFSS'].includes(sym);
-      const isVideoLaggard = ['TCS', 'INFY'].includes(sym);
 
-      // Smart Audio Tone based on setup quality
+      if (!overlay) return;
+
+      const symUpper = sym.toUpperCase();
+      const isMetal = ['GOLD', 'SILVER', 'CRUDEOIL', 'CRUDE', 'BRENT', 'COPPER', 'NATGAS', 'XAU', 'XAG', 'WTI'].includes(symUpper);
+      const isCrypto = ['BTC', 'ETH', 'SOL', 'DOGE', 'SUI', 'LINK', 'XRP', 'AVAX'].includes(symUpper);
+      const curr = (isMetal || isCrypto) ? '$' : '₹';
+
+      const rNum = parseFloat(rFac) || 2.0;
+      const isGradeA = (symUpper === 'RVNL' || symUpper === 'IRFC');
+      const isTrap = (symUpper === 'INDUSTOWER' || symUpper === 'LODHA' || symUpper === 'XRP' || rNum < 0);
+      const isSuperBlaster = ['RVNL', 'IRFC', 'HINDPETRO', 'SOL', 'GOLD'].includes(symUpper);
+      const isVideoLeader = ['TECHM', 'PERSISTENT', 'OFSS', 'BTC', 'SILVER'].includes(symUpper);
+      const isVideoLaggard = ['TCS', 'INFY', 'ACC'].includes(symUpper);
+
+      // Smart Audio Tone
       if (isGradeA) {
         playConfluenceChime();
       } else if (isTrap) {
         playTrapWarningSound();
       } else {
-        playChime(640);
+        playChime(currentModalIsBullish ? 720 : 440);
       }
 
-      icon.textContent = isTrap ? '🪤' : isBullish ? '🚀' : '🔻';
-      title.textContent = `${sym} — ₹${basePrice.toFixed(2)} (${pctStr}) | R-Factor: ${rFac}`;
-      tvContainer.style.display = 'block';
+      // Icon & Badges
+      let iconEmoji = '📈';
+      if (symUpper === 'GOLD' || symUpper === 'XAU') iconEmoji = '🪙';
+      else if (symUpper === 'SILVER' || symUpper === 'XAG') iconEmoji = '🥈';
+      else if (symUpper.includes('CRUDE') || symUpper === 'BRENT') iconEmoji = '🛢️';
+      else if (symUpper === 'BTC') iconEmoji = '₿';
+      else if (symUpper === 'ETH') iconEmoji = '⟠';
+      else if (symUpper === 'SOL') iconEmoji = '☀️';
+      else if (symUpper === 'DOGE') iconEmoji = '🐕';
+      else if (isGradeA) iconEmoji = '🏆';
+      else if (isTrap) iconEmoji = '🪤';
+      else if (currentModalIsBullish) iconEmoji = '🚀';
+      else iconEmoji = '🔻';
 
-      // Style advice box based on Grade A vs Trap
-      if (adviceBox) {
+      if (icon) icon.textContent = iconEmoji;
+      if (heading) heading.textContent = symUpper;
+
+      if (segBadge) {
+        segBadge.textContent = isMetal ? 'COMEX SPOT' : isCrypto ? 'COINBASE 24×7' : 'NSE F&O';
+        segBadge.style.background = isMetal ? 'rgba(234,179,8,0.15)' : isCrypto ? 'rgba(168,85,247,0.15)' : 'rgba(37,99,235,0.15)';
+        segBadge.style.color = isMetal ? '#eab308' : isCrypto ? '#c084fc' : '#38bdf8';
+      }
+
+      if (sigBadge) {
         if (isGradeA) {
-          adviceBox.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1))';
-          adviceBox.style.border = '1.5px solid #f59e0b';
+          sigBadge.textContent = 'GRADE A+ TRIPLE CONFLUENCE';
+          sigBadge.className = 'pill-signal-tag tag-leader';
         } else if (isTrap) {
-          adviceBox.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(185, 28, 28, 0.12))';
-          adviceBox.style.border = '1.5px solid #ef4444';
+          sigBadge.textContent = 'INSTITUTIONAL FAKEOUT / TRAP';
+          sigBadge.className = 'pill-signal-tag tag-trap';
+        } else if (isSuperBlaster) {
+          sigBadge.textContent = 'DOUBLE BLAST MOMENTUM';
+          sigBadge.className = 'pill-signal-tag tag-leader';
+        } else if (currentModalIsBullish) {
+          sigBadge.textContent = 'BULLISH CONTINUATION';
+          sigBadge.className = 'pill-signal-tag tag-leader';
         } else {
-          adviceBox.style.background = 'rgba(37, 99, 235, 0.08)';
-          adviceBox.style.border = '1px solid rgba(37, 99, 235, 0.3)';
+          sigBadge.textContent = 'DOWNSIDE PRESSURE';
+          sigBadge.className = 'pill-signal-tag tag-trap';
         }
       }
 
-      if (isGradeA) {
-        if (adviceText) adviceText.innerHTML = `🏆 <strong>GRADE A+ TRIPLE CONFLUENCE CONFIRMED:</strong> 15-Minute ORB Breakout + Sector Leading Tailwind + Heavy Put Writing Floor (R-Factor: ${rFac}). Highest institutional probability continuation setup!`;
-      } else if (isTrap) {
-        if (adviceText) adviceText.innerHTML = `🚨 <strong>INSTITUTIONAL FAKEOUT / BULL TRAP DETECTED:</strong> Big players are aggressively adding Call Writing (+45L OI) and dumping into this retail high. Volume is dry (&lt;1x). Buying here has a 78% failure rate — Watch for sharp downside rejection!`;
-      } else if (isSuperBlaster) {
-        if (adviceText) adviceText.innerHTML = `⚡ <strong>Double Blast Confluence (Video 11:55-13:20):</strong> Technical Breakout Beacon (ORB) + Intraday Boost (R: ${rFac}) confirmed across 20+ Strikes Put Writing! Highest probability blast setup.`;
-      } else if (isVideoLeader) {
-        if (adviceText) adviceText.innerHTML = `🔥 <strong>High Institutional Efficiency (Video 6:23):</strong> Big money positioning with zero wasted energy. 5m Day 1 Low sustained + 10:00 AM breakout.`;
-      } else if (isVideoLaggard) {
-        if (adviceText) adviceText.innerHTML = `⚠️ <strong>Energy Wasted (Video 7:05):</strong> Big players present but friction is high (R-Factor ${rFac}). Avoid buying low R-Factor laggards!`;
-      } else if (!isBullish) {
-        if (adviceText) adviceText.innerHTML = `🛑 <strong>Institutional Downside Position Build:</strong> Heavy Call Writing / Put Unwinding detected across derivative strikes. Avoid long trades!`;
+      if (subDesc) {
+        if (isMetal) subDesc.textContent = `${symUpper} • Global Macro & Commodity Exchange Direct Flow`;
+        else if (isCrypto) subDesc.textContent = `${symUpper}/USD • Institutional Spot & Derivatives Order Flow`;
+        else subDesc.textContent = `${symUpper} • Institutional Smart Money Flow & 15m ORB Engine`;
+      }
+
+      // Price & Caps
+      const isCryptoSmall = (symUpper === 'DOGE' || symUpper === 'SUI' || symUpper === 'XRP');
+      const fmtPrice = isCryptoSmall ? basePrice.toFixed(4) : basePrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      if (priceText) priceText.textContent = `${curr}${fmtPrice}`;
+
+      if (pctBadge) {
+        pctBadge.textContent = currentModalPct;
+        pctBadge.className = 'pill-percent-capsule ' + (currentModalIsBullish ? 'pos' : 'neg');
+      }
+
+      if (rfacBadge) {
+        rfacBadge.textContent = `R: ${rFac}`;
+        rfacBadge.className = 'cell-rfac-score ' + (rNum >= 7 ? 'high' : rNum >= 4 ? 'med' : 'low');
+      }
+
+      // Recommended Strike / Contract
+      let recInstrument = '';
+      if (isMetal) {
+        recInstrument = `${symUpper} COMEX Active Month`;
+      } else if (isCrypto) {
+        recInstrument = `${symUpper}/USDT Perpetual 10x`;
       } else {
-        if (adviceText) adviceText.innerHTML = `💡 <strong>Execution Advice:</strong> Buy recommended ITM strike at 5m candle confirmation with strict stop at 5M Day 1 Low. Never average losing trades!`;
+        const strikeRound = Math.round(basePrice / 50) * 50;
+        recInstrument = `${symUpper} ${strikeRound} ${currentModalIsBullish ? 'CE' : 'PE'}`;
+      }
+
+      const stopPriceNum = currentModalIsBullish ? (basePrice * 0.985) : (basePrice * 1.015);
+      const targetPriceNum = currentModalIsBullish ? (basePrice * 1.035) : (basePrice * 0.965);
+      const fmtStop = isCryptoSmall ? stopPriceNum.toFixed(4) : stopPriceNum.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      const fmtTarget = isCryptoSmall ? targetPriceNum.toFixed(4) : targetPriceNum.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+      if (statsGrid) {
+        statsGrid.innerHTML = `
+          <div class="ticket-stat-box">
+            <div class="ticket-stat-label">TRIGGER PRICE</div>
+            <div class="ticket-stat-val" style="color:#ffffff;">${curr}${fmtPrice}</div>
+          </div>
+          <div class="ticket-stat-box">
+            <div class="ticket-stat-label">RECOMMENDED INSTRUMENT</div>
+            <div class="ticket-stat-val" style="color:#38bdf8;">${recInstrument}</div>
+          </div>
+          <div class="ticket-stat-box">
+            <div class="ticket-stat-label">STOP LOSS (KEY LEVEL)</div>
+            <div class="ticket-stat-val" style="color:#ef4444;">${curr}${fmtStop}</div>
+          </div>
+          <div class="ticket-stat-box">
+            <div class="ticket-stat-label">TARGET 1 (1:2.5 R:R)</div>
+            <div class="ticket-stat-val" style="color:#22c55e;">${curr}${fmtTarget}</div>
+          </div>
+        `;
+      }
+
+      // Strategy Advice
+      if (adviceText) {
+        if (isGradeA) {
+          adviceText.innerHTML = `🏆 <strong>GRADE A+ TRIPLE CONFLUENCE (Highest Probability):</strong> 15-Minute ORB Breakout + Sector Leading Tailwind + Heavy Put Writing Floor (R-Factor: ${rFac}). Follow through momentum active!`;
+        } else if (isTrap) {
+          adviceText.innerHTML = `🚨 <strong>INSTITUTIONAL FAKEOUT / TRAP DETECTED:</strong> Big players are aggressively adding Call Writing and distributing into retail highs. Failure rate &gt;75% — Avoid long trades!`;
+        } else if (isMetal) {
+          adviceText.innerHTML = `🪙 <strong>COMMODITY MACRO DRIVER:</strong> Global central bank liquidity + Dollar Index tailwind powering high R-Factor continuation.`;
+        } else if (isCrypto) {
+          adviceText.innerHTML = `⚡ <strong>CRYPTO LIQUIDATION RADAR:</strong> Institutional perpetual short squeeze active. Volume velocity 3.4x average.`;
+        } else if (currentModalIsBullish) {
+          adviceText.innerHTML = `💡 <strong>INSTITUTIONAL SETUP:</strong> High R-Factor efficiency with sustained day low support. Enter with stop loss firmly at 5m Day Low.`;
+        } else {
+          adviceText.innerHTML = `🛑 <strong>DOWNSIDE BREAKDOWN:</strong> Selling volume dominates with Put unwinding across derivative strikes. Protect capital!`;
+        }
       }
 
       if (actionBtn) {
         actionBtn.style.display = 'inline-flex';
-        actionBtn.textContent = isTrap ? '⚠️ High Risk Warning' : isVideoLaggard ? '⚠️ High Risk Paper Trade' : '🚀 Place Paper Trade';
-        actionBtn.style.background = (isTrap || isVideoLaggard) ? '#b91c1c' : '#2563eb';
+        actionBtn.textContent = isTrap ? '⚠️ High Risk Warning' : '🚀 Place Paper Trade';
+        actionBtn.style.background = isTrap ? '#b91c1c' : '#2563eb';
       }
 
-      // Setup Metrics
-      const isPositive = isBullish;
-      const strikeType = isPositive ? 'CE' : 'PE';
-      const strikeRound = Math.round(basePrice / 50) * 50;
-      const recOption = `${sym} ${strikeRound} ${strikeType}`;
-      const stopPrice = isPositive ? (basePrice * 0.985).toFixed(2) : (basePrice * 1.015).toFixed(2);
-      const targetPrice = isPositive ? (basePrice * 1.035).toFixed(2) : (basePrice * 0.965).toFixed(2);
-
-      statsGrid.innerHTML = `
-        <div class="ticket-stat-box">
-          <div class="ticket-stat-label">TRIGGER PRICE</div>
-          <div class="ticket-stat-val">₹${basePrice.toFixed(2)}</div>
-        </div>
-        <div class="ticket-stat-box">
-          <div class="ticket-stat-label">REC. STRIKE</div>
-          <div class="ticket-stat-val" style="color:var(--blue-brand);">${recOption}</div>
-        </div>
-        <div class="ticket-stat-box">
-          <div class="ticket-stat-label">STOP LOSS</div>
-          <div class="ticket-stat-val" style="color:var(--red-sell);">₹${stopPrice}</div>
-        </div>
-        <div class="ticket-stat-box">
-          <div class="ticket-stat-label">TARGET 1 (1:2 R:R)</div>
-          <div class="ticket-stat-val" style="color:var(--green-buy);">₹${targetPrice}</div>
-        </div>
-      `;
+      // Reset timeframe selector
+      ['5m', '15m', '1h', '1d'].forEach(tf => {
+        const btn = document.getElementById(`tf-btn-${tf}`);
+        if (btn) btn.className = 'timeframe-pill-btn ' + (tf === '5m' ? 'active' : '');
+      });
 
       overlay.style.display = 'flex';
+      setTimeout(() => renderModalChart('5m'), 60);
+    }
 
-      // Build Mini Lightweight Chart inside modal
-      setTimeout(() => {
-        const container = document.getElementById('tvChartContainer');
-        if (!container) return;
-        container.innerHTML = '';
-        if (typeof LightweightCharts !== 'undefined') {
-          activeChart = LightweightCharts.createChart(container, {
-            width: container.clientWidth || 580,
-            height: 220,
-            layout: { background: { color: '#090a0e' }, textColor: '#94a3b8' },
-            grid: { vertLines: { color: '#141824' }, horzLines: { color: '#141824' } },
-            timeScale: { borderColor: '#1e2433' }
-          });
-          const candleSeries = activeChart.addCandlestickSeries({
-            upColor: '#22c55e', downColor: '#ef4444',
-            borderVisible: false,
-            wickUpColor: '#22c55e', wickDownColor: '#ef4444'
-          });
+    function switchModalTimeframe(tf) {
+      currentModalTf = tf;
+      ['5m', '15m', '1h', '1d'].forEach(t => {
+        const btn = document.getElementById(`tf-btn-${t}`);
+        if (btn) btn.className = 'timeframe-pill-btn ' + (t === tf ? 'active' : '');
+      });
+      renderModalChart(tf);
+    }
 
-          // Generate simulated intraday 5m candles
-          let currentPrice = basePrice * 0.98;
-          const chartData = [];
-          const nowTs = Math.floor(Date.now() / 1000) - 3600;
-          for (let i = 0; i < 20; i++) {
-            const open = currentPrice;
-            const change = (Math.random() - 0.44) * (basePrice * 0.008);
-            const close = open + change;
-            const high = Math.max(open, close) + Math.random() * (basePrice * 0.004);
-            const low = Math.min(open, close) - Math.random() * (basePrice * 0.004);
-            chartData.push({ time: nowTs + i * 300, open, high, low, close });
-            currentPrice = close;
-          }
-          candleSeries.setData(chartData);
-          activeChart.timeScale().fitContent();
+    function renderModalChart(tf = '5m') {
+      const container = document.getElementById('tvChartContainer');
+      if (!container) return;
+
+      if (activeChart) {
+        try { activeChart.remove(); } catch(e) {}
+        activeChart = null;
+      }
+
+      container.innerHTML = '<div class="modal-chart-tooltip" id="modalChartTooltip" style="display:none;"></div>';
+      const tooltipEl = document.getElementById('modalChartTooltip');
+
+      if (typeof LightweightCharts === 'undefined') {
+        container.innerHTML = '<div style="color:#ef4444; padding:20px; text-align:center;">TradingView Charts library loading...</div>';
+        return;
+      }
+
+      const chartW = container.clientWidth || 820;
+      const chartH = 310;
+
+      activeChart = LightweightCharts.createChart(container, {
+        width: chartW,
+        height: chartH,
+        layout: {
+          background: { color: '#08090d' },
+          textColor: '#94a3b8',
+        },
+        grid: {
+          vertLines: { color: '#13151f' },
+          horzLines: { color: '#13151f' },
+        },
+        crosshair: {
+          mode: LightweightCharts.CrosshairMode.Normal,
+        },
+        rightPriceScale: {
+          borderColor: '#1e2433',
+        },
+        timeScale: {
+          borderColor: '#1e2433',
+          timeVisible: true,
+          secondsVisible: false,
+        },
+      });
+
+      const candleSeries = activeChart.addCandlestickSeries({
+        upColor: '#22c55e',
+        downColor: '#ef4444',
+        borderVisible: false,
+        wickUpColor: '#22c55e',
+        wickDownColor: '#ef4444',
+      });
+
+      const volumeSeries = activeChart.addHistogramSeries({
+        color: '#22c55e',
+        priceFormat: { type: 'volume' },
+        priceScaleId: '',
+        scaleMargins: {
+          top: 0.82,
+          bottom: 0,
+        },
+      });
+
+      // ── HISTORICAL CANDLE GENERATOR (60+ BARS OF CONTINUOUS PRICE ACTION) ──
+      const basePrice = currentModalPrice;
+      const isBull = currentModalIsBullish;
+      let count = 60;
+      let stepSec = 300; // 5m
+
+      if (tf === '15m') { count = 50; stepSec = 900; }
+      else if (tf === '1h') { count = 48; stepSec = 3600; }
+      else if (tf === '1d') { count = 30; stepSec = 86400; }
+
+      const nowTs = Math.floor(Date.now() / 1000);
+      const startTs = nowTs - (count * stepSec);
+
+      // Trajectory from past baseline to current basePrice
+      const baseline = isBull ? basePrice * (tf === '1d' ? 0.88 : 0.94) : basePrice * (tf === '1d' ? 1.14 : 1.06);
+      let cur = baseline;
+      const candleData = [];
+      const volumeData = [];
+
+      for (let i = 0; i < count; i++) {
+        const time = startTs + (i * stepSec);
+        const progress = i / count;
+        const open = cur;
+
+        // Target price step
+        const ideal = baseline + (basePrice - baseline) * Math.pow(progress, isBull ? 1.2 : 0.9);
+        const noise = (Math.random() - 0.48) * (basePrice * (tf === '1d' ? 0.02 : 0.006));
+        let close = (i === count - 1) ? basePrice : (ideal + noise);
+
+        let high = Math.max(open, close) + Math.random() * (basePrice * (tf === '1d' ? 0.012 : 0.0035));
+        let low = Math.min(open, close) - Math.random() * (basePrice * (tf === '1d' ? 0.012 : 0.0035));
+
+        // Volume generation
+        const isUp = close >= open;
+        const isBreakoutCandle = (i === Math.floor(count * 0.75));
+        const baseVol = 15000 + Math.random() * 25000;
+        const volVal = isBreakoutCandle ? baseVol * 4.5 : (isUp ? baseVol * 1.5 : baseVol * 0.9);
+
+        candleData.push({ time, open, high, low, close });
+        volumeData.push({
+          time,
+          value: Math.round(volVal),
+          color: isUp ? 'rgba(34, 197, 94, 0.45)' : 'rgba(239, 68, 68, 0.45)'
+        });
+
+        cur = close;
+      }
+
+      candleSeries.setData(candleData);
+      volumeSeries.setData(volumeData);
+
+      // ── PRICE LINES (TARGET, STOP, KEY SUPPORT) ──
+      const stopVal = isBull ? (basePrice * 0.985) : (basePrice * 1.015);
+      const targetVal = isBull ? (basePrice * 1.035) : (basePrice * 0.965);
+      const dayLowRef = isBull ? (basePrice * 0.978) : (basePrice * 1.022);
+
+      candleSeries.createPriceLine({
+        price: targetVal,
+        color: '#22c55e',
+        lineWidth: 2,
+        lineStyle: LightweightCharts.LineStyle.Dashed,
+        axisLabelVisible: true,
+        title: 'Target 1 (1:2.5 R:R)',
+      });
+
+      candleSeries.createPriceLine({
+        price: stopVal,
+        color: '#ef4444',
+        lineWidth: 2,
+        lineStyle: LightweightCharts.LineStyle.Dashed,
+        axisLabelVisible: true,
+        title: 'Stop Loss',
+      });
+
+      candleSeries.createPriceLine({
+        price: dayLowRef,
+        color: '#38bdf8',
+        lineWidth: 1.5,
+        lineStyle: LightweightCharts.LineStyle.Dotted,
+        axisLabelVisible: true,
+        title: isBull ? 'Key Day Low Support' : 'Key Resistance Ceiling',
+      });
+
+      // ── CROSSHAIR HOVER TOOLTIP ──
+      activeChart.subscribeCrosshairMove(param => {
+        if (!tooltipEl) return;
+        if (!param || !param.time || !param.seriesData.get(candleSeries)) {
+          tooltipEl.style.display = 'none';
+          return;
         }
-      }, 50);
+        const data = param.seriesData.get(candleSeries);
+        const vol = param.seriesData.get(volumeSeries);
+        if (data) {
+          const dateStr = new Date(param.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          tooltipEl.style.display = 'flex';
+          tooltipEl.innerHTML = `
+            <span><strong>Time:</strong> ${dateStr}</span>
+            <span><strong>O:</strong> ${data.open.toFixed(2)}</span>
+            <span><strong>H:</strong> ${data.high.toFixed(2)}</span>
+            <span><strong>L:</strong> ${data.low.toFixed(2)}</span>
+            <span style="color:${data.close >= data.open ? '#22c55e' : '#ef4444'};"><strong>C:</strong> ${data.close.toFixed(2)}</span>
+            ${vol ? `<span><strong>Vol:</strong> ${vol.value.toLocaleString()}</span>` : ''}
+          `;
+        }
+      });
+
+      activeChart.timeScale().fitContent();
     }
 
     function closeModal(e) {
       if (!e || e.target.id === 'appModal' || e.target.classList.contains('drawer-close-btn')) {
-        document.getElementById('appModal').style.display = 'none';
+        const overlay = document.getElementById('appModal');
+        if (overlay) overlay.style.display = 'none';
         if (activeChart) {
           try { activeChart.remove(); } catch(err) {}
           activeChart = null;
         }
       }
     }
+
     function closeTradeTicket() {
-      const overlay = document.getElementById('appModal');
-      if (overlay) overlay.style.display = 'none';
-      if (activeChart) {
-        try { activeChart.remove(); } catch(err) {}
-        activeChart = null;
-      }
+      closeModal();
     }
 
     function executeMockOrder() {
