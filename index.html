@@ -1103,6 +1103,77 @@
       color: #e2e8f0;
     }
 
+
+    /* ─── INDIAN TOOLS SUB-NAV & TOOLBAR ─── */
+    .indian-tools-subnav-tree {
+      margin-left: 14px;
+      padding-left: 10px;
+      border-left: 1.5px solid #1e293b;
+      margin-top: 4px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .sub-tree-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 5px;
+      color: #94a3b8;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .sub-tree-link:hover {
+      background: #141620;
+      color: #f1f5f9;
+    }
+    .sub-tree-link.active {
+      background: #141824;
+      color: var(--blue-brand);
+      font-weight: 700;
+      border-left: 2px solid var(--blue-brand);
+    }
+    .indian-tools-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      background: #090a0e;
+      border-bottom: 1px solid #1a1e2d;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .tool-sub-pill {
+      background: #0f121d;
+      border: 1px solid #1e293b;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .tool-sub-pill:hover {
+      background: #192033;
+      color: #f1f5f9;
+      border-color: #2b3954;
+    }
+    .tool-sub-pill.active {
+      background: rgba(37, 99, 235, 0.18);
+      color: #60a5fa;
+      border-color: #2563eb;
+      box-shadow: 0 0 10px rgba(37, 99, 235, 0.25);
+    }
+
   </style>
 </head>
 <body>
@@ -1116,56 +1187,43 @@
 
     <div class="sidebar-nav">
       <div class="sidebar-section-label">SELECT MARKET</div>
+      
+      <!-- 1. INDIAN MARKET -->
       <a class="nav-btn-link active" id="menu-indian" onclick="switchMarketSegment('indian')">
         <span class="nav-icon-slot">🇮🇳</span>
         Indian Market
       </a>
+
+      <!-- INDIAN TOOLS: PLACED DIRECTLY DOWN OF INDIAN MARKET -->
+      <div class="indian-tools-subnav-tree" id="indian-tools-subnav">
+        <a class="sub-tree-link active" id="menu-pulse" onclick="showScreen('pulse')">
+          <span>⚡</span> Market Pulse
+        </a>
+        <a class="sub-tree-link" id="menu-sector" onclick="showScreen('sector')">
+          <span>🌐</span> Sector Scope
+        </a>
+        <a class="sub-tree-link" id="menu-insider" onclick="showScreen('insider')">
+          <span>🎯</span> Insider Strategy
+        </a>
+        <a class="sub-tree-link" id="menu-fii" onclick="showScreen('fii')">
+          <span>📊</span> FII / DII
+        </a>
+        <a class="sub-tree-link" id="menu-mover" onclick="showScreen('mover')">
+          <span>🚀</span> Index Mover
+        </a>
+      </div>
+
+      <!-- 2. METALS & ENERGY -->
       <a class="nav-btn-link" id="menu-metals" onclick="switchMarketSegment('metals')">
         <span class="nav-icon-slot">🪙</span>
         Metals & Energy
       </a>
+
+      <!-- 3. CRYPTO -->
       <a class="nav-btn-link" id="menu-crypto" onclick="switchMarketSegment('crypto')">
         <span class="nav-icon-slot">⚡</span>
         Crypto (24×7)
       </a>
-
-      <div class="sidebar-section-label" id="indian-tools-label" style="margin-top:14px;">INDIAN TOOLS</div>
-      <div id="indian-tools-subnav">
-        <a class="nav-btn-link active" id="menu-pulse" onclick="showScreen('pulse')">
-          <span class="nav-icon-slot">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-          </span>
-          Market Pulse
-        </a>
-
-        <a class="nav-btn-link" id="menu-sector" onclick="showScreen('sector')">
-          <span class="nav-icon-slot">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
-          </span>
-          Sector Scope
-        </a>
-
-        <a class="nav-btn-link" id="menu-insider" onclick="showScreen('insider')">
-          <span class="nav-icon-slot">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20M5 5l14 14"/></svg>
-          </span>
-          Insider Strategy
-        </a>
-
-        <a class="nav-btn-link" id="menu-fii" onclick="showScreen('fii')">
-          <span class="nav-icon-slot">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-          </span>
-          FII / DII
-        </a>
-
-        <a class="nav-btn-link" id="menu-mover" onclick="showScreen('mover')">
-          <span class="nav-icon-slot">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 3 7 7-3 3 9 1-1-9-3 3-7-7Z"/></svg>
-          </span>
-          Index Mover
-        </a>
-      </div>
     </div>
   </aside>
 
@@ -1266,6 +1324,16 @@
         </button>
       </div>
     </header>
+
+    <!-- ── SECONDARY SUB-NAVIGATION BAR FOR INDIAN TOOLS ── -->
+    <div id="indianToolsBar" class="indian-tools-bar">
+      <span style="font-size:10.5px; font-weight:800; color:#64748b; letter-spacing:0.5px; text-transform:uppercase;">Indian Tools:</span>
+      <button class="tool-sub-pill active" id="toolbtn-pulse" onclick="showScreen('pulse')">⚡ Market Pulse</button>
+      <button class="tool-sub-pill" id="toolbtn-sector" onclick="showScreen('sector')">🌐 Sector Scope</button>
+      <button class="tool-sub-pill" id="toolbtn-insider" onclick="showScreen('insider')">🎯 Insider Strategy</button>
+      <button class="tool-sub-pill" id="toolbtn-fii" onclick="showScreen('fii')">📊 FII / DII</button>
+      <button class="tool-sub-pill" id="toolbtn-mover" onclick="showScreen('mover')">🚀 Index Mover</button>
+    </div>
 
     <!-- ════════════ SCREEN 1: MARKET PULSE (EXACT MATCH VIDEO 5:35-6:33) ════════════ -->
     <div class="view-screen-tab active" id="tab-pulse">
@@ -3323,13 +3391,16 @@
     // ── NAVIGATION CONTROLLER ──
     function showScreen(screenId) {
       document.querySelectorAll('.view-screen-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.nav-btn-link').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.nav-btn-link, .sub-tree-link').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tool-sub-pill').forEach(b => b.classList.remove('active'));
 
       const tab = document.getElementById('tab-' + screenId);
       const menu = document.getElementById('menu-' + screenId);
+      const toolBtn = document.getElementById('toolbtn-' + screenId);
 
       if (tab) tab.classList.add('active');
       if (menu) menu.classList.add('active');
+      if (toolBtn) toolBtn.classList.add('active');
 
       playChime(520);
       if (screenId === 'sector') {
@@ -3406,26 +3477,27 @@
       const indianToolsSubnav = document.getElementById('indian-tools-subnav');
       const indianToolsLabel = document.getElementById('indian-tools-label');
 
+      const indianToolsBar = document.getElementById('indianToolsBar');
       if (segment === 'indian') {
         if (cIndian) cIndian.style.display = 'flex';
         if (cMetals) cMetals.style.display = 'none';
         if (cCrypto) cCrypto.style.display = 'none';
-        if (indianToolsSubnav) indianToolsSubnav.style.display = 'block';
-        if (indianToolsLabel) indianToolsLabel.style.display = 'block';
+        if (indianToolsSubnav) indianToolsSubnav.style.display = 'flex';
+        if (indianToolsBar) indianToolsBar.style.display = 'flex';
         showScreen('pulse');
       } else if (segment === 'metals') {
         if (cIndian) cIndian.style.display = 'none';
         if (cMetals) cMetals.style.display = 'flex';
         if (cCrypto) cCrypto.style.display = 'none';
         if (indianToolsSubnav) indianToolsSubnav.style.display = 'none';
-        if (indianToolsLabel) indianToolsLabel.style.display = 'none';
+        if (indianToolsBar) indianToolsBar.style.display = 'none';
         showScreen('metals');
       } else if (segment === 'crypto') {
         if (cIndian) cIndian.style.display = 'none';
         if (cMetals) cMetals.style.display = 'none';
         if (cCrypto) cCrypto.style.display = 'flex';
         if (indianToolsSubnav) indianToolsSubnav.style.display = 'none';
-        if (indianToolsLabel) indianToolsLabel.style.display = 'none';
+        if (indianToolsBar) indianToolsBar.style.display = 'none';
         showScreen('crypto');
       }
     }
