@@ -3398,8 +3398,12 @@
       loadTradingViewWidget(currentModalSymbol, tf);
     }
 
-        function openTradeTicket(sym, basePrice, pctStr, rFac, isBullish) {
+    function openTradeTicket(sym, basePrice, pctStr, rFac, isBullish) {
       const symUpper = (sym || '').toUpperCase().trim();
+      const isMetal = ['GOLD', 'SILVER', 'CRUDEOIL', 'CRUDE', 'BRENT', 'COPPER', 'NATGAS', 'XAU', 'XAG', 'WTI'].includes(symUpper);
+      const isCrypto = ['BTC', 'ETH', 'SOL', 'DOGE', 'SUI', 'LINK', 'XRP', 'AVAX'].includes(symUpper);
+      const curr = (isMetal || isCrypto) ? '$' : '₹';
+
       // Match price exactly from official TradingView Chart registry
       if (typeof TRADINGVIEW_MARKET_PRICES !== 'undefined' && TRADINGVIEW_MARKET_PRICES[symUpper]) {
         basePrice = TRADINGVIEW_MARKET_PRICES[symUpper];
@@ -3427,9 +3431,6 @@
       const actionBtn = document.getElementById('modalActionBtn');
 
       if (!overlay) return;
-      const isMetal = ['GOLD', 'SILVER', 'CRUDEOIL', 'CRUDE', 'BRENT', 'COPPER', 'NATGAS', 'XAU', 'XAG', 'WTI'].includes(symUpper);
-      const isCrypto = ['BTC', 'ETH', 'SOL', 'DOGE', 'SUI', 'LINK', 'XRP', 'AVAX'].includes(symUpper);
-      const curr = (isMetal || isCrypto) ? '$' : '₹';
 
       const rNum = parseFloat(rFac) || 2.0;
       const isGradeA = (symUpper === 'RVNL' || symUpper === 'IRFC');
