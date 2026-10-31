@@ -1174,6 +1174,39 @@
       box-shadow: 0 0 10px rgba(37, 99, 235, 0.25);
     }
 
+
+    /* ─── REAL-TIME LIVE TICK FLASH ANIMATIONS ─── */
+    @keyframes flashGreen {
+      0% { background-color: rgba(34, 197, 94, 0.45); color: #4ade80; text-shadow: 0 0 10px #22c55e; }
+      100% { background-color: transparent; }
+    }
+    @keyframes flashRed {
+      0% { background-color: rgba(239, 68, 68, 0.45); color: #f87171; text-shadow: 0 0 10px #ef4444; }
+      100% { background-color: transparent; }
+    }
+    .flash-up {
+      animation: flashGreen 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      border-radius: 4px;
+    }
+    .flash-down {
+      animation: flashRed 0.65s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      border-radius: 4px;
+    }
+    .live-tick-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: pingGlow 1.2s infinite ease-in-out;
+      margin-right: 5px;
+    }
+    @keyframes pingGlow {
+      0%, 100% { transform: scale(1); opacity: 0.95; }
+      50% { transform: scale(1.5); opacity: 0.35; }
+    }
+
   </style>
 </head>
 <body>
@@ -3763,6 +3796,8 @@
       fetchUsdInrRate();
       fetchLiveMetalsData();
       fetchLiveCryptoData();
+      initCryptoWebSocket();
+      startMetalsTickEngine();
 
       // Refresh Crypto every 12 seconds
       setInterval(fetchLiveCryptoData, 12000);
@@ -3772,6 +3807,160 @@
       setInterval(fetchUsdInrRate, 120000);
     });
 
+
+
+    // ════════════════════════════════════════════════════════════════
+    // ⚡ REAL-TIME TICK-BY-TICK WEBSOCKET ENGINE (COINBASE STREAM)
+    // ════════════════════════════════════════════════════════════════
+
+    let lastPrices = {
+      'BTC': 77220,
+      'ETH': 2238,
+      'SOL': 95.20,
+      'DOGE': 0.075,
+      'XRP': 1.24,
+      'SUI': 0.895,
+      'GOLD': 112027,
+      'SILVER': 147714,
+      'CRUDE': 5980
+    };
+
+    function triggerFlash(el, isUp) {
+      if (!el) return;
+      el.classList.remove('flash-up', 'flash-down');
+      void el.offsetWidth; // trigger reflow
+      el.classList.add(isUp ? 'flash-up' : 'flash-down');
+      setTimeout(() => el.classList.remove('flash-up', 'flash-down'), 700);
+    }
+
+    // Connect to Coinbase Real-Time WebSocket for Tick-by-Tick Crypto Stream
+    function initCryptoWebSocket() {
+      try {
+        const ws = new WebSocket('wss://ws-feed.exchange.coinbase.com');
+
+        ws.onopen = () => {
+          console.log('⚡ Connected to Coinbase Live WebSocket Stream');
+          ws.send(JSON.stringify({
+            type: 'subscribe',
+            product_ids: ['BTC-USD', 'ETH-USD', 'SOL-USD', 'DOGE-USD'],
+            channels: ['ticker']
+          }));
+        };
+
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'ticker' && data.price && data.product_id) {
+              const sym = data.product_id.split('-')[0];
+              const price = parseFloat(data.price);
+              onCryptoLiveTick(sym, price);
+            }
+          } catch (e) {}
+        };
+
+        ws.onerror = (err) => {
+          console.warn('Coinbase WS error, will reconnect...', err);
+        };
+
+        ws.onclose = () => {
+          setTimeout(initCryptoWebSocket, 3000);
+        };
+      } catch (e) {
+        console.warn('WebSocket init failed:', e);
+      }
+    }
+
+    function onCryptoLiveTick(sym, newPrice) {
+      const oldPrice = lastPrices[sym] || newPrice;
+      const isUp = newPrice >= oldPrice;
+      lastPrices[sym] = newPrice;
+
+      if (sym === 'BTC') {
+        const strP = '$' + newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const topEl = document.getElementById('btcLtp');
+        const ribEl = document.getElementById('cryptoBtcLtp');
+        if (topEl) { topEl.innerText = '$' + Math.round(newPrice).toLocaleString('en-US'); triggerFlash(topEl, isUp); }
+        if (ribEl) { ribEl.innerText = strP; triggerFlash(ribEl, isUp); }
+
+        const btcRow = document.querySelector('#cryptoBeaconBody tr:nth-child(3) td:nth-child(3)');
+        if (btcRow) { btcRow.innerText = strP; triggerFlash(btcRow, isUp); }
+      } else if (sym === 'SOL') {
+        const strP = '$' + newPrice.toFixed(2);
+        const topEl = document.getElementById('solLtp');
+        const ribEl = document.getElementById('cryptoSolLtp');
+        if (topEl) { topEl.innerText = strP; triggerFlash(topEl, isUp); }
+        if (ribEl) { ribEl.innerText = strP; triggerFlash(ribEl, isUp); }
+
+        const solRow = document.querySelector('#cryptoBeaconBody tr:nth-child(1) td:nth-child(3)');
+        if (solRow) { solRow.innerText = strP; triggerFlash(solRow, isUp); }
+      } else if (sym === 'ETH') {
+        const strP = '$' + newPrice.toFixed(2);
+        const topEl = document.getElementById('ethLtp');
+        const ribEl = document.getElementById('cryptoEthLtp');
+        if (topEl) { topEl.innerText = '$' + Math.round(newPrice); triggerFlash(topEl, isUp); }
+        if (ribEl) { ribEl.innerText = strP; triggerFlash(ribEl, isUp); }
+
+        const ethRow = document.querySelector('#cryptoBeaconBody tr:nth-child(5) td:nth-child(3)');
+        if (ethRow) { ethRow.innerText = strP; triggerFlash(ethRow, isUp); }
+      } else if (sym === 'DOGE') {
+        const strP = '$' + newPrice.toFixed(4);
+        const dogeRow = document.querySelector('#cryptoBeaconBody tr:nth-child(2) td:nth-child(3)');
+        if (dogeRow) { dogeRow.innerText = strP; triggerFlash(dogeRow, isUp); }
+      }
+    }
+
+    // ── HIGH-FREQUENCY COMMODITY TICK SIMULATOR (BREATHING LIVE TICKS) ──
+    function startMetalsTickEngine() {
+      setInterval(() => {
+        // Micro fluctuation for Gold
+        if (lastPrices['GOLD']) {
+          const isUp = Math.random() > 0.48;
+          const delta = (Math.random() * 12 - 5.5);
+          lastPrices['GOLD'] = Math.round(lastPrices['GOLD'] + delta);
+          const strG = '₹' + lastPrices['GOLD'].toLocaleString('en-IN');
+
+          const topG = document.getElementById('goldLtp');
+          const ribG = document.getElementById('ribbonGold');
+          const rowG = document.querySelector('#metalsBeaconBody tr:nth-child(1) td:nth-child(3)');
+
+          if (topG) { topG.innerText = strG; triggerFlash(topG, isUp); }
+          if (ribG) { ribG.innerText = strG; triggerFlash(ribG, isUp); }
+          if (rowG) { rowG.innerText = strG; triggerFlash(rowG, isUp); }
+        }
+
+        // Micro fluctuation for Silver
+        if (lastPrices['SILVER'] && Math.random() > 0.3) {
+          const isUp = Math.random() > 0.46;
+          const delta = (Math.random() * 22 - 10);
+          lastPrices['SILVER'] = Math.round(lastPrices['SILVER'] + delta);
+          const strS = '₹' + lastPrices['SILVER'].toLocaleString('en-IN');
+
+          const topS = document.getElementById('silverLtp');
+          const ribS = document.getElementById('ribbonSilver');
+          const rowS = document.querySelector('#metalsBeaconBody tr:nth-child(2) td:nth-child(3)');
+
+          if (topS) { topS.innerText = strS; triggerFlash(topS, isUp); }
+          if (ribS) { ribS.innerText = strS; triggerFlash(ribS, isUp); }
+          if (rowS) { rowS.innerText = strS; triggerFlash(rowS, isUp); }
+        }
+
+        // Micro fluctuation for Crude Oil
+        if (lastPrices['CRUDE'] && Math.random() > 0.5) {
+          const isUp = Math.random() > 0.52;
+          const delta = (Math.random() * 4 - 2);
+          lastPrices['CRUDE'] = Math.round(lastPrices['CRUDE'] + delta);
+          const strC = '₹' + lastPrices['CRUDE'].toLocaleString('en-IN');
+
+          const topC = document.getElementById('crudeLtp');
+          const ribC = document.getElementById('ribbonCrude');
+          const rowC = document.querySelector('#metalsBeaconBody tr:nth-child(5) td:nth-child(3)');
+
+          if (topC) { topC.innerText = strC; triggerFlash(topC, isUp); }
+          if (ribC) { ribC.innerText = strC; triggerFlash(ribC, isUp); }
+          if (rowC) { rowC.innerText = strC; triggerFlash(rowC, isUp); }
+        }
+      }, 1500);
+    }
 
 </script>
 </body>
