@@ -1500,18 +1500,18 @@
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">GOLD:</span>
-            <span style="color:#22c55e; font-weight:800;" id="goldLtp">$2,745.50</span>
-            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;">+0.72%</span>
+            <span style="color:#22c55e; font-weight:800;" id="goldLtp">$3,876.40</span>
+            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="goldPct">+0.72%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">SILVER:</span>
-            <span style="color:#22c55e; font-weight:800;" id="silverLtp">$33.90</span>
-            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;">+1.65%</span>
+            <span style="color:#22c55e; font-weight:800;" id="silverLtp">$49.25</span>
+            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="silverPct">+1.65%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">CRUDE OIL:</span>
-            <span style="color:#ef4444; font-weight:800;" id="crudeLtp">$71.15</span>
-            <span class="pill-percent-capsule neg" style="min-width:auto; padding:1px 5px; font-size:9.5px;">-0.90%</span>
+            <span style="color:#22c55e; font-weight:800;" id="crudeLtp">$104.12</span>
+            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="crudePct">+2.08%</span>
           </div>
         </div>
 
@@ -1524,18 +1524,18 @@
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">BTC/USDT:</span>
-            <span style="color:#22c55e; font-weight:800;" id="btcLtp">$68,620</span>
-            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="btcPct">+2.40%</span>
+            <span style="color:#22c55e; font-weight:800;" id="btcLtp">$77,276</span>
+            <span class="pill-percent-capsule neg" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="btcPct">-0.36%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">ETH/USDT:</span>
-            <span style="color:#22c55e; font-weight:800;" id="ethLtp">$2,545</span>
-            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;">+1.80%</span>
+            <span style="color:#22c55e; font-weight:800;" id="ethLtp">$2,241</span>
+            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="ethPct">+0.67%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">SOL/USDT:</span>
-            <span style="color:#22c55e; font-weight:800;" id="solLtp">$182.40</span>
-            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;">+5.85%</span>
+            <span style="color:#22c55e; font-weight:800;" id="solLtp">$95.27</span>
+            <span class="pill-percent-capsule neg" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="solPct">-1.43%</span>
           </div>
         </div>
       </div>
@@ -2027,14 +2027,14 @@
     <!-- SCREEN 6: METALS & ENERGY (GOLD, SILVER, CRUDE OIL) 🪙         -->
     <!-- ═════════════════════════════════════════════════════════════ -->
     <div class="view-screen-tab" id="tab-metals">
-      <!-- TOP COMMODITY RIBBON (PRICES IN $ USD ONLY) -->
+      <!-- TOP METRIC RIBBON (100% IN $ USD) -->
       <div class="market-ribbon-strip">
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>GOLD SPOT (XAU/USD)</span>
-            <span class="pill-percent-capsule pos">+0.72%</span>
+            <span class="pill-percent-capsule pos" id="ribbonGoldPct">+0.72%</span>
           </div>
-          <div class="metric-card-val" id="ribbonGold">$2,745.50</div>
+          <div class="metric-card-val" id="ribbonGold">$3,876.40</div>
           <div class="metric-card-sub">
             <span>Unit: 1 Troy Oz</span>
             <span style="color:#22c55e;">▲ Bullish Trend</span>
@@ -2044,45 +2044,45 @@
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>SILVER SPOT (XAG/USD)</span>
-            <span class="pill-percent-capsule pos">+1.65%</span>
+            <span class="pill-percent-capsule pos" id="ribbonSilverPct">+1.65%</span>
           </div>
-          <div class="metric-card-val" id="ribbonSilver">$33.90</div>
+          <div class="metric-card-val" id="ribbonSilver">$49.25</div>
           <div class="metric-card-sub">
             <span>Unit: 1 Troy Oz</span>
-            <span style="color:#22c55e; font-weight:700;">★ LEADER</span>
+            <span style="color:#22c55e;">★ LEADER</span>
           </div>
         </div>
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>CRUDE OIL (WTI)</span>
-            <span class="pill-percent-capsule neg">-0.90%</span>
+            <span class="pill-percent-capsule pos" id="ribbonCrudePct">+2.08%</span>
           </div>
-          <div class="metric-card-val" id="ribbonCrude">$71.15</div>
+          <div class="metric-card-val" id="ribbonCrude" style="color:#22c55e;">$104.12</div>
           <div class="metric-card-sub">
             <span>Unit: 1 Barrel (bbl)</span>
-            <span style="color:#ef4444;">▼ Short Bias</span>
+            <span style="color:#22c55e;">▲ Bull Breakout</span>
           </div>
         </div>
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>NATURAL GAS (NG)</span>
-            <span class="pill-percent-capsule pos">+2.40%</span>
+            <span class="pill-percent-capsule neg">-1.83%</span>
           </div>
-          <div class="metric-card-val" id="ribbonGas">$2.85</div>
+          <div class="metric-card-val" style="color:#ef4444;">$2.90</div>
           <div class="metric-card-sub">
             <span>Unit: 1 MMBtu</span>
-            <span style="color:#22c55e;">▲ Winter Squeeze</span>
+            <span style="color:#94a3b8;">Consolidating</span>
           </div>
         </div>
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>DOLLAR INDEX (DXY)</span>
-            <span class="pill-percent-capsule neg">-0.28%</span>
+            <span class="pill-percent-capsule neg">-0.07%</span>
           </div>
-          <div class="metric-card-val">103.85</div>
+          <div class="metric-card-val">101.96</div>
           <div class="metric-card-sub">
             <span>Inverse Metal Catalyst</span>
             <span style="color:#38bdf8;">Tailwind</span>
@@ -2090,13 +2090,13 @@
         </div>
       </div>
 
-      <!-- FULL-WIDTH COMMODITY BOOST & MACRO RADAR (BEACON REMOVED AS REQUESTED) -->
+      <!-- FULL-WIDTH COMMODITY BOOST & MACRO RADAR -->
       <div class="scanner-panel-card" style="margin-bottom:14px;">
         <div class="panel-header-strip">
           <div class="header-left-cluster">
             <span class="panel-title-text" style="font-size:16px;">COMMODITY BOOST & MACRO RADAR ✨</span>
             <span class="pill-badge-boost">MACRO R-FACTOR 🚀</span>
-            <span class="pill-badge-live">COMEX LIVE ($)</span>
+            <span class="pill-badge-live">● COMEX LIVE ($)</span>
           </div>
           <div class="pill-search-container">
             <input type="text" id="searchMetalsBoost" placeholder="Search commodity..." oninput="filterMetalsBoost(this.value)"/>
@@ -2119,87 +2119,87 @@
               </tr>
             </thead>
             <tbody id="metalsBoostBody">
-              <tr class="boost-row" onclick="openTradeTicket('SILVER', 33.90, '+1.65%', 9.75, true)">
+              <tr class="boost-row" onclick="openTradeTicket('SILVER', 49.25, '+1.65%', 9.75, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">SILVER (XAG/USD)</div>
                   <div class="cell-sub-desc">1 Troy Oz • High Beta Solar Demand</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSilver">$33.90</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos">+1.65%</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSilver">$49.25</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSilver">+1.65%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score high">9.75 LEADER</span></td>
                 <td style="color:#cbd5e1; font-size:11.5px;">Solar PV & Industrial Electronics Speculative Long Squeeze</td>
                 <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH BETA BLAST</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('GOLD', 2745.50, '+0.72%', 8.60, true)">
+              <tr class="boost-row" onclick="openTradeTicket('GOLD', 3876.40, '+0.72%', 8.60, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">GOLD (XAU/USD)</div>
                   <div class="cell-sub-desc">1 Troy Oz • Global Central Bank Reserves</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceGold">$2,745.50</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.72%</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceGold">$3,876.40</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctGold">+0.72%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score high">8.60 STRONG</span></td>
                 <td style="color:#cbd5e1; font-size:11.5px;">Sovereign Bank Gold Purchases + US DXY Drop Tailwind</td>
                 <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SAFE HAVEN</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('NATGAS', 2.85, '+2.40%', 7.45, true)">
+              <tr class="boost-row" onclick="openTradeTicket('CRUDEOIL', 104.12, '+2.08%', 7.80, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
-                <td>
-                  <div class="cell-symbol-primary">NATURAL GAS (NG)</div>
-                  <div class="cell-sub-desc">1 MMBtu • Henry Hub Cold Front</div>
-                </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceGas">$2.85</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.40%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score med">7.45 STRONG</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Winter Storage Drawdown Acceleration & LNG Export Inflow</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SHORT SQUEEZE</span></td>
-                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
-              </tr>
-
-              <tr class="boost-row" onclick="openTradeTicket('COPPER', 4.35, '+0.85%', 6.10, false)">
-                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
-                <td>
-                  <div class="cell-symbol-primary">COPPER (HG)</div>
-                  <div class="cell-sub-desc">1 Pound (lb) • Renewable Grid Metal</div>
-                </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$4.35</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.85%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score med">6.10 STEADY</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">LME Warehouse Drawdowns (-3,150 MT) + EV Supply Tightness</td>
-                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
-                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
-              </tr>
-
-              <tr class="boost-row" onclick="openTradeTicket('CRUDEOIL', 71.15, '-0.90%', -4.85, false)">
-                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
                 <td>
                   <div class="cell-symbol-primary">CRUDE OIL (WTI)</div>
                   <div class="cell-sub-desc">1 Barrel (bbl) • Cushing NYMEX Hub</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceCrude">$71.15</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.90%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score neg">-4.85 SHORT</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">US EIA Inventory Surplus (+2.4M Bbls Build) + Refining Slump</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE TRAP</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceCrude">$104.12</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctCrude">+2.08%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">7.80 STRONG</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Geopolitical Supply Risk Premium + Global Inventory Drawdown</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">LONG BREAKOUT</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('BRENT', 75.40, '-0.75%', -3.80, false)">
+              <tr class="boost-row" onclick="openTradeTicket('BRENT', 113.43, '-1.26%', 6.50, false)">
                 <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
                 <td>
                   <div class="cell-symbol-primary">BRENT CRUDE</div>
                   <div class="cell-sub-desc">1 Barrel (bbl) • North Sea Benchmark</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$75.40</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.75%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score neg">-3.80 SHORT</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Weak European Industrial Fuel Demand + OPEC+ Output Uncertainty</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceBrent">$113.43</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctBrent">-1.26%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">6.50 STEADY</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">High Refining Crack Spread Buffer ($9.31/bbl) vs NYMEX WTI</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">RANGE BOUND</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('COPPER', 6.48, '-1.50%', 6.10, false)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">COPPER (HG)</div>
+                  <div class="cell-sub-desc">1 Pound (lb) • Renewable Grid Metal</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceCopper">$6.48</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-1.50%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">6.10 STEADY</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">LME Warehouse Drawdowns (-3,150 MT) + Global Electrification</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('NATGAS', 2.90, '-1.83%', 5.20, false)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">NATURAL GAS (NG)</div>
+                  <div class="cell-sub-desc">1 MMBtu • Henry Hub Delivery</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$2.90</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-1.83%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">5.20 STEADY</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Storage Injection Run Rate Normalized • LNG Export Rebound</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">SUPPORT HOLD</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
             </tbody>
@@ -2207,29 +2207,29 @@
         </div>
       </div>
 
-      <!-- BOTTOM MACRO COMMODITY CARDS -->
+      <!-- COMMODITY MACRO INTELLIGENCE PANELS (100% IN $ USD) -->
       <div class="macro-cards-grid">
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>🥇</span> GOLD & SILVER BULLION DYNAMICS ($)</div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Gold/Silver Ratio (GSR):</span><span class="macro-stat-val">80.98 (Silver Outperforming)</span></div>
+          <div class="macro-card-title">🏅 GOLD & SILVER BULLION DYNAMICS ($)</div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Gold/Silver Ratio (GSR):</span><span class="macro-stat-val" style="color:#22c55e;">78.71 (Silver Outperforming)</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Comex Net Speculative Longs:</span><span class="macro-stat-val" style="color:#22c55e;">+248,500 Contracts</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Gold Next Resistance Floor:</span><span class="macro-stat-val" style="color:#f59e0b;">$2,765 / oz</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Silver Target Expansion:</span><span class="macro-stat-val" style="color:#22c55e;">$35.50 / oz</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Gold Next Resistance Floor:</span><span class="macro-stat-val" style="color:#f59e0b;">$3,950 / oz</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Silver Target Expansion:</span><span class="macro-stat-val" style="color:#22c55e;">$52.50 / oz</span></div>
         </div>
 
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>🛢️</span> CRUDE OIL & ENERGY INTELLIGENCE ($)</div>
-          <div class="macro-stat-row"><span class="macro-stat-label">US Crude Inventory (EIA):</span><span class="macro-stat-val" style="color:#ef4444;">+2.4M Bbls Build</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">OPEC+ Voluntary Quotas:</span><span class="macro-stat-val">2.2M Bbls Extension</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Brent / WTI Crack Spread:</span><span class="macro-stat-val">$4.25 / bbl</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Critical Support Floor:</span><span class="macro-stat-val" style="color:#ef4444;">$69.80 / bbl</span></div>
+          <div class="macro-card-title">🛢 CRUDE OIL & ENERGY INTELLIGENCE ($)</div>
+          <div class="macro-stat-row"><span class="macro-stat-label">US Crude Inventory (EIA):</span><span class="macro-stat-val" style="color:#ef4444;">-3.2M Bbls Drawdown</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">OPEC+ Voluntary Quotas:</span><span class="macro-stat-val" style="color:#cbd5e1;">2.2M Bbls Extension</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Brent / WTI Crack Spread:</span><span class="macro-stat-val" style="color:#38bdf8;">$9.31 / bbl</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Critical Support Floor:</span><span class="macro-stat-val" style="color:#22c55e;">$98.50 / bbl</span></div>
         </div>
 
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>🏭</span> BASE METALS & INDUSTRIAL FLOW ($)</div>
+          <div class="macro-card-title">🏭 BASE METALS & INDUSTRIAL FLOW ($)</div>
           <div class="macro-stat-row"><span class="macro-stat-label">LME Copper Warehouse Stocks:</span><span class="macro-stat-val" style="color:#22c55e;">-3,150 MT Drawdown</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">China Manufacturing PMI:</span><span class="macro-stat-val">50.2 (Expansion Zone)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Aluminum Smelter Power Cost:</span><span class="macro-stat-val">Tight Margins</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">China Manufacturing PMI:</span><span class="macro-stat-val" style="color:#cbd5e1;">50.2 (Expansion Zone)</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Copper Spot Floor (COMEX):</span><span class="macro-stat-val" style="color:#38bdf8;">$6.25 / lb</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Industrial Metal Bias:</span><span class="macro-stat-val" style="color:#22c55e;">Cautious Bullish</span></div>
         </div>
       </div>
@@ -2239,14 +2239,14 @@
  24×7 ⚡                                     -->
     <!-- ═════════════════════════════════════════════════════════════ -->
     <div class="view-screen-tab" id="tab-crypto">
-      <!-- TOP CRYPTO RIBBON -->
+      <!-- TOP METRIC RIBBON -->
       <div class="market-ribbon-strip">
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>BITCOIN (BTC/USDT)</span>
-            <span class="pill-percent-capsule pos" id="cryptoBtcPct">+2.40%</span>
+            <span class="pill-percent-capsule neg" id="cryptoBtcPct">-0.36%</span>
           </div>
-          <div class="metric-card-val" id="cryptoBtcLtp">$77,220.00</div>
+          <div class="metric-card-val" id="cryptoBtcLtp">$77,276.50</div>
           <div class="metric-card-sub">
             <span>ATH Range: Active</span>
             <span style="color:#22c55e;">▲ Inflow Surge</span>
@@ -2256,21 +2256,21 @@
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>SOLANA (SOL/USDT)</span>
-            <span class="pill-percent-capsule pos" id="cryptoSolPct">+5.85%</span>
+            <span class="pill-percent-capsule neg" id="cryptoSolPct">-1.43%</span>
           </div>
-          <div class="metric-card-val" id="cryptoSolLtp">$95.32</div>
+          <div class="metric-card-val" id="cryptoSolLtp">$95.27</div>
           <div class="metric-card-sub">
             <span>DEX Volume: #1 Chain</span>
-            <span style="color:#22c55e; font-weight:700;">★ LEADER</span>
+            <span style="color:#22c55e;">★ LEADER</span>
           </div>
         </div>
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
             <span>ETHEREUM (ETH/USDT)</span>
-            <span class="pill-percent-capsule pos" id="cryptoEthPct">+1.80%</span>
+            <span class="pill-percent-capsule pos" id="cryptoEthPct">+0.67%</span>
           </div>
-          <div class="metric-card-val" id="cryptoEthLtp">$2,238.00</div>
+          <div class="metric-card-val" id="cryptoEthLtp">$2241.04</div>
           <div class="metric-card-sub">
             <span>Layer 2 Activity: High</span>
             <span style="color:#38bdf8;">Consolidating</span>
@@ -2302,7 +2302,7 @@
         </div>
       </div>
 
-      <!-- FULL-WIDTH CRYPTO BOOST & LIQUIDATION RADAR (BEACON REMOVED AS REQUESTED) -->
+      <!-- FULL-WIDTH CRYPTO BOOST & LIQUIDATION RADAR -->
       <div class="scanner-panel-card" style="margin-bottom:14px;">
         <div class="panel-header-strip">
           <div class="header-left-cluster">
@@ -2332,14 +2332,14 @@
               </tr>
             </thead>
             <tbody id="cryptoBoostBody">
-              <tr class="boost-row" onclick="openTradeTicket('SOL', 95.32, '+5.85%', 9.88, true)">
+              <tr class="boost-row" onclick="openTradeTicket('SOL', 95.27, '-1.43%', 9.88, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">SOL / USDT</div>
                   <div class="cell-sub-desc">Solana • Ecosystem DEX Breakout</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSol">$95.32</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSol">+5.85%</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSol">$95.27</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctSol">-1.43%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score high">9.88 LEADER</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.012%</td>
                 <td style="color:#cbd5e1; font-size:11.5px;">Short Squeeze Active • $24.5M Shorts Wiped Out Above $94</td>
@@ -2347,14 +2347,14 @@
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('DOGE', 0.0750, '+8.65%', 8.95, true)">
+              <tr class="boost-row" onclick="openTradeTicket('DOGE', 0.0750, '-0.52%', 8.95, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">DOGE / USDT</div>
                   <div class="cell-sub-desc">Dogecoin • Whale Accumulation Wave</div>
                 </td>
                 <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceDoge">$0.0750</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctDoge">+8.65%</span></td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctDoge">-0.52%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score high">8.95 STRONG</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.015%</td>
                 <td style="color:#cbd5e1; font-size:11.5px;">Retail Liquidity Inflow Surge • 4.2x Volume Velocity</td>
@@ -2362,29 +2362,29 @@
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('BTC', 77220, '+2.40%', 8.42, true)">
+              <tr class="boost-row" onclick="openTradeTicket('BTC', 77276.50, '-0.36%', 8.42, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">BTC / USDT</div>
                   <div class="cell-sub-desc">Bitcoin • Institutional Spot ETF Wave</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceBtc">$77,220.00</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctBtc">+2.40%</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceBtc">$77,276.50</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctBtc">-0.36%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score high">8.42 STRONG</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.010%</td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Spot ETF Net Inflows (+$420M) • Major Liquidation Cluster at $78k</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Spot ETF Net Inflows (+$420M) • Major Liquidation Cluster at $78.5k</td>
                 <td style="text-align:center;"><span class="pill-signal-tag tag-leader">INSTITUTIONAL</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('SUI', 0.895, '+11.40%', 7.85, true)">
+              <tr class="boost-row" onclick="openTradeTicket('SUI', 0.898, '+2.04%', 7.85, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">SUI / USDT</div>
                   <div class="cell-sub-desc">Sui Network • All-Time High Run</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSui">$0.895</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSui">+11.40%</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSui">$0.8980</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSui">+2.04%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score med">7.85 STRONG</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.020%</td>
                 <td style="color:#cbd5e1; font-size:11.5px;">TVL Doubled In 30 Days • Spot Buying Across Major Exchanges</td>
@@ -2392,14 +2392,14 @@
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('ETH', 2238, '+1.80%', 6.20, false)">
+              <tr class="boost-row" onclick="openTradeTicket('ETH', 2241.04, '+0.67%', 6.20, false)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">ETH / USDT</div>
                   <div class="cell-sub-desc">Ethereum • Layer-2 Staking Flow</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceEth">$2,238.00</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctEth">+1.80%</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceEth">$2,241.04</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctEth">+0.67%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score med">6.20 STEADY</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#38bdf8;">+0.008%</td>
                 <td style="color:#cbd5e1; font-size:11.5px;">Base EMA 50 Support Bounce • Consolidating Under $2,300</td>
@@ -2407,14 +2407,14 @@
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('LINK', 11.36, '+2.15%', 5.40, false)">
+              <tr class="boost-row" onclick="openTradeTicket('LINK', 11.43, '+1.85%', 5.40, false)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">LINK / USDT</div>
                   <div class="cell-sub-desc">Chainlink • CCIP Cross-Chain Volume</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$11.36</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.15%</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceLink">$11.43</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctLink">+1.85%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score med">5.40 STEADY</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#38bdf8;">+0.009%</td>
                 <td style="color:#cbd5e1; font-size:11.5px;">Institutional Oracle Staking & Bank Pilots Expansion</td>
@@ -2422,18 +2422,18 @@
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('XRP', 1.24, '-0.45%', -3.20, false)">
+              <tr class="boost-row" onclick="openTradeTicket('XRP', 1.245, '-0.45%', -3.20, false)">
                 <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
                 <td>
                   <div class="cell-symbol-primary">XRP / USDT</div>
                   <div class="cell-sub-desc">Ripple • Liquidation Cascades</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$1.24</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.45%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score neg">-3.20 SHORT</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceXrp">$1.2450</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctXrp">-0.45%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score low">-3.20 SHORT</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#ef4444;">-0.005%</td>
                 <td style="color:#cbd5e1; font-size:11.5px;">Overleveraged Long Liquidations Trap • Rejection at $1.28</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE TRAP</span></td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-trap">DOWNSIDE TRAP</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
             </tbody>
@@ -2441,66 +2441,33 @@
         </div>
       </div>
 
-      <!-- BOTTOM CRYPTO MARKET FLOW CARDS -->
+      <!-- DERIVATIVES & ON-CHAIN MACRO RADAR -->
       <div class="macro-cards-grid">
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>📊</span> BITCOIN DOMINANCE & CAPITAL ROTATION</div>
+          <div class="macro-card-title">📊 BITCOIN DOMINANCE & CAPITAL ROTATION</div>
           <div class="macro-stat-row"><span class="macro-stat-label">Bitcoin Dominance (BTC.D):</span><span class="macro-stat-val" style="color:#22c55e;">58.4% (Bitcoin Season)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Ethereum / Bitcoin (ETH/BTC):</span><span class="macro-stat-val">0.0371 (Consolidating)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Altcoin Season Index:</span><span class="macro-stat-val">34 / 100 (Early Phase)</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Ethereum / Bitcoin (ETH/BTC):</span><span class="macro-stat-val" style="color:#cbd5e1;">0.0290 (Consolidating)</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Altcoin Season Index:</span><span class="macro-stat-val" style="color:#f59e0b;">34 / 100 (Early Phase)</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">US Spot ETF Net Assets:</span><span class="macro-stat-val" style="color:#22c55e;">$66.2 Billion</span></div>
         </div>
 
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>🔥</span> DERIVATIVES & LIQUIDATION MAP</div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Total Open Interest (OI):</span><span class="macro-stat-val">$38.4 Billion</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">BTC Top Liquidation Cluster:</span><span class="macro-stat-val" style="color:#f59e0b;">$78,500 ($1.2B Shorts)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">BTC Downside Liquidation Floor:</span><span class="macro-stat-val" style="color:#ef4444;">$75,200 ($850M Longs)</span></div>
+          <div class="macro-card-title">🔥 DERIVATIVES & LIQUIDATION MAP</div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Total Open Interest (OI):</span><span class="macro-stat-val" style="color:#f8fafc;">$38.4 Billion</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">BTC Top Liquidation Cluster:</span><span class="macro-stat-val" style="color:#ef4444;">$78,500 ($1.2B Shorts)</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">BTC Downside Liquidation Floor:</span><span class="macro-stat-val" style="color:#22c55e;">$76,140 ($850M Longs)</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Global Funding Rate Average:</span><span class="macro-stat-val" style="color:#22c55e;">+0.010% (Healthy Long Bias)</span></div>
         </div>
 
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>⚡</span> 24H SECTOR WINNERS</div>
+          <div class="macro-card-title">⚡ 24H SECTOR WINNERS</div>
           <div class="macro-stat-row"><span class="macro-stat-label">Layer-1 Ecosystems:</span><span class="macro-stat-val" style="color:#22c55e;">+4.8% (Led by SOL, SUI)</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Meme Coin Sector:</span><span class="macro-stat-val" style="color:#22c55e;">+7.2% (Led by DOGE, PEPE)</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">AI & Big Data Tokens:</span><span class="macro-stat-val" style="color:#22c55e;">+3.9% (Led by NEAR, FET)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">DeFi Total Value Locked:</span><span class="macro-stat-val">$88.9 Billion (+2.4%)</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">DeFi Total Value Locked:</span><span class="macro-stat-val" style="color:#38bdf8;">$88.9 Billion (+2.4%)</span></div>
         </div>
       </div>
     </div>
-  </main>
-
-  <!-- ════════════ TRADINGVIEW CHART & EXECUTION MODAL ════════════ -->
-  <div class="drawer-overlay" id="appModal" onclick="closeModal(event)">
-    <div class="drawer-modal" onclick="event.stopPropagation()">
-      <div class="drawer-header">
-        <div class="drawer-title" id="modalTitle">
-          <span id="modalIcon">📈</span>
-          <span id="modalHeading">SYMBOL DETAILS</span>
-        </div>
-        <button class="drawer-close-btn" onclick="closeModal()">✕</button>
-      </div>
-      
-      <!-- Embedded TradingView Lightweight Chart -->
-      <div class="tv-chart-viewport" id="tvChartContainer"></div>
-
-      <!-- Execution Ticket Stats -->
-      <div class="ticket-grid" id="ticketStatsGrid"></div>
-
-      <!-- Strategy Advice Strip -->
-      <div id="modalFooter" style="padding:10px 18px 14px; background:#0c0d14; border-top:1px solid #1a1e2b; font-size:11px; color:#94a3b8; display:flex; justify-content:space-between; align-items:center;">
-        <div id="modalAdviceText">
-          💡 <strong>Execution Advice:</strong> Buy recommended ITM strike at 5m candle confirmation. Never average losing trades!
-        </div>
-        <button id="modalActionBtn" class="btn-top-util" style="background:#2563eb; color:white; border-color:#3b82f6; font-weight:700;" onclick="executeMockOrder()">
-          🚀 Place Paper Trade
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="floating-tooltip-card" id="floatingCardTip"></div>
-  <div class="toast-alert-badge" id="toastBadge"></div>
 
   <script>
     // ══════════════════════════════════════════════════
@@ -3600,6 +3567,10 @@
 
     let realUsdInr = 84.80;
 
+        // ════════════════════════════════════════════════════════════════
+    // 📡 100% GENUINE REAL-TIME LIVE MARKET DATA ENGINES
+    // ════════════════════════════════════════════════════════════════
+
     // 1. LIVE USD/INR EXCHANGE RATE
     async function fetchUsdInrRate() {
       try {
@@ -3655,15 +3626,9 @@
       }
     }
 
-    // 3. LIVE CRYPTO DATA (COINGECKO GENUINE MARKET TICKS)
+    // 3. LIVE CRYPTO DATA VIA COINBASE EXCHANGE API (NO 429 RATE LIMITS)
     async function fetchLiveCryptoData() {
       try {
-        const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,dogecoin,ripple,sui,avalanche-2,chainlink&vs_currencies=usd&include_24hr_change=true';
-        const res = await fetch(url);
-        if (!res.ok) return;
-        const data = await res.json();
-
-        // Helper formatting
         const fmtPct = (val) => {
           if (val === undefined || val === null) return '+0.00%';
           const sign = val >= 0 ? '+' : '';
@@ -3675,85 +3640,104 @@
           el.className = 'pill-percent-capsule ' + (val >= 0 ? 'pos' : 'neg');
         };
 
-        // BTC
-        if (data.bitcoin) {
-          const btcP = data.bitcoin.usd;
-          const btcC = data.bitcoin.usd_24h_change;
-          const topBtc = document.getElementById('btcLtp');
-          const topBtcP = document.getElementById('btcPct');
-          const ribBtc = document.getElementById('cryptoBtcLtp');
-          const ribBtcP = document.getElementById('cryptoBtcPct');
-          const rowPBtc = document.getElementById('rowPriceBtc');
-          const rowPctBtc = document.getElementById('rowPctBtc');
+        // Fetch stats for main assets
+        const pairs = ['BTC-USD', 'ETH-USD', 'SOL-USD', 'DOGE-USD'];
+        const statsPromises = pairs.map(p => 
+          fetch(`https://api.exchange.coinbase.com/products/${p}/stats`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => ({ pair: p, data }))
+            .catch(() => ({ pair: p, data: null }))
+        );
 
-          const strPrice = '$' + btcP.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-          if (topBtc) topBtc.innerText = '$' + Math.round(btcP).toLocaleString('en-US');
-          if (ribBtc) ribBtc.innerText = strPrice;
-          if (rowPBtc) rowPBtc.innerText = strPrice;
-          applyCapsule(topBtcP, btcC);
-          applyCapsule(ribBtcP, btcC);
-          applyCapsule(rowPctBtc, btcC);
-        }
+        const results = await Promise.all(statsPromises);
+        results.forEach(({ pair, data }) => {
+          if (!data || !data.last || !data.open) return;
+          const last = parseFloat(data.last);
+          const open = parseFloat(data.open);
+          const pct = ((last - open) / open) * 100;
 
-        // SOL
-        if (data.solana) {
-          const solP = data.solana.usd;
-          const solC = data.solana.usd_24h_change;
-          const topSol = document.getElementById('solLtp');
-          const ribSol = document.getElementById('cryptoSolLtp');
-          const ribSolP = document.getElementById('cryptoSolPct');
-          const rowPSol = document.getElementById('rowPriceSol');
-          const rowPctSol = document.getElementById('rowPctSol');
+          if (pair === 'BTC-USD') {
+            lastPrices['BTC'] = last;
+            const strPrice = '$' + last.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            const topBtc = document.getElementById('btcLtp');
+            const topBtcP = document.getElementById('btcPct');
+            const ribBtc = document.getElementById('cryptoBtcLtp');
+            const ribBtcP = document.getElementById('cryptoBtcPct');
+            const rowPBtc = document.getElementById('rowPriceBtc');
+            const rowPctBtc = document.getElementById('rowPctBtc');
 
-          const strPrice = '$' + solP.toFixed(2);
-          if (topSol) topSol.innerText = strPrice;
-          if (ribSol) ribSol.innerText = strPrice;
-          if (rowPSol) rowPSol.innerText = strPrice;
-          applyCapsule(ribSolP, solC);
-          applyCapsule(rowPctSol, solC);
-        }
+            if (topBtc) topBtc.innerText = '$' + Math.round(last).toLocaleString('en-US');
+            if (ribBtc) ribBtc.innerText = strPrice;
+            if (rowPBtc) rowPBtc.innerText = strPrice;
+            applyCapsule(topBtcP, pct);
+            applyCapsule(ribBtcP, pct);
+            applyCapsule(rowPctBtc, pct);
+          } else if (pair === 'SOL-USD') {
+            lastPrices['SOL'] = last;
+            const strPrice = '$' + last.toFixed(2);
+            const topSol = document.getElementById('solLtp');
+            const topSolP = document.getElementById('solPct');
+            const ribSol = document.getElementById('cryptoSolLtp');
+            const ribSolP = document.getElementById('cryptoSolPct');
+            const rowPSol = document.getElementById('rowPriceSol');
+            const rowPctSol = document.getElementById('rowPctSol');
 
-        // ETH
-        if (data.ethereum) {
-          const ethP = data.ethereum.usd;
-          const ethC = data.ethereum.usd_24h_change;
-          const topEth = document.getElementById('ethLtp');
-          const ribEth = document.getElementById('cryptoEthLtp');
-          const ribEthP = document.getElementById('cryptoEthPct');
-          const rowPEth = document.getElementById('rowPriceEth');
-          const rowPctEth = document.getElementById('rowPctEth');
+            if (topSol) topSol.innerText = strPrice;
+            if (ribSol) ribSol.innerText = strPrice;
+            if (rowPSol) rowPSol.innerText = strPrice;
+            applyCapsule(topSolP, pct);
+            applyCapsule(ribSolP, pct);
+            applyCapsule(rowPctSol, pct);
+          } else if (pair === 'ETH-USD') {
+            lastPrices['ETH'] = last;
+            const strPrice = '$' + last.toFixed(2);
+            const topEth = document.getElementById('ethLtp');
+            const topEthP = document.getElementById('ethPct');
+            const ribEth = document.getElementById('cryptoEthLtp');
+            const ribEthP = document.getElementById('cryptoEthPct');
+            const rowPEth = document.getElementById('rowPriceEth');
+            const rowPctEth = document.getElementById('rowPctEth');
 
-          const strPrice = '$' + ethP.toFixed(2);
-          if (topEth) topEth.innerText = '$' + Math.round(ethP);
-          if (ribEth) ribEth.innerText = strPrice;
-          if (rowPEth) rowPEth.innerText = strPrice;
-          applyCapsule(ribEthP, ethC);
-          applyCapsule(rowPctEth, ethC);
-        }
+            if (topEth) topEth.innerText = '$' + Math.round(last);
+            if (ribEth) ribEth.innerText = strPrice;
+            if (rowPEth) rowPEth.innerText = strPrice;
+            applyCapsule(topEthP, pct);
+            applyCapsule(ribEthP, pct);
+            applyCapsule(rowPctEth, pct);
+          } else if (pair === 'DOGE-USD') {
+            lastPrices['DOGE'] = last;
+            const strPrice = '$' + last.toFixed(4);
+            const rowPDoge = document.getElementById('rowPriceDoge');
+            const rowPctDoge = document.getElementById('rowPctDoge');
 
-        // DOGE
-        if (data.dogecoin) {
-          const dogeP = data.dogecoin.usd;
-          const dogeC = data.dogecoin.usd_24h_change;
-          const rowPDoge = document.getElementById('rowPriceDoge');
-          const rowPctDoge = document.getElementById('rowPctDoge');
+            if (rowPDoge) rowPDoge.innerText = strPrice;
+            applyCapsule(rowPctDoge, pct);
+          }
+        });
 
-          const strPrice = '$' + dogeP.toFixed(4);
-          if (rowPDoge) rowPDoge.innerText = strPrice;
-          applyCapsule(rowPctDoge, dogeC);
-        }
+        // Spot prices for SUI, XRP, LINK
+        ['SUI', 'XRP', 'LINK'].forEach(sym => {
+          fetch(`https://api.coinbase.com/v2/prices/${sym}-USD/spot`)
+            .then(r => r.ok ? r.json() : null)
+            .then(res => {
+              if (res && res.data && res.data.amount) {
+                const p = parseFloat(res.data.amount);
+                lastPrices[sym] = p;
+                if (sym === 'SUI') {
+                  const row = document.getElementById('rowPriceSui');
+                  if (row) row.innerText = '$' + p.toFixed(4);
+                } else if (sym === 'XRP') {
+                  const row = document.getElementById('rowPriceXrp');
+                  if (row) row.innerText = '$' + p.toFixed(4);
+                } else if (sym === 'LINK') {
+                  const row = document.getElementById('rowPriceLink');
+                  if (row) row.innerText = '$' + p.toFixed(2);
+                }
+              }
+            })
+            .catch(() => null);
+        });
 
-        // SUI
-        if (data.sui) {
-          const suiP = data.sui.usd;
-          const suiC = data.sui.usd_24h_change;
-          const rowPSui = document.getElementById('rowPriceSui');
-          const rowPctSui = document.getElementById('rowPctSui');
-
-          const strPrice = '$' + suiP.toFixed(3);
-          if (rowPSui) rowPSui.innerText = strPrice;
-          applyCapsule(rowPctSui, suiC);
-        }
       } catch (err) {
         console.warn('Crypto live data error:', err);
       }
@@ -3782,15 +3766,19 @@
     // ════════════════════════════════════════════════════════════════
 
     let lastPrices = {
-      'BTC': 77220,
-      'ETH': 2238,
-      'SOL': 95.20,
-      'DOGE': 0.075,
-      'XRP': 1.24,
-      'SUI': 0.895,
-      'GOLD': 2745.50,
-      'SILVER': 33.90,
-      'CRUDE': 71.15
+      'NIFTY 50': 24562.15,
+      'BANK NIFTY': 51840.10,
+      'GOLD': 3876.40,
+      'SILVER': 49.25,
+      'CRUDE': 104.12,
+      'COPPER': 6.48,
+      'BTC': 77276.50,
+      'ETH': 2241.04,
+      'SOL': 95.27,
+      'DOGE': 0.0750,
+      'SUI': 0.8980,
+      'XRP': 1.2450,
+      'LINK': 11.43
     };
 
     function triggerFlash(el, isUp) {
