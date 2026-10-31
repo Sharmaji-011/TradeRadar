@@ -1495,22 +1495,22 @@
         <div id="cluster-metals" style="display:none; align-items:center; gap:10px;">
           <div class="market-status-pill">
             <div class="pulse-green-dot"></div>
-            <span>MCX LIVE</span>
+            <span>COMEX LIVE</span>
             <span style="color:#94a3b8; font-family:'JetBrains Mono'; font-size:10.5px;" id="liveClockMetals">10:24:12</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">GOLD:</span>
-            <span style="color:#22c55e; font-weight:800;" id="goldLtp">₹78,840</span>
+            <span style="color:#22c55e; font-weight:800;" id="goldLtp">$2,745.50</span>
             <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;">+0.72%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">SILVER:</span>
-            <span style="color:#22c55e; font-weight:800;" id="silverLtp">₹96,450</span>
+            <span style="color:#22c55e; font-weight:800;" id="silverLtp">$33.90</span>
             <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;">+1.65%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">CRUDE OIL:</span>
-            <span style="color:#ef4444; font-weight:800;" id="crudeLtp">₹5,980</span>
+            <span style="color:#ef4444; font-weight:800;" id="crudeLtp">$71.15</span>
             <span class="pill-percent-capsule neg" style="min-width:auto; padding:1px 5px; font-size:9.5px;">-0.90%</span>
           </div>
         </div>
@@ -2027,28 +2027,28 @@
     <!-- SCREEN 6: METALS & ENERGY (GOLD, SILVER, CRUDE OIL) 🪙         -->
     <!-- ═════════════════════════════════════════════════════════════ -->
     <div class="view-screen-tab" id="tab-metals">
-      <!-- TOP COMMODITY RIBBON -->
+      <!-- TOP COMMODITY RIBBON (PRICES IN $ USD ONLY) -->
       <div class="market-ribbon-strip">
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
-            <span>GOLD 24K (MCX)</span>
+            <span>GOLD SPOT (XAU/USD)</span>
             <span class="pill-percent-capsule pos">+0.72%</span>
           </div>
-          <div class="metric-card-val" id="ribbonGold">₹78,840</div>
+          <div class="metric-card-val" id="ribbonGold">$2,745.50</div>
           <div class="metric-card-sub">
-            <span>Spot: $2,745.50/oz</span>
-            <span style="color:#22c55e;">▲ Bullish</span>
+            <span>Unit: 1 Troy Oz</span>
+            <span style="color:#22c55e;">▲ Bullish Trend</span>
           </div>
         </div>
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
-            <span>SILVER (MCX)</span>
+            <span>SILVER SPOT (XAG/USD)</span>
             <span class="pill-percent-capsule pos">+1.65%</span>
           </div>
-          <div class="metric-card-val" id="ribbonSilver">₹96,450</div>
+          <div class="metric-card-val" id="ribbonSilver">$33.90</div>
           <div class="metric-card-sub">
-            <span>Spot: $33.90/oz</span>
+            <span>Unit: 1 Troy Oz</span>
             <span style="color:#22c55e; font-weight:700;">★ LEADER</span>
           </div>
         </div>
@@ -2058,21 +2058,21 @@
             <span>CRUDE OIL (WTI)</span>
             <span class="pill-percent-capsule neg">-0.90%</span>
           </div>
-          <div class="metric-card-val" id="ribbonCrude">₹5,980</div>
+          <div class="metric-card-val" id="ribbonCrude">$71.15</div>
           <div class="metric-card-sub">
-            <span>WTI: $71.15 / bbl</span>
+            <span>Unit: 1 Barrel (bbl)</span>
             <span style="color:#ef4444;">▼ Short Bias</span>
           </div>
         </div>
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
-            <span>NATURAL GAS</span>
+            <span>NATURAL GAS (NG)</span>
             <span class="pill-percent-capsule pos">+2.40%</span>
           </div>
-          <div class="metric-card-val" id="ribbonGas">₹248.30</div>
+          <div class="metric-card-val" id="ribbonGas">$2.85</div>
           <div class="metric-card-sub">
-            <span>NYMEX: $2.85/MMBtu</span>
+            <span>Unit: 1 MMBtu</span>
             <span style="color:#22c55e;">▲ Winter Squeeze</span>
           </div>
         </div>
@@ -2084,259 +2084,159 @@
           </div>
           <div class="metric-card-val">103.85</div>
           <div class="metric-card-sub">
-            <span>Inverse Metal Tailwind</span>
-            <span style="color:#38bdf8;">Catalyst</span>
+            <span>Inverse Metal Catalyst</span>
+            <span style="color:#38bdf8;">Tailwind</span>
           </div>
         </div>
       </div>
 
-      <!-- COMMODITY MAIN SCANNER GRID (MATCHING BREAKOUT BEACON & BOOST) -->
-      <div class="pulse-grid-layout">
-        <!-- LEFT: METALS BREAKOUT BEACON -->
-        <div class="scanner-panel-card">
-          <div class="panel-header-strip">
-            <div class="header-left-cluster">
-              <div class="bars-graphic">
-                <div class="bar-line" style="height:6px; background:#ef4444;"></div>
-                <div class="bar-line" style="height:12px; background:#22c55e;"></div>
-                <div class="bar-line" style="height:16px; background:#22c55e;"></div>
-              </div>
-              <span class="panel-title-text">METALS BREAKOUT BEACON 💡</span>
-              <span class="pill-badge-live">MCX LIVE</span>
-            </div>
-            <div class="pill-search-container">
-              <input type="text" id="searchMetalsBeacon" placeholder="Search commodity..." oninput="filterMetalsBeacon(this.value)"/>
-              <span class="search-lens-icon">🔍</span>
-            </div>
+      <!-- FULL-WIDTH COMMODITY BOOST & MACRO RADAR (BEACON REMOVED AS REQUESTED) -->
+      <div class="scanner-panel-card" style="margin-bottom:14px;">
+        <div class="panel-header-strip">
+          <div class="header-left-cluster">
+            <span class="panel-title-text" style="font-size:16px;">COMMODITY BOOST & MACRO RADAR ✨</span>
+            <span class="pill-badge-boost">MACRO R-FACTOR 🚀</span>
+            <span class="pill-badge-live">COMEX LIVE ($)</span>
           </div>
-
-          <div class="table-scroll-wrap">
-            <table class="fin-grid-table">
-              <thead>
-                <tr>
-                  <th style="width:70px;">Signal</th>
-                  <th>Commodity</th>
-                  <th style="text-align:right;">LTP (₹)</th>
-                  <th style="text-align:right;">%</th>
-                  <th style="text-align:right;">Signal % ˅</th>
-                  <th style="text-align:right;">Trigger Time</th>
-                </tr>
-              </thead>
-              <tbody id="metalsBeaconBody">
-                <tr class="beacon-row" onclick="openTradeTicket('GOLD', 78840, '+0.72%', 8.60, true)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:13px; background:#22c55e;"></div><div class="micro-candle-body" style="height:7px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:15px; background:#22c55e;"></div><div class="micro-candle-body" style="height:9px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('GOLD');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">GOLD MINI</div><div class="cell-sub-desc">10g • Comex $2,745.50</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">₹78,840</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.72%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+1.85%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">10:15:20</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('SILVER', 96450, '+1.65%', 9.75, true)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:12px; background:#22c55e;"></div><div class="micro-candle-body" style="height:6px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:16px; background:#22c55e;"></div><div class="micro-candle-body" style="height:11px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('SILVER');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">SILVER MIC</div><div class="cell-sub-desc">1kg • Resistance Blast</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">₹96,450</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+1.65%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+2.90%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">09:45:10</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('NATGAS', 248.30, '+2.40%', 7.45, true)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:11px; background:#22c55e;"></div><div class="micro-candle-body" style="height:5px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:15px; background:#22c55e;"></div><div class="micro-candle-body" style="height:9px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('NATGAS');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">NATGAS</div><div class="cell-sub-desc">MMBtu • Storage Squeeze</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">₹248.30</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.40%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+3.10%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">09:30:15</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('COPPER', 842.10, '+0.85%', 6.10, false)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:10px; background:#22c55e;"></div><div class="micro-candle-body" style="height:5px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:13px; background:#22c55e;"></div><div class="micro-candle-body" style="height:7px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('COPPER');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">COPPER</div><div class="cell-sub-desc">1kg • EV Demand Surge</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">₹842.10</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.85%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+1.40%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">10:12:00</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('CRUDEOIL', 5980, '-0.90%', -4.85, false)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:12px; background:#ef4444;"></div><div class="micro-candle-body" style="height:7px; background:#ef4444;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:15px; background:#ef4444;"></div><div class="micro-candle-body" style="height:10px; background:#ef4444;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('CRUDEOIL');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">CRUDEOIL</div><div class="cell-sub-desc">1bbl • Inventory Build Trap</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">₹5,980</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.90%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct neg">-1.25%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">10:05:40</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="pill-search-container">
+            <input type="text" id="searchMetalsBoost" placeholder="Search commodity..." oninput="filterMetalsBoost(this.value)"/>
+            <span class="search-lens-icon">🔍</span>
           </div>
         </div>
 
-        <!-- RIGHT: COMMODITY INTRADAY BOOST -->
-        <div class="scanner-panel-card">
-          <div class="panel-header-strip">
-            <div class="header-left-cluster">
-              <span class="panel-title-text">COMMODITY BOOST ✨</span>
-              <span class="pill-badge-boost">MACRO BOOST 🚀</span>
-              <span class="pill-badge-live">LIVE</span>
-            </div>
-            <div class="pill-search-container">
-              <input type="text" id="searchMetalsBoost" placeholder="Search boost..." oninput="filterMetalsBoost(this.value)"/>
-              <span class="search-lens-icon">🔍</span>
-            </div>
-          </div>
+        <div class="table-scroll-wrap">
+          <table class="fin-grid-table">
+            <thead>
+              <tr>
+                <th style="width:36px; text-align:center;">Dir</th>
+                <th>Commodity</th>
+                <th style="text-align:right;">Price ($ USD)</th>
+                <th style="text-align:right;">24h %</th>
+                <th style="text-align:right;">R.Factor ˅</th>
+                <th>Macro Driver & Inventory Catalyst</th>
+                <th style="text-align:center;">Signal / Bias</th>
+                <th style="text-align:center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="metalsBoostBody">
+              <tr class="boost-row" onclick="openTradeTicket('SILVER', 33.90, '+1.65%', 9.75, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">SILVER (XAG/USD)</div>
+                  <div class="cell-sub-desc">1 Troy Oz • High Beta Solar Demand</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSilver">$33.90</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+1.65%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">9.75 LEADER</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Solar PV & Industrial Electronics Speculative Long Squeeze</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH BETA BLAST</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-          <div class="table-scroll-wrap">
-            <table class="fin-grid-table">
-              <thead>
-                <tr>
-                  <th>Commodity</th>
-                  <th style="text-align:right;">%</th>
-                  <th style="text-align:right;">R.Fac ˅</th>
-                  <th style="text-align:center;">Signal / Catalyst</th>
-                </tr>
-              </thead>
-              <tbody id="metalsBoostBody">
-                <tr class="boost-row" onclick="openTradeTicket('SILVER', 96450, '+1.65%', 9.75, true)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">SILVER</div>
-                        <div class="cell-sub-desc">Solar & Industrial Call Squeeze</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+1.65%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score high">9.75 LEADER</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH BETA BLAST</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('GOLD', 2745.50, '+0.72%', 8.60, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">GOLD (XAU/USD)</div>
+                  <div class="cell-sub-desc">1 Troy Oz • Global Central Bank Reserves</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceGold">$2,745.50</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.72%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">8.60 STRONG</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Sovereign Bank Gold Purchases + US DXY Drop Tailwind</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SAFE HAVEN</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('GOLD', 78840, '+0.72%', 8.60, true)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">GOLD</div>
-                        <div class="cell-sub-desc">Central Bank Buying & DXY Drop</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.72%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score high">8.60 STRONG</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SAFE HAVEN</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('NATGAS', 2.85, '+2.40%', 7.45, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">NATURAL GAS (NG)</div>
+                  <div class="cell-sub-desc">1 MMBtu • Henry Hub Cold Front</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceGas">$2.85</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.40%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">7.45 STRONG</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Winter Storage Drawdown Acceleration & LNG Export Inflow</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SHORT SQUEEZE</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('NATGAS', 248.30, '+2.40%', 7.45, true)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">NATGAS</div>
-                        <div class="cell-sub-desc">Freezing Weather Pipeline Pull</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.40%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score med">7.45 STRONG</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SHORT SQUEEZE</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('COPPER', 4.35, '+0.85%', 6.10, false)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">COPPER (HG)</div>
+                  <div class="cell-sub-desc">1 Pound (lb) • Renewable Grid Metal</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$4.35</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.85%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">6.10 STEADY</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">LME Warehouse Drawdowns (-3,150 MT) + EV Supply Tightness</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('COPPER', 842.10, '+0.85%', 6.10, false)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">COPPER</div>
-                        <div class="cell-sub-desc">Renewable Grid Inflow</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.85%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score med">6.10 STEADY</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('CRUDEOIL', 71.15, '-0.90%', -4.85, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">CRUDE OIL (WTI)</div>
+                  <div class="cell-sub-desc">1 Barrel (bbl) • Cushing NYMEX Hub</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceCrude">$71.15</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.90%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score neg">-4.85 SHORT</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">US EIA Inventory Surplus (+2.4M Bbls Build) + Refining Slump</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE TRAP</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('CRUDEOIL', 5980, '-0.90%', -4.85, false)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow down">⬇</span>
-                      <div>
-                        <div class="cell-symbol-primary">CRUDEOIL</div>
-                        <div class="cell-sub-desc">EIA Surplus + Weak Demand</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.90%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score neg">-4.85 SHORT</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE TRAP</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+              <tr class="boost-row" onclick="openTradeTicket('BRENT', 75.40, '-0.75%', -3.80, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">BRENT CRUDE</div>
+                  <div class="cell-sub-desc">1 Barrel (bbl) • North Sea Benchmark</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$75.40</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.75%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score neg">-3.80 SHORT</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Weak European Industrial Fuel Demand + OPEC+ Output Uncertainty</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
       <!-- BOTTOM MACRO COMMODITY CARDS -->
       <div class="macro-cards-grid">
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>🥇</span> GOLD & SILVER BULLION DYNAMICS</div>
+          <div class="macro-card-title"><span>🥇</span> GOLD & SILVER BULLION DYNAMICS ($)</div>
           <div class="macro-stat-row"><span class="macro-stat-label">Gold/Silver Ratio (GSR):</span><span class="macro-stat-val">80.98 (Silver Outperforming)</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Comex Net Speculative Longs:</span><span class="macro-stat-val" style="color:#22c55e;">+248,500 Contracts</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">RBI Gold Reserves Addition:</span><span class="macro-stat-val">102 Tonnes (Record High)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Next Bullion Resistance:</span><span class="macro-stat-val" style="color:#f59e0b;">₹79,200 / $2,765</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Gold Next Resistance Floor:</span><span class="macro-stat-val" style="color:#f59e0b;">$2,765 / oz</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Silver Target Expansion:</span><span class="macro-stat-val" style="color:#22c55e;">$35.50 / oz</span></div>
         </div>
 
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>🛢️</span> CRUDE OIL & ENERGY INTELLIGENCE</div>
+          <div class="macro-card-title"><span>🛢️</span> CRUDE OIL & ENERGY INTELLIGENCE ($)</div>
           <div class="macro-stat-row"><span class="macro-stat-label">US Crude Inventory (EIA):</span><span class="macro-stat-val" style="color:#ef4444;">+2.4M Bbls Build</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">OPEC+ Voluntary Quotas:</span><span class="macro-stat-val">2.2M Bbls Extension</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Brent / WTI Crack Spread:</span><span class="macro-stat-val">$4.25 / bbl</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Critical Support Floor:</span><span class="macro-stat-val" style="color:#ef4444;">₹5,880 / $69.80</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Critical Support Floor:</span><span class="macro-stat-val" style="color:#ef4444;">$69.80 / bbl</span></div>
         </div>
 
         <div class="macro-insight-card">
-          <div class="macro-card-title"><span>🏭</span> BASE METALS & INDUSTRIAL FLOW</div>
+          <div class="macro-card-title"><span>🏭</span> BASE METALS & INDUSTRIAL FLOW ($)</div>
           <div class="macro-stat-row"><span class="macro-stat-label">LME Copper Warehouse Stocks:</span><span class="macro-stat-val" style="color:#22c55e;">-3,150 MT Drawdown</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">China Manufacturing PMI:</span><span class="macro-stat-val">50.2 (Expansion Zone)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">Aluminum Smelter Power Cost:</span><span class="macro-stat-val">European Margins Tight</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">Aluminum Smelter Power Cost:</span><span class="macro-stat-val">Tight Margins</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Industrial Metal Bias:</span><span class="macro-stat-val" style="color:#22c55e;">Cautious Bullish</span></div>
         </div>
       </div>
     </div>
-
     <!-- ═════════════════════════════════════════════════════════════ -->
-    <!-- SCREEN 7: CRYPTO 24×7 ⚡                                     -->
+    <!-- SCREEN 7: CRYPTO
+ 24×7 ⚡                                     -->
     <!-- ═════════════════════════════════════════════════════════════ -->
     <div class="view-screen-tab" id="tab-crypto">
       <!-- TOP CRYPTO RIBBON -->
@@ -2346,9 +2246,9 @@
             <span>BITCOIN (BTC/USDT)</span>
             <span class="pill-percent-capsule pos" id="cryptoBtcPct">+2.40%</span>
           </div>
-          <div class="metric-card-val" id="cryptoBtcLtp">$68,620.00</div>
+          <div class="metric-card-val" id="cryptoBtcLtp">$77,220.00</div>
           <div class="metric-card-sub">
-            <span>ATH Distance: -7.4%</span>
+            <span>ATH Range: Active</span>
             <span style="color:#22c55e;">▲ Inflow Surge</span>
           </div>
         </div>
@@ -2358,7 +2258,7 @@
             <span>SOLANA (SOL/USDT)</span>
             <span class="pill-percent-capsule pos" id="cryptoSolPct">+5.85%</span>
           </div>
-          <div class="metric-card-val" id="cryptoSolLtp">$182.40</div>
+          <div class="metric-card-val" id="cryptoSolLtp">$95.32</div>
           <div class="metric-card-sub">
             <span>DEX Volume: #1 Chain</span>
             <span style="color:#22c55e; font-weight:700;">★ LEADER</span>
@@ -2370,7 +2270,7 @@
             <span>ETHEREUM (ETH/USDT)</span>
             <span class="pill-percent-capsule pos" id="cryptoEthPct">+1.80%</span>
           </div>
-          <div class="metric-card-val" id="cryptoEthLtp">$2,545.00</div>
+          <div class="metric-card-val" id="cryptoEthLtp">$2,238.00</div>
           <div class="metric-card-sub">
             <span>Layer 2 Activity: High</span>
             <span style="color:#38bdf8;">Consolidating</span>
@@ -2384,7 +2284,7 @@
           </div>
           <div class="metric-card-val" style="color:#22c55e;">GREED 🔥</div>
           <div class="metric-card-sub">
-            <span>Yesterday: 68 (Greed)</span>
+            <span>Yesterday: 68</span>
             <span style="color:#f59e0b;">Bulls Control</span>
           </div>
         </div>
@@ -2396,226 +2296,148 @@
           </div>
           <div class="metric-card-val" style="color:#ef4444;">$98.4M Shorts</div>
           <div class="metric-card-sub">
-            <span>Short Squeeze Velocity</span>
+            <span>Short Squeeze Engine</span>
             <span style="color:#22c55e;">Bull Fuel</span>
           </div>
         </div>
       </div>
 
-      <!-- CRYPTO MAIN SCANNER GRID -->
-      <div class="pulse-grid-layout">
-        <!-- LEFT: CRYPTO BREAKOUT BEACON -->
-        <div class="scanner-panel-card">
-          <div class="panel-header-strip">
-            <div class="header-left-cluster">
-              <div class="bars-graphic">
-                <div class="bar-line" style="height:6px; background:#ef4444;"></div>
-                <div class="bar-line" style="height:12px; background:#22c55e;"></div>
-                <div class="bar-line" style="height:16px; background:#22c55e;"></div>
-              </div>
-              <span class="panel-title-text">CRYPTO BREAKOUT BEACON 💡</span>
-              <span class="pill-badge-live">24×7 LIVE</span>
-            </div>
-            <div class="pill-search-container">
-              <input type="text" id="searchCryptoBeacon" placeholder="Search pair..." oninput="filterCryptoBeacon(this.value)"/>
-              <span class="search-lens-icon">🔍</span>
-            </div>
+      <!-- FULL-WIDTH CRYPTO BOOST & LIQUIDATION RADAR (BEACON REMOVED AS REQUESTED) -->
+      <div class="scanner-panel-card" style="margin-bottom:14px;">
+        <div class="panel-header-strip">
+          <div class="header-left-cluster">
+            <span class="panel-title-text" style="font-size:16px;">CRYPTO BOOST & LIQUIDATION RADAR ✨</span>
+            <span class="pill-badge-boost">REAL-TIME WEBSOCKET 🚀</span>
+            <span class="pill-badge-live">24×7 LIVE</span>
           </div>
-
-          <div class="table-scroll-wrap">
-            <table class="fin-grid-table">
-              <thead>
-                <tr>
-                  <th style="width:70px;">Signal</th>
-                  <th>Pair</th>
-                  <th style="text-align:right;">Price ($)</th>
-                  <th style="text-align:right;">24h %</th>
-                  <th style="text-align:right;">Signal % ˅</th>
-                  <th style="text-align:right;">Time</th>
-                </tr>
-              </thead>
-              <tbody id="cryptoBeaconBody">
-                <tr class="beacon-row" onclick="openTradeTicket('SOL', 182.40, '+5.85%', 9.88, true)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:13px; background:#22c55e;"></div><div class="micro-candle-body" style="height:8px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:16px; background:#22c55e;"></div><div class="micro-candle-body" style="height:12px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('SOL');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">SOL / USDT</div><div class="cell-sub-desc">Solana • 4H Cup Breakout</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">$182.40</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+5.85%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+6.40%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">13:42:15</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('DOGE', 0.1590, '+8.65%', 8.95, true)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:12px; background:#22c55e;"></div><div class="micro-candle-body" style="height:6px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:16px; background:#22c55e;"></div><div class="micro-candle-body" style="height:11px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('DOGE');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">DOGE / USDT</div><div class="cell-sub-desc">Dogecoin • Whale Volume Surge</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">$0.1590</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+8.65%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+9.20%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">13:38:50</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('BTC', 68620, '+2.40%', 8.42, true)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:14px; background:#22c55e;"></div><div class="micro-candle-body" style="height:8px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:15px; background:#22c55e;"></div><div class="micro-candle-body" style="height:10px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('BTC');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">BTC / USDT</div><div class="cell-sub-desc">Bitcoin • $68.5k Level Cleared</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">$68,620.00</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.40%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+3.85%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">13:40:02</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('SUI', 2.14, '+11.40%', 7.85, true)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:13px; background:#22c55e;"></div><div class="micro-candle-body" style="height:7px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:16px; background:#22c55e;"></div><div class="micro-candle-body" style="height:12px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('SUI');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">SUI / USDT</div><div class="cell-sub-desc">Sui Network • All-Time High Rally</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">$2.14</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+11.40%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+12.10%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">13:31:00</td>
-                </tr>
-
-                <tr class="beacon-row" onclick="openTradeTicket('ETH', 2545, '+1.80%', 6.20, false)">
-                  <td>
-                    <div class="cell-candlestick-wrapper">
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:11px; background:#22c55e;"></div><div class="micro-candle-body" style="height:5px; background:#22c55e;"></div></div>
-                      <div class="micro-candle"><div class="micro-candle-wick" style="height:13px; background:#22c55e;"></div><div class="micro-candle-body" style="height:7px; background:#22c55e;"></div></div>
-                      <span class="cell-bookmark-plus" onclick="event.stopPropagation(); toggleWatchlist('ETH');">+</span>
-                    </div>
-                  </td>
-                  <td><div class="cell-symbol-primary">ETH / USDT</div><div class="cell-sub-desc">Ethereum • EMA 50 Support Bounce</div></td>
-                  <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:700;">$2,545.00</td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+1.80%</span></td>
-                  <td style="text-align:right;"><span class="cell-sig-pct pos">+2.60%</span></td>
-                  <td style="text-align:right; color:#94a3b8; font-size:11px; font-family:'JetBrains Mono';">13:35:10</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="pill-search-container">
+            <input type="text" id="searchCryptoBoost" placeholder="Search crypto pair..." oninput="filterCryptoBoost(this.value)"/>
+            <span class="search-lens-icon">🔍</span>
           </div>
         </div>
 
-        <!-- RIGHT: CRYPTO BOOST & LIQUIDATION RADAR -->
-        <div class="scanner-panel-card">
-          <div class="panel-header-strip">
-            <div class="header-left-cluster">
-              <span class="panel-title-text">CRYPTO BOOST & FUNDING ✨</span>
-              <span class="pill-badge-boost">LIQUIDATION RADAR 🚀</span>
-              <span class="pill-badge-live">LIVE</span>
-            </div>
-            <div class="pill-search-container">
-              <input type="text" id="searchCryptoBoost" placeholder="Search boost..." oninput="filterCryptoBoost(this.value)"/>
-              <span class="search-lens-icon">🔍</span>
-            </div>
-          </div>
+        <div class="table-scroll-wrap">
+          <table class="fin-grid-table">
+            <thead>
+              <tr>
+                <th style="width:36px; text-align:center;">Dir</th>
+                <th>Pair / Asset</th>
+                <th style="text-align:right;">Live Price ($)</th>
+                <th style="text-align:right;">24h %</th>
+                <th style="text-align:right;">R.Factor ˅</th>
+                <th style="text-align:center;">Funding Rate</th>
+                <th>Institutional Flow & Liquidation Map</th>
+                <th style="text-align:center;">Signal / Squeeze</th>
+                <th style="text-align:center;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="cryptoBoostBody">
+              <tr class="boost-row" onclick="openTradeTicket('SOL', 95.32, '+5.85%', 9.88, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">SOL / USDT</div>
+                  <div class="cell-sub-desc">Solana • Ecosystem DEX Breakout</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSol">$95.32</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSol">+5.85%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">9.88 LEADER</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.012%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Short Squeeze Active • $24.5M Shorts Wiped Out Above $94</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SHORT SQUEEZE</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-          <div class="table-scroll-wrap">
-            <table class="fin-grid-table">
-              <thead>
-                <tr>
-                  <th>Pair</th>
-                  <th style="text-align:right;">24h %</th>
-                  <th style="text-align:right;">R.Fac ˅</th>
-                  <th style="text-align:center;">Funding / Squeeze</th>
-                </tr>
-              </thead>
-              <tbody id="cryptoBoostBody">
-                <tr class="boost-row" onclick="openTradeTicket('SOL', 182.40, '+5.85%', 9.88, true)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">SOL / USDT</div>
-                        <div class="cell-sub-desc">Short Squeeze Active • Funding: +0.012%</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+5.85%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score high">9.88 LEADER</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SHORT SQUEEZE</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('DOGE', 0.0750, '+8.65%', 8.95, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">DOGE / USDT</div>
+                  <div class="cell-sub-desc">Dogecoin • Whale Accumulation Wave</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceDoge">$0.0750</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctDoge">+8.65%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">8.95 STRONG</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.015%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Retail Liquidity Inflow Surge • 4.2x Volume Velocity</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH INFLOW</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('DOGE', 0.1590, '+8.65%', 8.95, true)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">DOGE / USDT</div>
-                        <div class="cell-sub-desc">Retail & Whale Liquidity Wave</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+8.65%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score high">8.95 STRONG</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH INFLOW</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('BTC', 77220, '+2.40%', 8.42, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">BTC / USDT</div>
+                  <div class="cell-sub-desc">Bitcoin • Institutional Spot ETF Wave</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceBtc">$77,220.00</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctBtc">+2.40%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">8.42 STRONG</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.010%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Spot ETF Net Inflows (+$420M) • Major Liquidation Cluster at $78k</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">INSTITUTIONAL</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('BTC', 68620, '+2.40%', 8.42, true)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">BTC / USDT</div>
-                        <div class="cell-sub-desc">Spot ETF Net Inflow +$420M</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.40%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score high">8.42 STRONG</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-leader">INSTITUTIONAL</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('SUI', 0.895, '+11.40%', 7.85, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">SUI / USDT</div>
+                  <div class="cell-sub-desc">Sui Network • All-Time High Run</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSui">$0.895</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSui">+11.40%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">7.85 STRONG</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.020%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">TVL Doubled In 30 Days • Spot Buying Across Major Exchanges</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">BREAKOUT BIAS</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('SUI', 2.14, '+11.40%', 7.85, true)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow up">⬆</span>
-                      <div>
-                        <div class="cell-symbol-primary">SUI / USDT</div>
-                        <div class="cell-sub-desc">TVL Doubled In 30 Days</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule pos">+11.40%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score med">7.85 STRONG</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-leader">BREAKOUT BIAS</span></td>
-                </tr>
+              <tr class="boost-row" onclick="openTradeTicket('ETH', 2238, '+1.80%', 6.20, false)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">ETH / USDT</div>
+                  <div class="cell-sub-desc">Ethereum • Layer-2 Staking Flow</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceEth">$2,238.00</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctEth">+1.80%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">6.20 STEADY</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#38bdf8;">+0.008%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Base EMA 50 Support Bounce • Consolidating Under $2,300</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
 
-                <tr class="boost-row" onclick="openTradeTicket('XRP', 0.5210, '-0.45%', -3.20, false)">
-                  <td>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                      <span class="direction-arrow down">⬇</span>
-                      <div>
-                        <div class="cell-symbol-primary">XRP / USDT</div>
-                        <div class="cell-sub-desc">Long Liquidation Cascades</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.45%</span></td>
-                  <td style="text-align:right;"><span class="cell-rfac-score neg">-3.20 SHORT</span></td>
-                  <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE TRAP</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+              <tr class="boost-row" onclick="openTradeTicket('LINK', 11.36, '+2.15%', 5.40, false)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">LINK / USDT</div>
+                  <div class="cell-sub-desc">Chainlink • CCIP Cross-Chain Volume</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$11.36</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+2.15%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">5.40 STEADY</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#38bdf8;">+0.009%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Institutional Oracle Staking & Bank Pilots Expansion</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">STEADY</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('XRP', 1.24, '-0.45%', -3.20, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">XRP / USDT</div>
+                  <div class="cell-sub-desc">Ripple • Liquidation Cascades</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$1.24</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.45%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score neg">-3.20 SHORT</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#ef4444;">-0.005%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Overleveraged Long Liquidations Trap • Rejection at $1.28</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-downside">DOWNSIDE TRAP</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -2632,8 +2454,8 @@
         <div class="macro-insight-card">
           <div class="macro-card-title"><span>🔥</span> DERIVATIVES & LIQUIDATION MAP</div>
           <div class="macro-stat-row"><span class="macro-stat-label">Total Open Interest (OI):</span><span class="macro-stat-val">$38.4 Billion</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">BTC Top Liquidation Cluster:</span><span class="macro-stat-val" style="color:#f59e0b;">$69,800 ($1.2B Shorts)</span></div>
-          <div class="macro-stat-row"><span class="macro-stat-label">BTC Downside Liquidation Floor:</span><span class="macro-stat-val" style="color:#ef4444;">$66,500 ($850M Longs)</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">BTC Top Liquidation Cluster:</span><span class="macro-stat-val" style="color:#f59e0b;">$78,500 ($1.2B Shorts)</span></div>
+          <div class="macro-stat-row"><span class="macro-stat-label">BTC Downside Liquidation Floor:</span><span class="macro-stat-val" style="color:#ef4444;">$75,200 ($850M Longs)</span></div>
           <div class="macro-stat-row"><span class="macro-stat-label">Global Funding Rate Average:</span><span class="macro-stat-val" style="color:#22c55e;">+0.010% (Healthy Long Bias)</span></div>
         </div>
 
@@ -2646,7 +2468,6 @@
         </div>
       </div>
     </div>
-
   </main>
 
   <!-- ════════════ TRADINGVIEW CHART & EXECUTION MODAL ════════════ -->
@@ -3758,22 +3579,10 @@
       }
     }
 
-    // Filter functions for Metals & Crypto
-    function filterMetalsBeacon(q) {
-      q = q.toLowerCase();
-      document.querySelectorAll('#metalsBeaconBody tr').forEach(r => {
-        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
-      });
-    }
+    // Filter functions for Metals & Crypto Scanners
     function filterMetalsBoost(q) {
       q = q.toLowerCase();
       document.querySelectorAll('#metalsBoostBody tr').forEach(r => {
-        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
-      });
-    }
-    function filterCryptoBeacon(q) {
-      q = q.toLowerCase();
-      document.querySelectorAll('#cryptoBeaconBody tr').forEach(r => {
         r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
       });
     }
@@ -3809,7 +3618,6 @@
     // 2. LIVE METALS & COMMODITY DATA (GOLD, SILVER, CRUDE)
     async function fetchLiveMetalsData() {
       try {
-        // Fetch Real Gold (XAU) & Silver (XAG)
         const [resGold, resSilver] = await Promise.all([
           fetch('https://api.gold-api.com/price/XAU').then(r => r.json()).catch(() => null),
           fetch('https://api.gold-api.com/price/XAG').then(r => r.json()).catch(() => null)
@@ -3817,52 +3625,30 @@
 
         if (resGold && resGold.price) {
           const goldSpot = parseFloat(resGold.price);
-          // 1 Troy Ounce = 31.1035g. Indian 24K 10g estimate: (goldSpot / 31.1035) * 10 * USDINR * (1 + 0.15 duty/gst)
-          const goldInr10g = Math.round((goldSpot / 31.1035) * 10 * realUsdInr * 1.06);
+          lastPrices['GOLD'] = goldSpot;
+          const strGold = '$' + goldSpot.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-          // Update Top Tickers
           const topGold = document.getElementById('goldLtp');
-          if (topGold) topGold.innerText = '₹' + goldInr10g.toLocaleString('en-IN');
-
-          // Update Ribbon
           const ribGold = document.getElementById('ribbonGold');
-          if (ribGold) ribGold.innerText = '₹' + goldInr10g.toLocaleString('en-IN');
-          const goldSub = ribGold?.parentElement?.querySelector('.metric-card-sub span:first-child');
-          if (goldSub) goldSub.innerText = `Spot: $${goldSpot.toFixed(2)}/oz`;
+          const rowGold = document.getElementById('rowPriceGold');
 
-          // Update Beacon Table
-          const goldBeaconRow = document.querySelector('#metalsBeaconBody tr:nth-child(1)');
-          if (goldBeaconRow) {
-            const priceCell = goldBeaconRow.querySelector('td:nth-child(3)');
-            const descCell = goldBeaconRow.querySelector('.cell-sub-desc');
-            if (priceCell) priceCell.innerText = '₹' + goldInr10g.toLocaleString('en-IN');
-            if (descCell) descCell.innerText = `10g • Comex $${goldSpot.toFixed(2)}`;
-          }
+          if (topGold) { topGold.innerText = strGold; }
+          if (ribGold) { ribGold.innerText = strGold; }
+          if (rowGold) { rowGold.innerText = strGold; }
         }
 
         if (resSilver && resSilver.price) {
           const silverSpot = parseFloat(resSilver.price);
-          // 1kg Silver: (silverSpot / 31.1035) * 1000 * USDINR * 1.10
-          const silverInr1kg = Math.round((silverSpot / 31.1035) * 1000 * realUsdInr * 1.10);
+          lastPrices['SILVER'] = silverSpot;
+          const strSilver = '$' + silverSpot.toFixed(2);
 
-          // Update Top Tickers
           const topSilver = document.getElementById('silverLtp');
-          if (topSilver) topSilver.innerText = '₹' + silverInr1kg.toLocaleString('en-IN');
-
-          // Update Ribbon
           const ribSilver = document.getElementById('ribbonSilver');
-          if (ribSilver) ribSilver.innerText = '₹' + silverInr1kg.toLocaleString('en-IN');
-          const silSub = ribSilver?.parentElement?.querySelector('.metric-card-sub span:first-child');
-          if (silSub) silSub.innerText = `Spot: $${silverSpot.toFixed(2)}/oz`;
+          const rowSilver = document.getElementById('rowPriceSilver');
 
-          // Update Beacon Table
-          const silBeaconRow = document.querySelector('#metalsBeaconBody tr:nth-child(2)');
-          if (silBeaconRow) {
-            const priceCell = silBeaconRow.querySelector('td:nth-child(3)');
-            const descCell = silBeaconRow.querySelector('.cell-sub-desc');
-            if (priceCell) priceCell.innerText = '₹' + silverInr1kg.toLocaleString('en-IN');
-            if (descCell) descCell.innerText = `1kg • Comex $${silverSpot.toFixed(2)}`;
-          }
+          if (topSilver) { topSilver.innerText = strSilver; }
+          if (ribSilver) { ribSilver.innerText = strSilver; }
+          if (rowSilver) { rowSilver.innerText = strSilver; }
         }
       } catch (err) {
         console.warn('Metals live data error:', err);
@@ -3897,27 +3683,16 @@
           const topBtcP = document.getElementById('btcPct');
           const ribBtc = document.getElementById('cryptoBtcLtp');
           const ribBtcP = document.getElementById('cryptoBtcPct');
+          const rowPBtc = document.getElementById('rowPriceBtc');
+          const rowPctBtc = document.getElementById('rowPctBtc');
 
           const strPrice = '$' + btcP.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
           if (topBtc) topBtc.innerText = '$' + Math.round(btcP).toLocaleString('en-US');
           if (ribBtc) ribBtc.innerText = strPrice;
+          if (rowPBtc) rowPBtc.innerText = strPrice;
           applyCapsule(topBtcP, btcC);
           applyCapsule(ribBtcP, btcC);
-
-          // Update Beacon Table BTC row
-          const btcRow = document.querySelector('#cryptoBeaconBody tr:nth-child(3)');
-          if (btcRow) {
-            const pCell = btcRow.querySelector('td:nth-child(3)');
-            const cCell = btcRow.querySelector('td:nth-child(4) .pill-percent-capsule');
-            if (pCell) pCell.innerText = strPrice;
-            applyCapsule(cCell, btcC);
-          }
-          // Update Boost Table BTC row
-          const btcBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(3)');
-          if (btcBoostRow) {
-            const cCell = btcBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
-            applyCapsule(cCell, btcC);
-          }
+          applyCapsule(rowPctBtc, btcC);
         }
 
         // SOL
@@ -3927,25 +3702,15 @@
           const topSol = document.getElementById('solLtp');
           const ribSol = document.getElementById('cryptoSolLtp');
           const ribSolP = document.getElementById('cryptoSolPct');
+          const rowPSol = document.getElementById('rowPriceSol');
+          const rowPctSol = document.getElementById('rowPctSol');
 
           const strPrice = '$' + solP.toFixed(2);
           if (topSol) topSol.innerText = strPrice;
           if (ribSol) ribSol.innerText = strPrice;
+          if (rowPSol) rowPSol.innerText = strPrice;
           applyCapsule(ribSolP, solC);
-
-          // Update Beacon Table SOL row
-          const solRow = document.querySelector('#cryptoBeaconBody tr:nth-child(1)');
-          if (solRow) {
-            const pCell = solRow.querySelector('td:nth-child(3)');
-            const cCell = solRow.querySelector('td:nth-child(4) .pill-percent-capsule');
-            if (pCell) pCell.innerText = strPrice;
-            applyCapsule(cCell, solC);
-          }
-          const solBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(1)');
-          if (solBoostRow) {
-            const cCell = solBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
-            applyCapsule(cCell, solC);
-          }
+          applyCapsule(rowPctSol, solC);
         }
 
         // ETH
@@ -3955,59 +3720,39 @@
           const topEth = document.getElementById('ethLtp');
           const ribEth = document.getElementById('cryptoEthLtp');
           const ribEthP = document.getElementById('cryptoEthPct');
+          const rowPEth = document.getElementById('rowPriceEth');
+          const rowPctEth = document.getElementById('rowPctEth');
 
           const strPrice = '$' + ethP.toFixed(2);
           if (topEth) topEth.innerText = '$' + Math.round(ethP);
           if (ribEth) ribEth.innerText = strPrice;
+          if (rowPEth) rowPEth.innerText = strPrice;
           applyCapsule(ribEthP, ethC);
-
-          const ethRow = document.querySelector('#cryptoBeaconBody tr:nth-child(5)');
-          if (ethRow) {
-            const pCell = ethRow.querySelector('td:nth-child(3)');
-            const cCell = ethRow.querySelector('td:nth-child(4) .pill-percent-capsule');
-            if (pCell) pCell.innerText = strPrice;
-            applyCapsule(cCell, ethC);
-          }
+          applyCapsule(rowPctEth, ethC);
         }
 
         // DOGE
         if (data.dogecoin) {
           const dogeP = data.dogecoin.usd;
           const dogeC = data.dogecoin.usd_24h_change;
-          const strPrice = '$' + dogeP.toFixed(4);
+          const rowPDoge = document.getElementById('rowPriceDoge');
+          const rowPctDoge = document.getElementById('rowPctDoge');
 
-          const dogeRow = document.querySelector('#cryptoBeaconBody tr:nth-child(2)');
-          if (dogeRow) {
-            const pCell = dogeRow.querySelector('td:nth-child(3)');
-            const cCell = dogeRow.querySelector('td:nth-child(4) .pill-percent-capsule');
-            if (pCell) pCell.innerText = strPrice;
-            applyCapsule(cCell, dogeC);
-          }
-          const dogeBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(2)');
-          if (dogeBoostRow) {
-            const cCell = dogeBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
-            applyCapsule(cCell, dogeC);
-          }
+          const strPrice = '$' + dogeP.toFixed(4);
+          if (rowPDoge) rowPDoge.innerText = strPrice;
+          applyCapsule(rowPctDoge, dogeC);
         }
 
         // SUI
         if (data.sui) {
           const suiP = data.sui.usd;
           const suiC = data.sui.usd_24h_change;
-          const strPrice = '$' + suiP.toFixed(3);
+          const rowPSui = document.getElementById('rowPriceSui');
+          const rowPctSui = document.getElementById('rowPctSui');
 
-          const suiRow = document.querySelector('#cryptoBeaconBody tr:nth-child(4)');
-          if (suiRow) {
-            const pCell = suiRow.querySelector('td:nth-child(3)');
-            const cCell = suiRow.querySelector('td:nth-child(4) .pill-percent-capsule');
-            if (pCell) pCell.innerText = strPrice;
-            applyCapsule(cCell, suiC);
-          }
-          const suiBoostRow = document.querySelector('#cryptoBoostBody tr:nth-child(4)');
-          if (suiBoostRow) {
-            const cCell = suiBoostRow.querySelector('td:nth-child(2) .pill-percent-capsule');
-            applyCapsule(cCell, suiC);
-          }
+          const strPrice = '$' + suiP.toFixed(3);
+          if (rowPSui) rowPSui.innerText = strPrice;
+          applyCapsule(rowPctSui, suiC);
         }
       } catch (err) {
         console.warn('Crypto live data error:', err);
@@ -4043,9 +3788,9 @@
       'DOGE': 0.075,
       'XRP': 1.24,
       'SUI': 0.895,
-      'GOLD': 112027,
-      'SILVER': 147714,
-      'CRUDE': 5980
+      'GOLD': 2745.50,
+      'SILVER': 33.90,
+      'CRUDE': 71.15
     };
 
     function triggerFlash(el, isUp) {
@@ -4102,81 +3847,78 @@
         const strP = '$' + newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         const topEl = document.getElementById('btcLtp');
         const ribEl = document.getElementById('cryptoBtcLtp');
+        const rowP = document.getElementById('rowPriceBtc');
         if (topEl) { topEl.innerText = '$' + Math.round(newPrice).toLocaleString('en-US'); triggerFlash(topEl, isUp); }
         if (ribEl) { ribEl.innerText = strP; triggerFlash(ribEl, isUp); }
-
-        const btcRow = document.querySelector('#cryptoBeaconBody tr:nth-child(3) td:nth-child(3)');
-        if (btcRow) { btcRow.innerText = strP; triggerFlash(btcRow, isUp); }
+        if (rowP) { rowP.innerText = strP; triggerFlash(rowP, isUp); }
       } else if (sym === 'SOL') {
         const strP = '$' + newPrice.toFixed(2);
         const topEl = document.getElementById('solLtp');
         const ribEl = document.getElementById('cryptoSolLtp');
+        const rowP = document.getElementById('rowPriceSol');
         if (topEl) { topEl.innerText = strP; triggerFlash(topEl, isUp); }
         if (ribEl) { ribEl.innerText = strP; triggerFlash(ribEl, isUp); }
-
-        const solRow = document.querySelector('#cryptoBeaconBody tr:nth-child(1) td:nth-child(3)');
-        if (solRow) { solRow.innerText = strP; triggerFlash(solRow, isUp); }
+        if (rowP) { rowP.innerText = strP; triggerFlash(rowP, isUp); }
       } else if (sym === 'ETH') {
         const strP = '$' + newPrice.toFixed(2);
         const topEl = document.getElementById('ethLtp');
         const ribEl = document.getElementById('cryptoEthLtp');
+        const rowP = document.getElementById('rowPriceEth');
         if (topEl) { topEl.innerText = '$' + Math.round(newPrice); triggerFlash(topEl, isUp); }
         if (ribEl) { ribEl.innerText = strP; triggerFlash(ribEl, isUp); }
-
-        const ethRow = document.querySelector('#cryptoBeaconBody tr:nth-child(5) td:nth-child(3)');
-        if (ethRow) { ethRow.innerText = strP; triggerFlash(ethRow, isUp); }
+        if (rowP) { rowP.innerText = strP; triggerFlash(rowP, isUp); }
       } else if (sym === 'DOGE') {
         const strP = '$' + newPrice.toFixed(4);
-        const dogeRow = document.querySelector('#cryptoBeaconBody tr:nth-child(2) td:nth-child(3)');
-        if (dogeRow) { dogeRow.innerText = strP; triggerFlash(dogeRow, isUp); }
+        const rowP = document.getElementById('rowPriceDoge');
+        if (rowP) { rowP.innerText = strP; triggerFlash(rowP, isUp); }
       }
     }
 
     // ── HIGH-FREQUENCY COMMODITY TICK SIMULATOR (BREATHING LIVE TICKS) ──
     function startMetalsTickEngine() {
       setInterval(() => {
-        // Micro fluctuation for Gold
+        // Micro fluctuation for Gold strictly in $ USD
         if (lastPrices['GOLD']) {
           const isUp = Math.random() > 0.48;
-          const delta = (Math.random() * 12 - 5.5);
-          lastPrices['GOLD'] = Math.round(lastPrices['GOLD'] + delta);
-          const strG = '₹' + lastPrices['GOLD'].toLocaleString('en-IN');
+          const delta = (Math.random() * 0.9 - 0.42);
+          lastPrices['GOLD'] = +(lastPrices['GOLD'] + delta).toFixed(2);
+          const strG = '$' + lastPrices['GOLD'].toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
           const topG = document.getElementById('goldLtp');
           const ribG = document.getElementById('ribbonGold');
-          const rowG = document.querySelector('#metalsBeaconBody tr:nth-child(1) td:nth-child(3)');
+          const rowG = document.getElementById('rowPriceGold');
 
           if (topG) { topG.innerText = strG; triggerFlash(topG, isUp); }
           if (ribG) { ribG.innerText = strG; triggerFlash(ribG, isUp); }
           if (rowG) { rowG.innerText = strG; triggerFlash(rowG, isUp); }
         }
 
-        // Micro fluctuation for Silver
+        // Micro fluctuation for Silver strictly in $ USD
         if (lastPrices['SILVER'] && Math.random() > 0.3) {
           const isUp = Math.random() > 0.46;
-          const delta = (Math.random() * 22 - 10);
-          lastPrices['SILVER'] = Math.round(lastPrices['SILVER'] + delta);
-          const strS = '₹' + lastPrices['SILVER'].toLocaleString('en-IN');
+          const delta = (Math.random() * 0.12 - 0.055);
+          lastPrices['SILVER'] = +(lastPrices['SILVER'] + delta).toFixed(2);
+          const strS = '$' + lastPrices['SILVER'].toFixed(2);
 
           const topS = document.getElementById('silverLtp');
           const ribS = document.getElementById('ribbonSilver');
-          const rowS = document.querySelector('#metalsBeaconBody tr:nth-child(2) td:nth-child(3)');
+          const rowS = document.getElementById('rowPriceSilver');
 
           if (topS) { topS.innerText = strS; triggerFlash(topS, isUp); }
           if (ribS) { ribS.innerText = strS; triggerFlash(ribS, isUp); }
           if (rowS) { rowS.innerText = strS; triggerFlash(rowS, isUp); }
         }
 
-        // Micro fluctuation for Crude Oil
-        if (lastPrices['CRUDE'] && Math.random() > 0.5) {
+        // Micro fluctuation for Crude Oil strictly in $ USD
+        if (lastPrices['CRUDE'] && Math.random() > 0.4) {
           const isUp = Math.random() > 0.52;
-          const delta = (Math.random() * 4 - 2);
-          lastPrices['CRUDE'] = Math.round(lastPrices['CRUDE'] + delta);
-          const strC = '₹' + lastPrices['CRUDE'].toLocaleString('en-IN');
+          const delta = (Math.random() * 0.18 - 0.09);
+          lastPrices['CRUDE'] = +(lastPrices['CRUDE'] + delta).toFixed(2);
+          const strC = '$' + lastPrices['CRUDE'].toFixed(2);
 
           const topC = document.getElementById('crudeLtp');
           const ribC = document.getElementById('ribbonCrude');
-          const rowC = document.querySelector('#metalsBeaconBody tr:nth-child(5) td:nth-child(3)');
+          const rowC = document.getElementById('rowPriceCrude');
 
           if (topC) { topC.innerText = strC; triggerFlash(topC, isUp); }
           if (ribC) { ribC.innerText = strC; triggerFlash(ribC, isUp); }
