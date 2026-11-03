@@ -1460,6 +1460,8 @@
     }
 
   </style>
+  <!-- Flagship Cyberpunk Order Block HUD Stylesheet -->
+  <link rel="stylesheet" href="orderblock.css">
 </head>
 <body>
 
@@ -1496,6 +1498,9 @@
         <a class="sub-tree-link" id="menu-mover" onclick="showScreen('mover')">
           <span>🚀</span> Index Mover
         </a>
+        <a class="sub-tree-link" id="menu-orderblock" onclick="showScreen('orderblock')">
+          <span>🎯</span> Order Block HUD
+        </a>
       </div>
 
       <!-- 2. METALS & ENERGY -->
@@ -1508,6 +1513,13 @@
       <a class="nav-btn-link" id="menu-crypto" onclick="switchMarketSegment('crypto')">
         <span class="nav-icon-slot">⚡</span>
         Crypto (24×7)
+      </a>
+
+      <!-- 4. ORDER BLOCK CYBERPUNK HUD (FLAGSHIP PRO) -->
+      <a class="nav-btn-link" id="menu-ob-flagship" onclick="showScreen('orderblock')" style="color:#00ff87; border: 1px solid rgba(0,255,135,0.3); background: rgba(0,255,135,0.07); margin-top: 10px;">
+        <span class="nav-icon-slot">🎯</span>
+        Order Block HUD
+        <span style="margin-left:auto; font-size:9px; background:rgba(0,255,135,0.2); color:#00ff87; padding:1px 6px; border-radius:4px; font-weight:800;">PRO</span>
       </a>
     </div>
   </aside>
@@ -1624,6 +1636,7 @@
       <button class="tool-sub-pill" id="toolbtn-insider" onclick="showScreen('insider')">🎯 Insider Strategy</button>
       <button class="tool-sub-pill" id="toolbtn-fii" onclick="showScreen('fii')">📊 FII / DII</button>
       <button class="tool-sub-pill" id="toolbtn-mover" onclick="showScreen('mover')">🚀 Index Mover</button>
+      <button class="tool-sub-pill" id="toolbtn-orderblock" onclick="showScreen('orderblock')">🎯 Order Block HUD</button>
     </div>
 
     <!-- ════════════ SCREEN 1: MARKET PULSE (EXACT MATCH VIDEO 5:35-6:33) ════════════ -->
@@ -2515,6 +2528,441 @@
         </div>
       </div>
     </div>
+
+    <!-- ════════════ SCREEN 8: INSTITUTIONAL ORDER BLOCK & LIQUIDITY HUD ════════════ -->
+    <div class="view-screen-tab" id="tab-orderblock">
+      <div id="view-orderblock" class="orderblock-view" style="display:flex;">
+        
+        <!-- Top Toolbar: Search + Market Selector + Scatter Matrix -->
+        <div class="ob-top-toolbar">
+          <div class="ob-search-bar-wrap">
+            <svg class="ic sm" style="width:14px; height:14px; opacity:0.6;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" class="ob-search-input" id="stockSearchInput" placeholder="Search assets (e.g. BTC, SOL, NVDA, SBIN)...">
+            <span class="ob-search-key">Ctrl K</span>
+          </div>
+
+          <!-- Live Market Feed Switcher (Crypto 24/7 / US Equities / Indian Nifty) -->
+          <div class="market-selector-switch" id="marketSelector">
+            <button type="button" class="mkt-tab active" id="ob-mkt-crypto" data-market="crypto" onclick="switchMarket('crypto')">
+              <span class="mkt-pulse green"></span> 🪙 Crypto 24/7 Live
+            </button>
+            <button type="button" class="mkt-tab" id="ob-mkt-us" data-market="us" onclick="switchMarket('us')">
+              🇺🇸 US Equities
+            </button>
+            <button type="button" class="mkt-tab" id="ob-mkt-nse" data-market="nse" onclick="switchMarket('nse')">
+              🇮🇳 Indian Nifty F&O
+            </button>
+          </div>
+
+          <!-- Scatter Matrix Radar Header (from video) -->
+          <div class="ob-scatter-radar">
+            <div class="scatter-row bull">
+              <span class="scatter-label">▲ BULLISH</span>
+              <div class="scatter-dots" id="bull-scatter-dots"></div>
+            </div>
+            <div class="scatter-row bear">
+              <span class="scatter-label">▼ BEARISH</span>
+              <div class="scatter-dots" id="bear-scatter-dots"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Mega Canvas Grid -->
+        <div class="ob-xray-canvas-grid">
+          
+          <!-- Left: Stock list source -->
+          <div class="ob-source-list" id="ob-source-list"></div>
+
+          <!-- Center: Neural Sankey Flow Canvas with Live Laser Streams -->
+          <div class="sankey-center-stage">
+            <svg class="sankey-svg-canvas" id="sankey-canvas" viewBox="0 0 740 680" preserveAspectRatio="none"></svg>
+            
+            <!-- 6-Matrix Derivatives Build-up Overlay (3 Bullish Top, 3 Bearish Bottom matching Screenshot 3) -->
+            <div class="buildup-categories-overlay">
+              <div class="buildup-col">
+                <span class="buildup-pill long">LONG BUILD-UP •••••</span>
+                <div id="col-long-buildup-1" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill long">LONG BUILD-UP •••••</span>
+                <div id="col-long-buildup-2" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill short-cov">SHORT COVERING</span>
+                <div id="col-short-covering" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill short-bd">SHORT BUILD-UP •••••</span>
+                <div id="col-short-buildup-1" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill short-bd">SHORT BUILD-UP •••••</span>
+                <div id="col-short-buildup-2" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill long-unw">LONG UNWINDING</span>
+                <div id="col-long-unwinding" class="col-items-wrap"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Master Pick Active Cards (3 Bullish + 3 Bearish) -->
+          <div class="ob-master-picks" id="ob-master-picks"></div>
+
+        </div>
+
+      </div>
+
+      <!-- ================= VIEW 2: OFFICIAL HOME DASHBOARD (TOGGLEABLE) ================= -->
+      <div id="view-home" class="home" style="display:none;">
+        <section class="panel mh" id="mh" data-section="home-market" aria-live="polite">
+          <div class="mh-top">
+            <div class="skel" style="height:14px;width:150px"></div>
+            <div class="skel" style="height:8px"></div>
+          </div>
+          <div class="mh-picks" id="mh-picks"></div>
+        </section>
+
+        <aside class="home-side">
+          <div id="hs-month"></div>
+          <div id="hs-learn"></div>
+          <nav class="shortcuts" aria-label="Shortcuts">
+            <a href="javascript:void(0)" onclick="alert('Log a trade: Record entry, stop loss, and targets.')" data-track="home:log-trade">
+              <span class="ibadge sm amber"><svg class="ic" aria-hidden="true"><use href="/static/icons.svg#plus"></use></svg></span>
+              <span><b>Log a trade</b><em>Add it to your journal</em></span>
+            </a>
+            <a href="javascript:void(0)" onclick="alert('Share a setup: Post your zone analysis to the community.')" data-track="home:community">
+              <span class="ibadge sm pink"><svg class="ic" aria-hidden="true"><use href="/static/icons.svg#community"></use></svg></span>
+              <span><b>Share a setup</b><em>Post to the community</em></span>
+            </a>
+            <a href="javascript:void(0)" onclick="alert('Browse lessons: 12 Video modules on Order Blocks.')" data-track="home:learn">
+              <span class="ibadge sm sky"><svg class="ic" aria-hidden="true"><use href="/static/icons.svg#play-circle"></use></svg></span>
+              <span><b>Browse lessons</b><em>All courses</em></span>
+            </a>
+            <a href="javascript:void(0)" onclick="alert('Send feedback: Share ideas or report issues.')" data-track="home:feedback">
+              <span class="ibadge sm teal"><svg class="ic" aria-hidden="true"><use href="/static/icons.svg#message"></use></svg></span>
+              <span><b>Send feedback</b><em>Ideas, bugs, data issues</em></span>
+            </a>
+          </nav>
+        </aside>
+
+        <div class="home-lower">
+          <section class="hl" data-section="home-sectors" id="hl-sectors">
+            <div class="hl-h">
+              <h2>Sectors now</h2>
+              <a href="javascript:void(0)" onclick="switchView('orderblock')" class="hl-more" data-track="home:sectors-open">
+                Open Order Block
+                <svg class="ic sm" aria-hidden="true"><use href="/static/icons.svg#arrow-right"></use></svg>
+              </a>
+            </div>
+            <div id="sx" class="sx"></div>
+          </section>
+
+          <section class="hl" data-section="home-community">
+            <div class="hl-h">
+              <h2>Community this week</h2>
+              <a href="javascript:void(0)" onclick="alert('Community Feed: 2,400+ members.')" class="hl-more">
+                Open feed
+                <svg class="ic sm" aria-hidden="true"><use href="/static/icons.svg#arrow-right"></use></svg>
+              </a>
+            </div>
+            <div id="hl-community"></div>
+          </section>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= MODAL: THE 10-SECOND ORDER BLOCK POPUP (IMAGE 2) ================= -->
+  <div class="modal-overlay" id="stockModalOverlay" onclick="closeModalOnBackdrop(event)">
+    <div class="ob-modal" id="stockModal">
+      
+      <button class="modal-close-btn" onclick="closeStockModal()">✕</button>
+      
+      <div class="modal-header-top">
+        <div class="modal-sym-title">
+          <h2 id="modal-symbol" class="blur-target">SBIN</h2>
+          <span class="modal-sec-badge" id="modal-sector">NIFTY BANK</span>
+          <span class="tag-badge bull" id="modal-bias-badge">BULLISH #1</span>
+        </div>
+        <div class="modal-price-box">
+          <div class="modal-price-val" id="modal-cmp">₹782.50</div>
+          <div class="modal-chg-val up" id="modal-chg">+2.84%</div>
+        </div>
+      </div>
+
+      <!-- 10-Second Key Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-cell">
+          <span class="metric-label">Rank</span>
+          <span class="metric-val green" id="m-rank">p99.8 · #1/130</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Rule</span>
+          <span class="metric-val" id="m-rule">ORDER BLOCK RETEST</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">OB Zone</span>
+          <span class="metric-val amber" id="m-ob">774.20 - 777.50</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Z / S1 (Stop)</span>
+          <span class="metric-val" id="m-zs1">775.85 / 771.90</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">R:R Ratio</span>
+          <span class="metric-val green" id="m-rr">1 : 2.7</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">R1 / R2 (Targets)</span>
+          <span class="metric-val" id="m-r1r2">788.00 / 796.50</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">OI Build-up</span>
+          <span class="metric-val green" id="m-oi">+12.4%</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">VWAP</span>
+          <span class="metric-val" id="m-vwap">₹778.20</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Delta (Δ)</span>
+          <span class="metric-val" id="m-delta">+62.4</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Conviction</span>
+          <span class="metric-val green">HIGH (MSB)</span>
+        </div>
+      </div>
+
+      <!-- Interactive Candlestick Chart Stage -->
+      <div class="modal-chart-stage">
+        <svg id="modal-candlestick-svg" viewBox="0 0 690 250" style="width:100%; height:100%;"></svg>
+      </div>
+
+      <!-- Price Position Slider Bar -->
+      <div class="modal-slider-box">
+        <div class="slider-labels-top">
+          <span style="color:var(--bear-red);">S1 (Stop): <b id="lbl-s1">771.90</b></span>
+          <span style="color:#00f0ff;">Zone (Z): <b id="lbl-z">775.85</b></span>
+          <span style="color:var(--bull-green);">R1: <b id="lbl-r1">788.00</b></span>
+          <span style="color:var(--bull-green);">R2: <b id="lbl-r2">796.50</b></span>
+        </div>
+        <div class="slider-bar-track">
+          <div class="slider-bar-fill" id="modal-slider-fill" style="width: 70%;"></div>
+          <div class="slider-pin" id="modal-slider-pin" style="left: 70%;"></div>
+        </div>
+        <div style="font-size: 0.68rem; color: var(--text-dim); text-align: center;">
+          Current Price sits between <b>Zone (Z)</b> and <b>R1 Target</b> · Favourable First Retest
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <!-- ================= FLOATING ANIMATED HOVER PREVIEW CARD (VIDEO FEATURE) ================= -->
+  <div id="hover-stock-card" class="hover-floating-card">
+    <div class="hover-header-row">
+      <div class="hover-sym-group">
+        <h3 id="h-sym" class="hover-sym-title">SBIN</h3>
+        <span id="h-sector" class="hover-badge bull">NIFTY BANK</span>
+        <span id="h-bias" class="hover-badge bull">BULLISH #1</span>
+      </div>
+      <div>
+        <div id="h-price" class="hover-price-val">₹782.50</div>
+        <div id="h-chg" class="hover-chg-val up">+2.84%</div>
+      </div>
+    </div>
+
+    <!-- 10-Second Key Metrics Grid -->
+    <div class="hover-metrics-grid">
+      <div class="hover-cell"><span class="lbl">Rank</span><span class="val green" id="h-rank">p99.8 · #1/130</span></div>
+      <div class="hover-cell"><span class="lbl">Rule</span><span class="val" id="h-rule">OB RETEST</span></div>
+      <div class="hover-cell"><span class="lbl">OB Zone</span><span class="val cyan" id="h-ob">774.2 - 777.5</span></div>
+      <div class="hover-cell"><span class="lbl">Stop (S1)</span><span class="val amber" id="h-s1">771.90</span></div>
+      <div class="hover-cell"><span class="lbl">Target (R1)</span><span class="val green" id="h-r1">788.00</span></div>
+      <div class="hover-cell"><span class="lbl">Target (R2)</span><span class="val green" id="h-r2">796.50</span></div>
+      <div class="hover-cell"><span class="lbl">R:R Ratio</span><span class="val green" id="h-rr">1 : 2.7</span></div>
+      <div class="hover-cell"><span class="lbl">OI Build-up</span><span class="val green" id="h-oi">+12.4%</span></div>
+      <div class="hover-cell"><span class="lbl">VWAP</span><span class="val" id="h-vwap">₹778.20</span></div>
+      <div class="hover-cell"><span class="lbl">Conviction</span><span class="val green">HIGH (MSB)</span></div>
+    </div>
+
+    <!-- 5-Min Candlestick Mini-Chart SVG -->
+    <div class="hover-chart-box">
+      <svg id="hover-candlestick-svg" viewBox="0 0 340 140" style="width:100%; height:100%;"></svg>
+    </div>
+
+    <!-- Position Slider Track -->
+    <div class="hover-slider-track">
+      <div class="hover-slider-fill" id="h-slider-fill" style="width:68%;"></div>
+      <div class="hover-slider-pin" id="h-slider-pin" style="left:68%;"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:0.58rem; color:var(--text-dim); font-family:var(--font-mono); margin-top:2px;">
+      <span style="color:#fbbf24;">S1: <b id="h-s1-lbl">771.90</b></span>
+      <span style="color:#00f0ff;">Zone: <b id="h-z-lbl">775.80</b></span>
+      <span style="color:var(--bull-green);">R1: <b id="h-r1-lbl">788.00</b></span>
+      <span style="color:var(--bull-green);">R2: <b id="h-r2-lbl">796.50</b></span>
+    </div>
+  </div>
+
+  <!-- ================= PRODUCTION BOOTSTRAP DATA PROVIDED BY USER ================= -->
+  
+
+  <!-- Official Scripts -->
+  <script src="/static/js/core.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/pages/home-market.js"></script>
+  <script src="/static/js/pages/home.js"></script>
+  
+  <!-- Cyberpunk Terminal HUD & Laser Engine -->
+  <script src="/app.js?v=20261103_perfect_v9"></script>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- 🎯 ORDER BLOCK 10-SECOND MODAL & HOVER PREVIEW CARD          -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- ================= MODAL: THE 10-SECOND ORDER BLOCK POPUP (IMAGE 2) ================= -->
+  <div class="modal-overlay" id="stockModalOverlay" onclick="closeModalOnBackdrop(event)">
+    <div class="ob-modal" id="stockModal">
+      
+      <button class="modal-close-btn" onclick="closeStockModal()">✕</button>
+      
+      <div class="modal-header-top">
+        <div class="modal-sym-title">
+          <h2 id="modal-symbol" class="blur-target">SBIN</h2>
+          <span class="modal-sec-badge" id="modal-sector">NIFTY BANK</span>
+          <span class="tag-badge bull" id="modal-bias-badge">BULLISH #1</span>
+        </div>
+        <div class="modal-price-box">
+          <div class="modal-price-val" id="modal-cmp">₹782.50</div>
+          <div class="modal-chg-val up" id="modal-chg">+2.84%</div>
+        </div>
+      </div>
+
+      <!-- 10-Second Key Metrics Grid -->
+      <div class="metrics-grid">
+        <div class="metric-cell">
+          <span class="metric-label">Rank</span>
+          <span class="metric-val green" id="m-rank">p99.8 · #1/130</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Rule</span>
+          <span class="metric-val" id="m-rule">ORDER BLOCK RETEST</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">OB Zone</span>
+          <span class="metric-val amber" id="m-ob">774.20 - 777.50</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Z / S1 (Stop)</span>
+          <span class="metric-val" id="m-zs1">775.85 / 771.90</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">R:R Ratio</span>
+          <span class="metric-val green" id="m-rr">1 : 2.7</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">R1 / R2 (Targets)</span>
+          <span class="metric-val" id="m-r1r2">788.00 / 796.50</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">OI Build-up</span>
+          <span class="metric-val green" id="m-oi">+12.4%</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">VWAP</span>
+          <span class="metric-val" id="m-vwap">₹778.20</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Delta (Δ)</span>
+          <span class="metric-val" id="m-delta">+62.4</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Conviction</span>
+          <span class="metric-val green">HIGH (MSB)</span>
+        </div>
+      </div>
+
+      <!-- Interactive Candlestick Chart Stage -->
+      <div class="modal-chart-stage">
+        <svg id="modal-candlestick-svg" viewBox="0 0 690 250" style="width:100%; height:100%;"></svg>
+      </div>
+
+      <!-- Price Position Slider Bar -->
+      <div class="modal-slider-box">
+        <div class="slider-labels-top">
+          <span style="color:var(--bear-red);">S1 (Stop): <b id="lbl-s1">771.90</b></span>
+          <span style="color:#00f0ff;">Zone (Z): <b id="lbl-z">775.85</b></span>
+          <span style="color:var(--bull-green);">R1: <b id="lbl-r1">788.00</b></span>
+          <span style="color:var(--bull-green);">R2: <b id="lbl-r2">796.50</b></span>
+        </div>
+        <div class="slider-bar-track">
+          <div class="slider-bar-fill" id="modal-slider-fill" style="width: 70%;"></div>
+          <div class="slider-pin" id="modal-slider-pin" style="left: 70%;"></div>
+        </div>
+        <div style="font-size: 0.68rem; color: var(--text-dim); text-align: center;">
+          Current Price sits between <b>Zone (Z)</b> and <b>R1 Target</b> · Favourable First Retest
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <!-- ================= FLOATING ANIMATED HOVER PREVIEW CARD (VIDEO FEATURE) ================= -->
+  <div id="hover-stock-card" class="hover-floating-card">
+    <div class="hover-header-row">
+      <div class="hover-sym-group">
+        <h3 id="h-sym" class="hover-sym-title">SBIN</h3>
+        <span id="h-sector" class="hover-badge bull">NIFTY BANK</span>
+        <span id="h-bias" class="hover-badge bull">BULLISH #1</span>
+      </div>
+      <div>
+        <div id="h-price" class="hover-price-val">₹782.50</div>
+        <div id="h-chg" class="hover-chg-val up">+2.84%</div>
+      </div>
+    </div>
+
+    <!-- 10-Second Key Metrics Grid -->
+    <div class="hover-metrics-grid">
+      <div class="hover-cell"><span class="lbl">Rank</span><span class="val green" id="h-rank">p99.8 · #1/130</span></div>
+      <div class="hover-cell"><span class="lbl">Rule</span><span class="val" id="h-rule">OB RETEST</span></div>
+      <div class="hover-cell"><span class="lbl">OB Zone</span><span class="val cyan" id="h-ob">774.2 - 777.5</span></div>
+      <div class="hover-cell"><span class="lbl">Stop (S1)</span><span class="val amber" id="h-s1">771.90</span></div>
+      <div class="hover-cell"><span class="lbl">Target (R1)</span><span class="val green" id="h-r1">788.00</span></div>
+      <div class="hover-cell"><span class="lbl">Target (R2)</span><span class="val green" id="h-r2">796.50</span></div>
+      <div class="hover-cell"><span class="lbl">R:R Ratio</span><span class="val green" id="h-rr">1 : 2.7</span></div>
+      <div class="hover-cell"><span class="lbl">OI Build-up</span><span class="val green" id="h-oi">+12.4%</span></div>
+      <div class="hover-cell"><span class="lbl">VWAP</span><span class="val" id="h-vwap">₹778.20</span></div>
+      <div class="hover-cell"><span class="lbl">Conviction</span><span class="val green">HIGH (MSB)</span></div>
+    </div>
+
+    <!-- 5-Min Candlestick Mini-Chart SVG -->
+    <div class="hover-chart-box">
+      <svg id="hover-candlestick-svg" viewBox="0 0 340 140" style="width:100%; height:100%;"></svg>
+    </div>
+
+    <!-- Position Slider Track -->
+    <div class="hover-slider-track">
+      <div class="hover-slider-fill" id="h-slider-fill" style="width:68%;"></div>
+      <div class="hover-slider-pin" id="h-slider-pin" style="left:68%;"></div>
+    </div>
+    <div style="display:flex; justify-content:space-between; font-size:0.58rem; color:var(--text-dim); font-family:var(--font-mono); margin-top:2px;">
+      <span style="color:#fbbf24;">S1: <b id="h-s1-lbl">771.90</b></span>
+      <span style="color:#00f0ff;">Zone: <b id="h-z-lbl">775.80</b></span>
+      <span style="color:var(--bull-green);">R1: <b id="h-r1-lbl">788.00</b></span>
+      <span style="color:var(--bull-green);">R2: <b id="h-r2-lbl">796.50</b></span>
+    </div>
+  </div>
+
+  <!-- Flagship Cyberpunk Order Block Interactive Engine -->
+  <script src="orderblock.js"></script>
+</body>
+</html>
+    </div>
+
   </main>
 
   <!-- ═════════════════════════════════════════════════════════════ -->
@@ -3832,6 +4280,13 @@
       playChime(520);
       if (screenId === 'sector') {
         setTimeout(buildWaterfallChart, 50);
+      }
+      if (screenId === 'orderblock') {
+        const flagshipBtn = document.getElementById('menu-ob-flagship');
+        if (flagshipBtn) flagshipBtn.classList.add('active');
+        if (typeof window.initOrderBlockScreen === 'function') {
+          window.initOrderBlockScreen();
+        }
       }
     }
 
