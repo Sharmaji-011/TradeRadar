@@ -134,6 +134,39 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     setInterval(tickClientSideData, 2500);
   }
 
+  function updateLiveTickLabels() {
+    if (!MARKET_DATA || !MARKET_DATA.stocks) return;
+    Object.values(MARKET_DATA.stocks).forEach(s => {
+      const sign = s.change_pct > 0 ? '+' : '';
+      const color = s.change_pct >= 0 ? 'var(--bull-green)' : 'var(--bear-red)';
+      
+      const srcRow = document.getElementById(`src-item-${s.symbol}`);
+      if (srcRow) {
+        const chgEl = srcRow.querySelector('.source-chg');
+        if (chgEl) {
+          chgEl.textContent = `${sign}${s.change_pct.toFixed(2)}%`;
+          chgEl.style.color = color;
+        }
+      }
+      const bdItem = document.getElementById(`buildup-${s.symbol}`);
+      if (bdItem) {
+        const chgSpan = bdItem.querySelector('span[style*="font-family"]');
+        if (chgSpan) {
+          chgSpan.textContent = `${sign}${s.change_pct.toFixed(2)}%`;
+          chgSpan.style.color = color;
+        }
+      }
+      const mCard = document.getElementById(`master-${s.symbol}`);
+      if (mCard) {
+        const chgSpan = mCard.querySelector('.master-card-head span[style*="font-family"]');
+        if (chgSpan) {
+          chgSpan.textContent = `${sign}${s.change_pct.toFixed(2)}%`;
+          chgSpan.style.color = color;
+        }
+      }
+    });
+  }
+
   async function tickClientSideData() {
     if (!MARKET_DATA || !MARKET_DATA.stocks) return;
 
@@ -171,10 +204,10 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     const now = new Date();
     MARKET_DATA.timestamp = now.toTimeString().split(' ')[0];
 
-    // If orderblock screen is currently active, re-render
+    // If orderblock screen is currently active, update tick labels without wiping the DOM
     const obTab = document.getElementById('tab-orderblock');
     if (obTab && obTab.classList.contains('active')) {
-      renderOrderBlockView(MARKET_DATA);
+      updateLiveTickLabels();
     }
   }
 
@@ -545,23 +578,22 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     let svgHtml = `
       <defs>
-        <filter id="neonLaser" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="5" result="glow"/>
-          <feMerge>
-            <feMergeNode in="glow"/>
-            <feMergeNode in="glow"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-        <filter id="greenGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="glow"/>
+        <filter id="neonLaser" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="2" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="glow"/>
+        <filter id="greenGlow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="1.5" result="glow"/>
+          <feMerge>
+            <feMergeNode in="glow"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <filter id="redGlow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="1.5" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>

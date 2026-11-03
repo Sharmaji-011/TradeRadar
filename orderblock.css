@@ -1263,3 +1263,206 @@ body.app .page {
   border-color: #ff2a55;
   box-shadow: 0 0 8px rgba(255, 42, 85, 0.4);
 }
+
+/* ============================================================
+   ZERO-OVERFLOW FULL-VIEWPORT RESPONSIVE SYSTEM
+   Fits 100% on any screen (1366x768 laptops to 4K desktops)
+   ============================================================ */
+
+#tab-orderblock.view-screen-tab.active {
+  display: flex !important;
+  flex-direction: column !important;
+  height: calc(100vh - 84px) !important;
+  max-height: calc(100vh - 84px) !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  padding: 4px 8px !important;
+  box-sizing: border-box !important;
+}
+
+.orderblock-view {
+  height: 100% !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.ob-top-toolbar {
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  flex-shrink: 0 !important;
+  margin-bottom: 2px !important;
+}
+
+.ob-xray-canvas-grid {
+  display: grid !important;
+  grid-template-columns: 140px 1fr 310px !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 8px !important;
+  flex: 1 1 0% !important;
+  height: calc(100% - 40px) !important;
+  min-height: 0 !important;
+  max-height: calc(100% - 40px) !important;
+  overflow: hidden !important;
+  padding: 6px 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* Left Rail Container */
+.ob-source-list-container {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.ob-source-list {
+  flex: 1 1 0% !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  padding-right: 2px !important;
+}
+
+.source-row {
+  padding: 3px 6px !important;
+  font-size: 0.70rem !important;
+  min-height: 22px !important;
+}
+
+/* Center Stage */
+.sankey-center-stage {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.sankey-svg-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+
+.buildup-categories-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 53% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: 6px !important;
+  padding: 4px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.buildup-col {
+  min-height: 0 !important;
+  max-height: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  padding: 4px 6px !important;
+  background: rgba(6, 10, 18, 0.75) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-sizing: border-box !important;
+}
+
+.buildup-pill {
+  font-size: 0.58rem !important;
+  padding: 1px 5px !important;
+  margin-bottom: 2px !important;
+  flex-shrink: 0 !important;
+}
+
+.col-items-wrap {
+  flex: 1 1 0% !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.buildup-item {
+  padding: 2px 6px !important;
+  font-size: 0.67rem !important;
+  min-height: 20px !important;
+}
+
+/* Right Master Picks (Compact 6-Card Deck Fitting Viewport) */
+.ob-master-picks {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  padding-right: 3px !important;
+  box-sizing: border-box !important;
+}
+
+.master-card {
+  flex-shrink: 0 !important;
+  padding: 3px 6px !important;
+  border-radius: 5px !important;
+  background: rgba(7, 12, 24, 0.95) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.master-card-head {
+  margin-bottom: 0 !important;
+  line-height: 1.1 !important;
+}
+
+.master-card-sym {
+  font-size: 0.78rem !important;
+}
+
+.tag-badge {
+  font-size: 0.58rem !important;
+  padding: 1px 4px !important;
+}
+
+.master-chart-wrap {
+  height: 24px !important;
+  margin: 1px 0 !important;
+}
+
+.master-chart-wrap svg {
+  height: 24px !important;
+}
+
+.master-slider-row {
+  font-size: 0.55rem !important;
+  gap: 4px !important;
+  margin-top: 1px !important;
+  line-height: 1 !important;
+}
+
+.radar-btn {
+  padding: 1px 5px !important;
+  font-size: 0.55rem !important;
+  height: 16px !important;
+  line-height: 1 !important;
+}
