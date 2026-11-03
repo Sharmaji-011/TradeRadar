@@ -102,6 +102,8 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   };
 
   // DOM REFS
+  const bullContainer = document.getElementById('bullish-cards-container');
+  const bearContainer = document.getElementById('bearish-cards-container');
   const depthSvg = document.getElementById('market-depth-svg');
   const sectorSvg = document.getElementById('sector-flow-svg');
   const sankeySvg = document.getElementById('sankey-canvas');
