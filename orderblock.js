@@ -165,6 +165,30 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
         }
       }
     });
+
+    // Re-sort left stock rail DOM elements strictly Bullish to Bearish
+    const srcList = document.getElementById('ob-source-list');
+    if (srcList) {
+      const rows = Array.from(srcList.children);
+      rows.sort((a, b) => {
+        const symA = a.dataset.sym;
+        const symB = b.dataset.sym;
+        const pctA = (MARKET_DATA.stocks[symA]?.change_pct) || 0;
+        const pctB = (MARKET_DATA.stocks[symB]?.change_pct) || 0;
+        return pctB - pctA;
+      });
+      rows.forEach(r => srcList.appendChild(r));
+    }
+
+    // Re-sort and render Master Cards so Cards 1-3 are strictly top Bullish and 4-6 are Bearish
+    const masterPicks = document.getElementById('ob-master-picks');
+    if (masterPicks) {
+      const allStocks = Object.values(MARKET_DATA.stocks);
+      const topBull = allStocks.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
+      const topBear = allStocks.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
+      const topPicks = [...topBull, ...topBear];
+      masterPicks.innerHTML = topPicks.map(s => createMasterCardHtml(s)).join('');
+    }
   }
 
   async function tickClientSideData() {
@@ -542,15 +566,17 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     if (!srcList || !data.stocks) return;
 
-    // Render left stock list according to active filter (ALL / BUYERS / SELLERS)
+    // Render left stock list strictly sorted from top to bottom by percentage (Bullish to Bearish)
     let stockEntries = Object.values(data.stocks);
     if (CURRENT_SOURCE_FILTER === 'bull') {
       stockEntries = stockEntries.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
     } else if (CURRENT_SOURCE_FILTER === 'bear') {
-      stockEntries = stockEntries.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0));
+      // In bear filter, still maintain top-to-bottom descending percentage (least negative down to deepest breakdown)
+      stockEntries = stockEntries.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
     } else {
       stockEntries = stockEntries.sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
     }
+    srcList.scrollTop = 0; // Always start at the top so most bullish stocks are immediately visible
     srcList.innerHTML = stockEntries.map(s => {
       const isHovered = s.symbol === HOVERED_SYMBOL;
       return `
@@ -570,12 +596,11 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     // Categorization overlay (All 6 columns matching video)
     const allMarketStocks = Object.values(data.stocks);
+    // All 6 columns strictly sorted from Bullish to Bearish by percentage descending!
     const longList = allMarketStocks.filter(s => (s.change_pct || 0) >= 2.0 || s.category === 'LONG BUILD-UP').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
     const shortCovList = allMarketStocks.filter(s => ((s.change_pct || 0) >= 0 && (s.change_pct || 0) < 2.0) || s.category === 'SHORT COVERING').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
-    // Sort short_buildup with worst breakdown drop first!
-    const shortBdList = allMarketStocks.filter(s => (s.change_pct || 0) <= -2.0 || s.category === 'SHORT BUILD-UP').sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0));
-    // Sort long_unwinding with active drop first!
-    const longUnwList = allMarketStocks.filter(s => ((s.change_pct || 0) < 0 && (s.change_pct || 0) > -2.0) || s.category === 'LONG UNWINDING').sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0));
+    const shortBdList = allMarketStocks.filter(s => (s.change_pct || 0) <= -2.0 || s.category === 'SHORT BUILD-UP').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    const longUnwList = allMarketStocks.filter(s => ((s.change_pct || 0) < 0 && (s.change_pct || 0) > -2.0) || s.category === 'LONG UNWINDING').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
 
     const colLong1 = document.getElementById('col-long-buildup-1');
     const colLong2 = document.getElementById('col-long-buildup-2');
@@ -592,10 +617,12 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     if (colLongUnw) colLongUnw.innerHTML = longUnwList.slice(0, 4).map(s => createBuildupItemHtml(s)).join('');
 
     // Master picks (right: exactly 3 Bullish + 3 Bearish = 6 Master Cards)
+    // Strictly ordered from top to bottom by percentage (Bullish to Bearish)!
     if (masterPicks) {
       const allStocks = Object.values(data.stocks);
       const topBull = (data.top_bullish || allStocks.filter(s => (s.change_pct || 0) >= 0)).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
-      const topBear = (data.top_bearish || allStocks.filter(s => (s.change_pct || 0) < 0)).slice().sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0)).slice(0, 3);
+      // Top Bearish movers sorted descending by percentage so Card 1 through Card 6 strictly descend:
+      const topBear = (data.top_bearish || allStocks.filter(s => (s.change_pct || 0) < 0)).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
       const topPicks = [...topBull, ...topBear];
       masterPicks.innerHTML = topPicks.map(s => createMasterCardHtml(s)).join('');
     }

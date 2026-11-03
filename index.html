@@ -227,8 +227,24 @@
       display: none;
       flex: 1;
       flex-direction: column;
-      overflow: hidden;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
       height: calc(100% - 48px);
+      padding-right: 4px;
+    }
+    .view-screen-tab::-webkit-scrollbar {
+      width: 6px;
+    }
+    .view-screen-tab::-webkit-scrollbar-track {
+      background: rgba(6, 10, 18, 0.6);
+    }
+    .view-screen-tab::-webkit-scrollbar-thumb {
+      background: #2563eb;
+      border-radius: 4px;
+    }
+    .view-screen-tab::-webkit-scrollbar-thumb:hover {
+      background: #00ff87;
     }
     .view-screen-tab.active {
       display: flex;
@@ -1558,9 +1574,9 @@
             <span style="color:#94a3b8; font-family:'JetBrains Mono'; font-size:10.5px;" id="liveClockMetals">10:24:12</span>
           </div>
           <div class="index-ticker-item">
-            <span class="index-ticker-title">GOLD:</span>
-            <span style="color:#22c55e; font-weight:800;" id="goldLtp">$3,876.40</span>
-            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="goldPct">+0.72%</span>
+            <span class="index-ticker-title">CRUDE OIL:</span>
+            <span style="color:#22c55e; font-weight:800;" id="crudeLtp">$104.12</span>
+            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="crudePct">+2.08%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">SILVER:</span>
@@ -1568,9 +1584,9 @@
             <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="silverPct">+1.65%</span>
           </div>
           <div class="index-ticker-item">
-            <span class="index-ticker-title">CRUDE OIL:</span>
-            <span style="color:#22c55e; font-weight:800;" id="crudeLtp">$104.12</span>
-            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="crudePct">+2.08%</span>
+            <span class="index-ticker-title">GOLD:</span>
+            <span style="color:#22c55e; font-weight:800;" id="goldLtp">$3,876.40</span>
+            <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="goldPct">+0.72%</span>
           </div>
         </div>
 
@@ -1582,14 +1598,14 @@
             <span style="color:#94a3b8; font-family:'JetBrains Mono'; font-size:10.5px;" id="liveClockCrypto">13:58:30</span>
           </div>
           <div class="index-ticker-item">
-            <span class="index-ticker-title">BTC/USDT:</span>
-            <span style="color:#22c55e; font-weight:800;" id="btcLtp">$77,276</span>
-            <span class="pill-percent-capsule neg" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="btcPct">-0.36%</span>
-          </div>
-          <div class="index-ticker-item">
             <span class="index-ticker-title">ETH/USDT:</span>
             <span style="color:#22c55e; font-weight:800;" id="ethLtp">$2,241</span>
             <span class="pill-percent-capsule pos" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="ethPct">+0.67%</span>
+          </div>
+          <div class="index-ticker-item">
+            <span class="index-ticker-title">BTC/USDT:</span>
+            <span style="color:#22c55e; font-weight:800;" id="btcLtp">$77,276</span>
+            <span class="pill-percent-capsule neg" style="min-width:auto; padding:1px 5px; font-size:9.5px;" id="btcPct">-0.36%</span>
           </div>
           <div class="index-ticker-item">
             <span class="index-ticker-title">SOL/USDT:</span>
@@ -2076,7 +2092,32 @@
                 <th>Points Impact</th>
               </tr>
             </thead>
-            <tbody id="body-mover"></tbody>
+            <tbody id="body-mover">
+          <tr onclick="openTradeTicket('ICICIBANK', 1245.80, '+0.92%', 1.95, true)">
+            <td><strong style="color:white;">ICICIBANK</strong></td>
+            <td>7.80%</td>
+            <td style="color:#22c55e;">+0.92%</td>
+            <td style="color:#22c55e; font-weight:800; font-size:13px;">+22.6 Pts</td>
+          </tr>
+          <tr onclick="openTradeTicket('HDFCBANK', 1682.40, '+0.85%', 2.10, true)">
+            <td><strong style="color:white;">HDFCBANK</strong></td>
+            <td>11.45%</td>
+            <td style="color:#22c55e;">+0.85%</td>
+            <td style="color:#22c55e; font-weight:800; font-size:13px;">+38.4 Pts</td>
+          </tr>
+          <tr onclick="openTradeTicket('RELIANCE', 2984.50, '+0.60%', 1.80, true)">
+            <td><strong style="color:white;">RELIANCE</strong></td>
+            <td>9.20%</td>
+            <td style="color:#22c55e;">+0.60%</td>
+            <td style="color:#22c55e; font-weight:800; font-size:13px;">+24.1 Pts</td>
+          </tr>
+          <tr onclick="openTradeTicket('TCS', 4120.00, '-0.70%', 1.60, false)">
+            <td><strong style="color:white;">TCS</strong></td>
+            <td>4.10%</td>
+            <td style="color:#ef4444;">-0.70%</td>
+            <td style="color:#ef4444; font-weight:800; font-size:13px;">-8.5 Pts</td>
+          </tr>
+        </tbody>
           </table>
         </div>
       </div>
@@ -2091,13 +2132,13 @@
       <div class="market-ribbon-strip">
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
-            <span>GOLD SPOT (XAU/USD)</span>
-            <span class="pill-percent-capsule pos" id="ribbonGoldPct">+0.72%</span>
+            <span>CRUDE OIL (WTI)</span>
+            <span class="pill-percent-capsule pos" id="ribbonCrudePct">+2.08%</span>
           </div>
-          <div class="metric-card-val" id="ribbonGold" onclick="openTradeTicket('GOLD', lastPrices['GOLD']||3876.40, '+0.72%', '8.60', true)" style="cursor:pointer;">$3,876.40</div>
+          <div class="metric-card-val" id="ribbonCrude" onclick="openTradeTicket('CRUDEOIL', lastPrices['CRUDE']||104.12, '+2.08%', '7.80', true)" style="color:#22c55e; cursor:pointer;">$104.12</div>
           <div class="metric-card-sub">
-            <span>Unit: 1 Troy Oz</span>
-            <span style="color:#22c55e;">▲ Bullish Trend</span>
+            <span>Unit: 1 Barrel (bbl)</span>
+            <span style="color:#22c55e;">▲ Bull Breakout</span>
           </div>
         </div>
 
@@ -2115,25 +2156,13 @@
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
-            <span>CRUDE OIL (WTI)</span>
-            <span class="pill-percent-capsule pos" id="ribbonCrudePct">+2.08%</span>
+            <span>GOLD SPOT (XAU/USD)</span>
+            <span class="pill-percent-capsule pos" id="ribbonGoldPct">+0.72%</span>
           </div>
-          <div class="metric-card-val" id="ribbonCrude" onclick="openTradeTicket('CRUDEOIL', lastPrices['CRUDE']||104.12, '+2.08%', '7.80', true)" style="color:#22c55e; cursor:pointer;">$104.12</div>
+          <div class="metric-card-val" id="ribbonGold" onclick="openTradeTicket('GOLD', lastPrices['GOLD']||3876.40, '+0.72%', '8.60', true)" style="cursor:pointer;">$3,876.40</div>
           <div class="metric-card-sub">
-            <span>Unit: 1 Barrel (bbl)</span>
-            <span style="color:#22c55e;">▲ Bull Breakout</span>
-          </div>
-        </div>
-
-        <div class="metric-ribbon-card">
-          <div class="metric-card-top">
-            <span>NATURAL GAS (NG)</span>
-            <span class="pill-percent-capsule neg">-1.83%</span>
-          </div>
-          <div class="metric-card-val" style="color:#ef4444;">$2.90</div>
-          <div class="metric-card-sub">
-            <span>Unit: 1 MMBtu</span>
-            <span style="color:#94a3b8;">Consolidating</span>
+            <span>Unit: 1 Troy Oz</span>
+            <span style="color:#22c55e;">▲ Bullish Trend</span>
           </div>
         </div>
 
@@ -2146,6 +2175,18 @@
           <div class="metric-card-sub">
             <span>Inverse Metal Catalyst</span>
             <span style="color:#38bdf8;">Tailwind</span>
+          </div>
+        </div>
+
+        <div class="metric-ribbon-card">
+          <div class="metric-card-top">
+            <span>NATURAL GAS (NG)</span>
+            <span class="pill-percent-capsule neg">-1.83%</span>
+          </div>
+          <div class="metric-card-val" style="color:#ef4444;">$2.90</div>
+          <div class="metric-card-sub">
+            <span>Unit: 1 MMBtu</span>
+            <span style="color:#94a3b8;">Consolidating</span>
           </div>
         </div>
       </div>
@@ -2179,31 +2220,31 @@
               </tr>
             </thead>
             <tbody id="metalsBoostBody">
-              <tr class="boost-row" onclick="openTradeTicket('SILVER', 49.25, '+1.65%', 9.75, true)">
+              <tr class="boost-row" onclick="openTradeTicket('NATGAS', 3.12, '+4.82%', 8.20, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
-                  <div class="cell-symbol-primary">SILVER (XAG/USD)</div>
-                  <div class="cell-sub-desc">1 Troy Oz • High Beta Solar Demand</div>
+                  <div class="cell-symbol-primary">NATURAL GAS (HENRY HUB)</div>
+                  <div class="cell-sub-desc">1 MMBtu • Severe Winter Demand Squeeze</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSilver">$49.25</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSilver">+1.65%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score high">9.75 LEADER</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Solar PV & Industrial Electronics Speculative Long Squeeze</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH BETA BLAST</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceNatgas">$3.12</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctNatgas">+4.82%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">8.20 LEADER</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">LNG Export Surge + Cold Weather Drawdown</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">TOP GAINER</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('GOLD', 3876.40, '+0.72%', 8.60, true)">
+              <tr class="boost-row" onclick="openTradeTicket('URANIUM', 92.40, '+3.20%', 7.95, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
-                  <div class="cell-symbol-primary">GOLD (XAU/USD)</div>
-                  <div class="cell-sub-desc">1 Troy Oz • Global Central Bank Reserves</div>
+                  <div class="cell-symbol-primary">URANIUM SPOT (U3O8)</div>
+                  <div class="cell-sub-desc">1 lb • Nuclear Renaissance Power Base</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceGold">$3,876.40</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctGold">+0.72%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score high">8.60 STRONG</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Sovereign Bank Gold Purchases + US DXY Drop Tailwind</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SAFE HAVEN</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$92.40</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+3.20%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">7.95 STRONG</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">AI Datacenter Nuclear PPAs + Utility Contracting Wave</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">LONG SURGE</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
@@ -2221,6 +2262,62 @@
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
+              <tr class="boost-row" onclick="openTradeTicket('SILVER', 49.25, '+1.65%', 9.75, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">SILVER (XAG/USD)</div>
+                  <div class="cell-sub-desc">1 Troy Oz • High Beta Solar Demand</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSilver">$49.25</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctSilver">+1.65%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">9.75 LEADER</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Solar PV & Industrial Electronics Speculative Long Squeeze</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH BETA BLAST</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('COPPER', 4.88, '+1.15%', 6.80, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">COPPER (HG1!)</div>
+                  <div class="cell-sub-desc">1 lb • Grid Electrification & AI Capex</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$4.88</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+1.15%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">6.80 STEADY</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Smelter Disruptions + EV Grid Infrastructure Flow</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(34,197,94,0.15); color:#22c55e;">ACCUMULATION</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('GOLD', 3876.40, '+0.72%', 8.60, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">GOLD (XAU/USD)</div>
+                  <div class="cell-sub-desc">1 Troy Oz • Global Central Bank Reserves</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceGold">$3,876.40</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctGold">+0.72%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">8.60 STRONG</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Sovereign Bank Gold Purchases + US DXY Drop Tailwind</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SAFE HAVEN</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('PLATINUM', 985.20, '-0.85%', 4.60, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">PLATINUM (XPT/USD)</div>
+                  <div class="cell-sub-desc">1 Troy Oz • Catalytic Auto Demand Weakness</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$985.20</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-0.85%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">4.60 DEFENSIVE</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Auto Sector Softness • Range Rejection at $1,000 Level</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(239,68,68,0.15); color:#ef4444;">DEFENSIVE</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
               <tr class="boost-row" onclick="openTradeTicket('BRENT', 113.43, '-1.26%', 6.50, false)">
                 <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
                 <td>
@@ -2230,36 +2327,22 @@
                 <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceBrent">$113.43</td>
                 <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctBrent">-1.26%</span></td>
                 <td style="text-align:right;"><span class="cell-rfac-score med">6.50 STEADY</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">High Refining Crack Spread Buffer ($9.31/bbl) vs NYMEX WTI</td>
-                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">RANGE BOUND</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Technical Pullback to 20 EMA Support • Momentum Digest</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(239,68,68,0.15); color:#ef4444;">PULLBACK</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('COPPER', 6.48, '-1.50%', 6.10, false)">
-                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+              <tr class="boost-row" onclick="openTradeTicket('PALLADIUM', 980.00, '-2.40%', 4.10, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
                 <td>
-                  <div class="cell-symbol-primary">COPPER (HG)</div>
-                  <div class="cell-sub-desc">1 Pound (lb) • Renewable Grid Metal</div>
+                  <div class="cell-symbol-primary">PALLADIUM SPOT (XPD)</div>
+                  <div class="cell-sub-desc">1 Troy Oz • Heavy Institutional Hedging</div>
                 </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceCopper">$6.48</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg">-1.50%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score med">6.10 STEADY</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">LME Warehouse Drawdowns (-3,150 MT) + Global Electrification</td>
-                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
-                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
-              </tr>
-
-              <tr class="boost-row" onclick="openTradeTicket('NATGAS', 2.90, '-1.83%', 5.20, false)">
-                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
-                <td>
-                  <div class="cell-symbol-primary">NATURAL GAS (NG)</div>
-                  <div class="cell-sub-desc">1 MMBtu • Henry Hub Delivery</div>
-                </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$2.90</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg">-1.83%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score med">5.20 STEADY</span></td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Storage Injection Run Rate Normalized • LNG Export Rebound</td>
-                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">SUPPORT HOLD</span></td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$980.00</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-2.40%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">4.10 BREAKDOWN</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Catalytic Substitution Headwinds + Industrial Destocking</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(239,68,68,0.15); color:#ef4444;">SHORT BUILD</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
             </tbody>
@@ -2303,6 +2386,18 @@
       <div class="market-ribbon-strip">
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
+            <span>ETHEREUM (ETH/USDT)</span>
+            <span class="pill-percent-capsule pos" id="cryptoEthPct">+0.67%</span>
+          </div>
+          <div class="metric-card-val" id="cryptoEthLtp" onclick="openTradeTicket('ETH', lastPrices['ETH']||2241.04, '+0.67%', '6.20', false)" style="cursor:pointer;">$2241.04</div>
+          <div class="metric-card-sub">
+            <span>Layer 2 Activity: High</span>
+            <span style="color:#38bdf8;">Consolidating</span>
+          </div>
+        </div>
+
+        <div class="metric-ribbon-card">
+          <div class="metric-card-top">
             <span>BITCOIN (BTC/USDT)</span>
             <span class="pill-percent-capsule neg" id="cryptoBtcPct">-0.36%</span>
           </div>
@@ -2327,18 +2422,6 @@
 
         <div class="metric-ribbon-card">
           <div class="metric-card-top">
-            <span>ETHEREUM (ETH/USDT)</span>
-            <span class="pill-percent-capsule pos" id="cryptoEthPct">+0.67%</span>
-          </div>
-          <div class="metric-card-val" id="cryptoEthLtp" onclick="openTradeTicket('ETH', lastPrices['ETH']||2241.04, '+0.67%', '6.20', false)" style="cursor:pointer;">$2241.04</div>
-          <div class="metric-card-sub">
-            <span>Layer 2 Activity: High</span>
-            <span style="color:#38bdf8;">Consolidating</span>
-          </div>
-        </div>
-
-        <div class="metric-ribbon-card">
-          <div class="metric-card-top">
             <span>FEAR & GREED INDEX</span>
             <span class="pill-percent-capsule pos">74</span>
           </div>
@@ -2356,8 +2439,8 @@
           </div>
           <div class="metric-card-val" style="color:#ef4444;">$98.4M Shorts</div>
           <div class="metric-card-sub">
-            <span>Short Squeeze Engine</span>
-            <span style="color:#22c55e;">Bull Fuel</span>
+            <span>Shorts Wiped: 69%</span>
+            <span style="color:#22c55e;">Squeeze Pressure</span>
           </div>
         </div>
       </div>
@@ -2392,51 +2475,6 @@
               </tr>
             </thead>
             <tbody id="cryptoBoostBody">
-              <tr class="boost-row" onclick="openTradeTicket('SOL', 95.27, '-1.43%', 9.88, true)">
-                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
-                <td>
-                  <div class="cell-symbol-primary">SOL / USDT</div>
-                  <div class="cell-sub-desc">Solana • Ecosystem DEX Breakout</div>
-                </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSol">$95.27</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctSol">-1.43%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score high">9.88 LEADER</span></td>
-                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.012%</td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Short Squeeze Active • $24.5M Shorts Wiped Out Above $94</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SHORT SQUEEZE</span></td>
-                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
-              </tr>
-
-              <tr class="boost-row" onclick="openTradeTicket('DOGE', 0.0750, '-0.52%', 8.95, true)">
-                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
-                <td>
-                  <div class="cell-symbol-primary">DOGE / USDT</div>
-                  <div class="cell-sub-desc">Dogecoin • Whale Accumulation Wave</div>
-                </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceDoge">$0.0750</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctDoge">-0.52%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score high">8.95 STRONG</span></td>
-                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.015%</td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Retail Liquidity Inflow Surge • 4.2x Volume Velocity</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH INFLOW</span></td>
-                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
-              </tr>
-
-              <tr class="boost-row" onclick="openTradeTicket('BTC', 77276.50, '-0.36%', 8.42, true)">
-                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
-                <td>
-                  <div class="cell-symbol-primary">BTC / USDT</div>
-                  <div class="cell-sub-desc">Bitcoin • Institutional Spot ETF Wave</div>
-                </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceBtc">$77,276.50</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctBtc">-0.36%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score high">8.42 STRONG</span></td>
-                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.010%</td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Spot ETF Net Inflows (+$420M) • Major Liquidation Cluster at $78.5k</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">INSTITUTIONAL</span></td>
-                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
-              </tr>
-
               <tr class="boost-row" onclick="openTradeTicket('SUI', 0.898, '+2.04%', 7.85, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
@@ -2448,26 +2486,11 @@
                 <td style="text-align:right;"><span class="cell-rfac-score med">7.85 STRONG</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.020%</td>
                 <td style="color:#cbd5e1; font-size:11.5px;">TVL Doubled In 30 Days • Spot Buying Across Major Exchanges</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">BREAKOUT BIAS</span></td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">TOP GAINER</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('ETH', 2241.04, '+0.67%', 6.20, false)">
-                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
-                <td>
-                  <div class="cell-symbol-primary">ETH / USDT</div>
-                  <div class="cell-sub-desc">Ethereum • Layer-2 Staking Flow</div>
-                </td>
-                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceEth">$2,241.04</td>
-                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctEth">+0.67%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score med">6.20 STEADY</span></td>
-                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#38bdf8;">+0.008%</td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Base EMA 50 Support Bounce • Consolidating Under $2,300</td>
-                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
-                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
-              </tr>
-
-              <tr class="boost-row" onclick="openTradeTicket('LINK', 11.43, '+1.85%', 5.40, false)">
+              <tr class="boost-row" onclick="openTradeTicket('LINK', 11.43, '+1.85%', 5.40, true)">
                 <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
                 <td>
                   <div class="cell-symbol-primary">LINK / USDT</div>
@@ -2482,7 +2505,52 @@
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
 
-              <tr class="boost-row" onclick="openTradeTicket('XRP', 1.245, '-0.45%', -3.20, false)">
+              <tr class="boost-row" onclick="openTradeTicket('ETH', 2241.04, '+0.67%', 6.20, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">ETH / USDT</div>
+                  <div class="cell-sub-desc">Ethereum • Layer-2 Staking Flow</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceEth">$2,241.04</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos" id="rowPctEth">+0.67%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">6.20 STEADY</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#38bdf8;">+0.008%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Base EMA 50 Support Bounce • Consolidating Under $2,300</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(56,189,248,0.15); color:#38bdf8;">ACCUMULATION</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('BNB', 612.40, '+0.45%', 5.80, true)">
+                <td style="text-align:center;"><span class="direction-arrow up">⬆</span></td>
+                <td>
+                  <div class="cell-symbol-primary">BNB / USDT</div>
+                  <div class="cell-sub-desc">BNB Chain • Launchpool Capital Velocity</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$612.40</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule pos">+0.45%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">5.80 STEADY</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.011%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Ecosystem Yield Surge • Holding Above Key Moving Averages</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(34,197,94,0.15); color:#22c55e;">SUPPORT HOLD</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('BTC', 77276.50, '-0.36%', 8.42, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">BTC / USDT</div>
+                  <div class="cell-sub-desc">Bitcoin • Institutional Spot ETF Wave</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceBtc">$77,276.50</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctBtc">-0.36%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">8.42 STRONG</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.010%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Spot ETF Net Inflows (+$420M) • Major Liquidation Cluster at $78.5k</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">INSTITUTIONAL</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('XRP', 1.245, '-0.45%', 3.20, false)">
                 <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
                 <td>
                   <div class="cell-symbol-primary">XRP / USDT</div>
@@ -2490,10 +2558,70 @@
                 </td>
                 <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceXrp">$1.2450</td>
                 <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctXrp">-0.45%</span></td>
-                <td style="text-align:right;"><span class="cell-rfac-score low">-3.20 SHORT</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">3.20 LIQUIDATION</span></td>
                 <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#ef4444;">-0.005%</td>
-                <td style="color:#cbd5e1; font-size:11.5px;">Overleveraged Long Liquidations Trap • Rejection at $1.28</td>
-                <td style="text-align:center;"><span class="pill-signal-tag tag-trap">DOWNSIDE TRAP</span></td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Multi-Exchange Long Liquidations ($18M in 1h) Trigger Dip</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(239,68,68,0.15); color:#ef4444;">LIQUIDATION</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('DOGE', 0.0750, '-0.52%', 8.95, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">DOGE / USDT</div>
+                  <div class="cell-sub-desc">Dogecoin • Whale Accumulation Wave</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceDoge">$0.0750</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctDoge">-0.52%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">8.95 STRONG</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.015%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Retail Liquidity Inflow Surge • 4.2x Volume Velocity</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">HIGH INFLOW</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('SOL', 95.27, '-1.43%', 9.88, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">SOL / USDT</div>
+                  <div class="cell-sub-desc">Solana • Ecosystem DEX Breakout</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;" id="rowPriceSol">$95.27</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg" id="rowPctSol">-1.43%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score high">9.88 LEADER</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#22c55e;">+0.012%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Short Squeeze Active • $24.5M Shorts Wiped Out Above $94</td>
+                <td style="text-align:center;"><span class="pill-signal-tag tag-leader">SHORT SQUEEZE</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('ADA', 0.420, '-1.82%', 3.10, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">ADA / USDT</div>
+                  <div class="cell-sub-desc">Cardano • Ecosystem Distribution</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$0.4200</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-1.82%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">3.10 WEAK</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#ef4444;">-0.008%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Lower Highs on 15m Chart • Volume Drying Up Near Support</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(239,68,68,0.15); color:#ef4444;">WEAKNESS</span></td>
+                <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
+              </tr>
+
+              <tr class="boost-row" onclick="openTradeTicket('AVAX', 28.50, '-2.35%', 2.90, false)">
+                <td style="text-align:center;"><span class="direction-arrow down">⬇</span></td>
+                <td>
+                  <div class="cell-symbol-primary">AVAX / USDT</div>
+                  <div class="cell-sub-desc">Avalanche • Subnet Unlock Sell-off</div>
+                </td>
+                <td style="text-align:right; font-family:'JetBrains Mono'; font-weight:800; color:#f8fafc;">$28.50</td>
+                <td style="text-align:right;"><span class="pill-percent-capsule neg">-2.35%</span></td>
+                <td style="text-align:right;"><span class="cell-rfac-score med">2.90 SHORT</span></td>
+                <td style="text-align:center; font-family:'JetBrains Mono'; font-size:11px; color:#ef4444;">-0.012%</td>
+                <td style="color:#cbd5e1; font-size:11.5px;">Token Unlock Supply Inflow • Sellers Dominating Order Books</td>
+                <td style="text-align:center;"><span class="pill-signal-tag" style="background:rgba(239,68,68,0.15); color:#ef4444;">DISTRIBUTION</span></td>
                 <td style="text-align:center;"><button class="btn-top-util" style="padding:3px 10px; font-size:10px;">Ticket ↗</button></td>
               </tr>
             </tbody>
@@ -3088,8 +3216,8 @@
       if (beaconUnivFilter !== 'All') list = list.filter(s => s.univ === beaconUnivFilter);
       if (filter) list = list.filter(s => s.sym.includes(filter.toUpperCase()));
 
-      // Sort by signalPct descending
-      list.sort((a, b) => parseFloat(b.signalPct) - parseFloat(a.signalPct));
+      // Sort strictly from top to bottom by percentage (Bullish to Bearish)
+      list.sort((a, b) => (b.pct || 0) - (a.pct || 0));
 
       tbody.innerHTML = list.map(s => {
         const isBookmarked = myWatchlist.has(s.sym);
@@ -3198,8 +3326,8 @@
       if (boostUnivFilter !== 'All') list = list.filter(s => s.univ === boostUnivFilter);
       if (search) list = list.filter(s => s.sym.includes(search.toUpperCase()));
 
-      // Sort by R.Fac descending
-      list.sort((a, b) => b.rFac - a.rFac);
+      // Sort strictly from top to bottom by percentage (Bullish to Bearish)
+      list.sort((a, b) => (b.pct || 0) - (a.pct || 0));
 
       tbody.innerHTML = list.map(s => {
         const isBookmarked = myWatchlist.has(s.sym);
@@ -4049,6 +4177,12 @@
       const mover = document.getElementById('body-mover');
       if (mover) {
         mover.innerHTML = `
+          <tr onclick="openTradeTicket('ICICIBANK', 1245.80, '+0.92%', 1.95, true)">
+            <td><strong style="color:white;">ICICIBANK</strong></td>
+            <td>7.80%</td>
+            <td style="color:#22c55e;">+0.92%</td>
+            <td style="color:#22c55e; font-weight:800; font-size:13px;">+22.6 Pts</td>
+          </tr>
           <tr onclick="openTradeTicket('HDFCBANK', 1682.40, '+0.85%', 2.10, true)">
             <td><strong style="color:white;">HDFCBANK</strong></td>
             <td>11.45%</td>
@@ -4060,12 +4194,6 @@
             <td>9.20%</td>
             <td style="color:#22c55e;">+0.60%</td>
             <td style="color:#22c55e; font-weight:800; font-size:13px;">+24.1 Pts</td>
-          </tr>
-          <tr onclick="openTradeTicket('ICICIBANK', 1245.80, '+0.92%', 1.95, true)">
-            <td><strong style="color:white;">ICICIBANK</strong></td>
-            <td>7.80%</td>
-            <td style="color:#22c55e;">+0.92%</td>
-            <td style="color:#22c55e; font-weight:800; font-size:13px;">+22.6 Pts</td>
           </tr>
           <tr onclick="openTradeTicket('TCS', 4120.00, '-0.70%', 1.60, false)">
             <td><strong style="color:white;">TCS</strong></td>
@@ -4366,6 +4494,8 @@
             applyCapsule(rowPctDoge, pct);
           }
         });
+        sortCryptoBoostRows();
+        sortCryptoRibbonCards();
 
         // Spot prices for SUI, XRP, LINK
         ['SUI', 'XRP', 'LINK'].forEach(sym => {
@@ -4396,6 +4526,72 @@
     }
 
     // Initialize Real Live Feeds on Load & Set Periodic Refresh
+    
+    // ── AUTO-SORTING GUARANTEE (STRICT BULLISH TO BEARISH) ──
+    function sortCryptoBoostRows() {
+      const tbody = document.getElementById('cryptoBoostBody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.sort((a, b) => {
+        const getPct = r => {
+          const cap = r.querySelector('.pill-percent-capsule');
+          if (!cap) return 0;
+          return parseFloat(cap.textContent.replace('%', '').trim()) || 0;
+        };
+        return getPct(b) - getPct(a);
+      });
+      rows.forEach(r => tbody.appendChild(r));
+    }
+
+    function sortMetalsBoostRows() {
+      const tbody = document.getElementById('metalsBoostBody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      rows.sort((a, b) => {
+        const getPct = r => {
+          const cap = r.querySelector('.pill-percent-capsule');
+          if (!cap) return 0;
+          return parseFloat(cap.textContent.replace('%', '').trim()) || 0;
+        };
+        return getPct(b) - getPct(a);
+      });
+      rows.forEach(r => tbody.appendChild(r));
+    }
+
+    function sortCryptoRibbonCards() {
+      const strip = document.querySelector('#tab-crypto .market-ribbon-strip');
+      if (!strip) return;
+      const cards = Array.from(strip.querySelectorAll('.metric-ribbon-card'));
+      if (cards.length >= 3) {
+        const priceCards = cards.slice(0, 3);
+        priceCards.sort((a, b) => {
+          const getPct = c => {
+            const cap = c.querySelector('.pill-percent-capsule');
+            if (!cap) return 0;
+            return parseFloat(cap.textContent.replace('%', '').trim()) || 0;
+          };
+          return getPct(b) - getPct(a);
+        });
+        const refNode = cards[3];
+        priceCards.forEach(c => strip.insertBefore(c, refNode));
+      }
+    }
+
+    function sortMetalsRibbonCards() {
+      const strip = document.querySelector('#tab-metals .market-ribbon-strip');
+      if (!strip) return;
+      const cards = Array.from(strip.querySelectorAll('.metric-ribbon-card'));
+      cards.sort((a, b) => {
+        const getPct = c => {
+          const cap = c.querySelector('.pill-percent-capsule');
+          if (!cap) return 0;
+          return parseFloat(cap.textContent.replace('%', '').trim()) || 0;
+        };
+        return getPct(b) - getPct(a);
+      });
+      cards.forEach(c => strip.appendChild(c));
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       fetchUsdInrRate();
       fetchLiveMetalsData();
@@ -4403,6 +4599,10 @@
       initCryptoWebSocket();
       startMetalsTickEngine();
 
+      sortCryptoBoostRows();
+      sortMetalsBoostRows();
+      sortCryptoRibbonCards();
+      sortMetalsRibbonCards();
       // Refresh Crypto every 12 seconds
       setInterval(fetchLiveCryptoData, 12000);
 
