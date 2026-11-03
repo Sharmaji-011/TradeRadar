@@ -2574,7 +2574,14 @@
         <div class="ob-xray-canvas-grid">
           
           <!-- Left: Stock list source -->
-          <div class="ob-source-list" id="ob-source-list"></div>
+          <div class="ob-source-list-container" style="display:flex; flex-direction:column; height:100%; min-width:138px; max-width:155px;">
+            <div class="source-list-filter-row">
+              <button type="button" class="src-filter-btn active" id="src-filter-all" onclick="filterSourceRail('all')">ALL</button>
+              <button type="button" class="src-filter-btn" id="src-filter-bull" onclick="filterSourceRail('bull')">🟢 BUY</button>
+              <button type="button" class="src-filter-btn" id="src-filter-bear" onclick="filterSourceRail('bear')">🔴 SELL</button>
+            </div>
+            <div class="ob-source-list" id="ob-source-list" style="flex:1;"></div>
+          </div>
 
           <!-- Center: Neural Sankey Flow Canvas with Live Laser Streams -->
           <div class="sankey-center-stage">

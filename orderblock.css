@@ -1217,3 +1217,49 @@ body.app .page {
   gap: 3px !important;
   overflow-y: auto !important;
 }
+
+/* Source List Quick Filter Pills (ALL / BUYERS / SELLERS) */
+.source-list-filter-row {
+  display: flex;
+  gap: 3px;
+  background: #060913;
+  padding: 3px;
+  border-radius: 6px;
+  border: 1px solid #141c2c;
+  margin-bottom: 4px;
+}
+.src-filter-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 4px 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+.src-filter-btn:hover {
+  color: #fff;
+  background: #0f172a;
+}
+.src-filter-btn.active#src-filter-all {
+  background: #1e293b;
+  color: #38bdf8;
+  border-color: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+}
+.src-filter-btn.active#src-filter-bull {
+  background: rgba(0, 255, 135, 0.15);
+  color: #00ff87;
+  border-color: #00ff87;
+  box-shadow: 0 0 8px rgba(0, 255, 135, 0.4);
+}
+.src-filter-btn.active#src-filter-bear {
+  background: rgba(255, 42, 85, 0.15);
+  color: #ff2a55;
+  border-color: #ff2a55;
+  box-shadow: 0 0 8px rgba(255, 42, 85, 0.4);
+}
