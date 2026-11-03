@@ -2557,6 +2557,14 @@
             </button>
           </div>
 
+          <!-- Layout Zoom / Size Switcher (Compact / Standard) -->
+          <div class="ob-scale-selector" style="display:flex; align-items:center; gap:2px; background:#090e1b; border:1px solid #1a273e; border-radius:6px; padding:2px 4px;">
+            <span style="font-size:0.58rem; color:#64748b; font-weight:700; margin-right:2px;">ZOOM:</span>
+            <button type="button" class="ob-scale-btn" onclick="setOBViewScale('75', this)" id="btn-scale-75" style="background:transparent; border:none; color:#94a3b8; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">75%</button>
+            <button type="button" class="ob-scale-btn active" onclick="setOBViewScale('85', this)" id="btn-scale-85" style="background:#0d1a2d; border:1px solid rgba(0,255,135,0.4); color:#00ff87; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">85%</button>
+            <button type="button" class="ob-scale-btn" onclick="setOBViewScale('100', this)" id="btn-scale-100" style="background:transparent; border:none; color:#94a3b8; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">100%</button>
+          </div>
+
           <!-- Scatter Matrix Radar Header (from video) -->
           <div class="ob-scatter-radar">
             <div class="scatter-row bull">

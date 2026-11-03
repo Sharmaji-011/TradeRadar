@@ -211,7 +211,66 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     }
   }
 
+  // Scale / Zoom Controller for HUD fitting
+  window.setOBViewScale = function(scaleStr, btnEl) {
+    const scale = parseInt(scaleStr, 10) || 85;
+    const view = document.getElementById('view-orderblock');
+    if (view) {
+      view.style.zoom = (scale / 100);
+      try { localStorage.setItem('traderadar_ob_scale', scaleStr); } catch(e) {}
+    }
+    document.querySelectorAll('.ob-scale-btn').forEach(b => {
+      b.classList.remove('active');
+      b.style.background = 'transparent';
+      b.style.color = '#94a3b8';
+      b.style.border = 'none';
+    });
+    const targetBtn = btnEl || document.getElementById(`btn-scale-${scaleStr}`);
+    if (targetBtn) {
+      targetBtn.classList.add('active');
+      targetBtn.style.background = '#0d1a2d';
+      targetBtn.style.color = '#00ff87';
+      targetBtn.style.border = '1px solid rgba(0,255,135,0.4)';
+    }
+  };
+
+  function bindAllWheelScrolling() {
+    const listIds = [
+      'ob-source-list',
+      'col-long-buildup-1',
+      'col-long-buildup-2',
+      'col-short-covering',
+      'col-short-buildup-1',
+      'col-short-buildup-2',
+      'col-long-unwinding',
+      'ob-master-picks'
+    ];
+    listIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el || el._wheelBound) return;
+      el._wheelBound = true;
+      el.addEventListener('wheel', (e) => {
+        if (el.scrollHeight > el.clientHeight) {
+          const atTop = el.scrollTop <= 0 && e.deltaY < 0;
+          const atBottom = (el.scrollTop + el.clientHeight >= el.scrollHeight - 1) && e.deltaY > 0;
+          if (!atTop && !atBottom) {
+            el.scrollTop += e.deltaY;
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }
+      }, { passive: false });
+    });
+  }
+
   window.initOrderBlockScreen = function() {
+    // Restore preferred zoom scale (defaults to 85% for compact fit)
+    const savedScale = (typeof localStorage !== 'undefined' && localStorage.getItem('traderadar_ob_scale')) || '85';
+    if (typeof window.setOBViewScale === 'function') {
+      window.setOBViewScale(savedScale);
+    }
+    setTimeout(bindAllWheelScrolling, 100);
+
     // Sync with TradeRadar currentMarketSegment if set
     if (typeof currentMarketSegment !== 'undefined') {
       if (currentMarketSegment === 'crypto') {
@@ -546,6 +605,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     // Render Full SVG Neural Canvas with 70+ live background flow lines
     renderSankeyCanvas(data);
+    setTimeout(bindAllWheelScrolling, 50);
   }
 
   function renderTopScatterDots() {

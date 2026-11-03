@@ -1265,85 +1265,182 @@ body.app .page {
 }
 
 /* ============================================================
-   ZERO-OVERFLOW FULL-VIEWPORT RESPONSIVE SYSTEM
-   Fits 100% on any screen (1366x768 laptops to 4K desktops)
+   ULTRA-COMPACT RESPONSIVE & SMOOTH SCROLL ENGINE
+   1. Fits seamlessly on any screen with default compact zoom.
+   2. Allows full vertical up/down scrolling on the screen when needed.
+   3. Ensures all lists (left rail, buildup cols, master picks) move smoothly.
    ============================================================ */
 
+/* 1. Main Tab: takes workspace height and allows vertical up/down scrolling */
 #tab-orderblock.view-screen-tab.active {
   display: flex !important;
   flex-direction: column !important;
-  height: calc(100vh - 84px) !important;
-  max-height: calc(100vh - 84px) !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  padding: 4px 8px !important;
+  height: calc(100% - 48px) !important;
+  max-height: calc(100% - 48px) !important;
+  overflow-y: auto !important; /* CRITICAL: Enables smooth screen scrolling */
+  overflow-x: hidden !important;
+  scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 4px 10px !important;
   box-sizing: border-box !important;
 }
 
+#tab-orderblock::-webkit-scrollbar {
+  width: 6px !important;
+}
+#tab-orderblock::-webkit-scrollbar-track {
+  background: rgba(6, 10, 18, 0.8) !important;
+}
+#tab-orderblock::-webkit-scrollbar-thumb {
+  background: #3b82f6 !important;
+  border-radius: 4px !important;
+}
+#tab-orderblock::-webkit-scrollbar-thumb:hover {
+  background: #00ff87 !important;
+}
+
+/* 2. Orderblock View: default compact zoom and natural height */
 .orderblock-view {
-  height: 100% !important;
-  max-height: 100% !important;
-  min-height: 0 !important;
+  min-height: 480px !important;
+  height: auto !important;
+  max-height: none !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 4px !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   box-sizing: border-box !important;
+  zoom: 0.85; /* Compact default scale: perfectly fits laptop screens */
 }
 
+/* 3. Top Toolbar */
 .ob-top-toolbar {
-  height: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
   flex-shrink: 0 !important;
   margin-bottom: 2px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
 }
 
+.ob-search-bar-wrap {
+  width: 190px !important;
+  height: 26px !important;
+  padding: 2px 8px !important;
+  border-radius: 6px !important;
+}
+.ob-search-input {
+  font-size: 0.70rem !important;
+}
+.ob-search-key {
+  font-size: 0.55rem !important;
+  padding: 1px 4px !important;
+}
+
+.market-selector-switch {
+  padding: 2px !important;
+  gap: 3px !important;
+}
+.mkt-tab {
+  padding: 3px 8px !important;
+  font-size: 0.66rem !important;
+  border-radius: 5px !important;
+  gap: 4px !important;
+}
+
+.ob-scatter-radar {
+  gap: 10px !important;
+  font-size: 0.62rem !important;
+}
+
+/* 4. Canvas Grid */
 .ob-xray-canvas-grid {
   display: grid !important;
-  grid-template-columns: 140px 1fr 310px !important;
-  grid-template-rows: minmax(0, 1fr) !important;
-  gap: 8px !important;
-  flex: 1 1 0% !important;
-  height: calc(100% - 40px) !important;
-  min-height: 0 !important;
-  max-height: calc(100% - 40px) !important;
-  overflow: hidden !important;
-  padding: 6px 8px !important;
+  grid-template-columns: 140px 1fr 295px !important;
+  grid-template-rows: minmax(430px, 1fr) !important;
+  gap: 6px !important;
+  flex: 1 1 auto !important;
+  height: 470px !important;
+  min-height: 430px !important;
+  max-height: none !important;
+  overflow: visible !important;
+  padding: 4px !important;
   box-sizing: border-box !important;
 }
 
-/* Left Rail Container */
+/* 5. Left Stock Rail: always smoothly scrollable */
 .ob-source-list-container {
   display: flex !important;
   flex-direction: column !important;
   height: 100% !important;
-  min-height: 0 !important;
+  min-height: 420px !important;
   max-height: 100% !important;
   overflow: hidden !important;
+}
+
+.source-list-filter-row {
+  display: flex !important;
+  gap: 3px !important;
+  margin-bottom: 3px !important;
+  flex-shrink: 0 !important;
+}
+
+.src-filter-btn {
+  flex: 1 !important;
+  padding: 2px 4px !important;
+  font-size: 0.60rem !important;
+  font-weight: 700 !important;
+  height: 20px !important;
+  line-height: 1 !important;
+  border-radius: 4px !important;
 }
 
 .ob-source-list {
-  flex: 1 1 0% !important;
-  height: 0 !important;
-  min-height: 0 !important;
-  overflow-y: auto !important;
-  padding-right: 2px !important;
+  flex: 1 1 auto !important;
+  min-height: 200px !important;
+  height: 100% !important;
+  overflow-y: scroll !important; /* Always enable vertical list scroll */
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-right: 3px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #3b82f6 rgba(8, 12, 22, 0.8) !important;
+}
+
+.ob-source-list::-webkit-scrollbar {
+  width: 5px !important;
+  display: block !important;
+}
+.ob-source-list::-webkit-scrollbar-track {
+  background: rgba(8, 12, 22, 0.8) !important;
+  border-radius: 3px !important;
+}
+.ob-source-list::-webkit-scrollbar-thumb {
+  background: #2563eb !important;
+  border-radius: 3px !important;
+}
+.ob-source-list::-webkit-scrollbar-thumb:hover {
+  background: #00ff87 !important;
 }
 
 .source-row {
-  padding: 3px 6px !important;
-  font-size: 0.70rem !important;
-  min-height: 22px !important;
+  padding: 2px 6px !important;
+  font-size: 0.67rem !important;
+  min-height: 20px !important;
+  line-height: 1.15 !important;
+  border-radius: 4px !important;
+  margin-bottom: 2px !important;
 }
 
-/* Center Stage */
+/* 6. Center Stage & Buildup Categories */
 .sankey-center-stage {
   height: 100% !important;
-  min-height: 0 !important;
-  max-height: 100% !important;
-  overflow: hidden !important;
+  min-height: 420px !important;
   position: relative !important;
+  overflow: hidden !important;
 }
 
 .sankey-svg-canvas {
@@ -1364,105 +1461,162 @@ body.app .page {
   max-height: 100% !important;
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
-  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) !important;
-  gap: 6px !important;
-  padding: 4px !important;
-  overflow: hidden !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 4px !important;
+  padding: 2px !important;
   box-sizing: border-box !important;
 }
 
 .buildup-col {
   min-height: 0 !important;
-  max-height: 100% !important;
   height: 100% !important;
+  max-height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
-  padding: 4px 6px !important;
-  background: rgba(6, 10, 18, 0.75) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  padding: 3px 5px !important;
+  background: rgba(6, 10, 18, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 5px !important;
   box-sizing: border-box !important;
 }
 
 .buildup-pill {
-  font-size: 0.58rem !important;
-  padding: 1px 5px !important;
+  font-size: 0.54rem !important;
+  padding: 1px 4px !important;
   margin-bottom: 2px !important;
   flex-shrink: 0 !important;
+  border-radius: 3px !important;
+  line-height: 1.2 !important;
 }
 
 .col-items-wrap {
-  flex: 1 1 0% !important;
-  height: 0 !important;
+  flex: 1 1 auto !important;
   min-height: 0 !important;
-  overflow-y: auto !important;
+  height: 100% !important;
+  overflow-y: auto !important; /* Smooth scroll inside buildup cols */
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 2px !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #475569 rgba(6, 10, 18, 0.6) !important;
+}
+
+.col-items-wrap::-webkit-scrollbar {
+  width: 4px !important;
+  display: block !important;
+}
+.col-items-wrap::-webkit-scrollbar-thumb {
+  background: #475569 !important;
+  border-radius: 2px !important;
+}
+.col-items-wrap::-webkit-scrollbar-thumb:hover {
+  background: #00ff87 !important;
 }
 
 .buildup-item {
-  padding: 2px 6px !important;
-  font-size: 0.67rem !important;
-  min-height: 20px !important;
+  padding: 2px 4px !important;
+  font-size: 0.63rem !important;
+  min-height: 18px !important;
+  border-radius: 3px !important;
+  line-height: 1.15 !important;
 }
 
-/* Right Master Picks (Compact 6-Card Deck Fitting Viewport) */
+/* 7. Right Master Picks (Compact 6-Card Deck) */
 .ob-master-picks {
   height: 100% !important;
-  min-height: 0 !important;
+  min-height: 420px !important;
   max-height: 100% !important;
-  overflow-y: auto !important;
+  overflow-y: auto !important; /* Smooth scroll inside master picks */
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 4px !important;
+  gap: 3px !important;
   padding-right: 3px !important;
   box-sizing: border-box !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #3b82f6 rgba(7, 12, 24, 0.8) !important;
+}
+
+.ob-master-picks::-webkit-scrollbar {
+  width: 5px !important;
+  display: block !important;
+}
+.ob-master-picks::-webkit-scrollbar-track {
+  background: rgba(7, 12, 24, 0.8) !important;
+  border-radius: 3px !important;
+}
+.ob-master-picks::-webkit-scrollbar-thumb {
+  background: #2563eb !important;
+  border-radius: 3px !important;
+}
+.ob-master-picks::-webkit-scrollbar-thumb:hover {
+  background: #00ff87 !important;
 }
 
 .master-card {
   flex-shrink: 0 !important;
-  padding: 3px 6px !important;
-  border-radius: 5px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
   background: rgba(7, 12, 24, 0.95) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  border-left-width: 2.5px !important;
 }
 
 .master-card-head {
   margin-bottom: 0 !important;
   line-height: 1.1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
 .master-card-sym {
-  font-size: 0.78rem !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
 }
 
 .tag-badge {
-  font-size: 0.58rem !important;
-  padding: 1px 4px !important;
+  font-size: 0.52rem !important;
+  padding: 0 3px !important;
+  border-radius: 2px !important;
 }
 
 .master-chart-wrap {
-  height: 24px !important;
+  height: 14px !important;
   margin: 1px 0 !important;
 }
 
 .master-chart-wrap svg {
-  height: 24px !important;
+  height: 14px !important;
 }
 
 .master-slider-row {
-  font-size: 0.55rem !important;
-  gap: 4px !important;
+  font-size: 0.52rem !important;
+  gap: 3px !important;
   margin-top: 1px !important;
   line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
-.radar-btn {
-  padding: 1px 5px !important;
-  font-size: 0.55rem !important;
-  height: 16px !important;
-  line-height: 1 !important;
+.master-metrics-row {
+  font-size: 0.52rem !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 1px !important;
+}
+
+.radar-btn, .btn-trade-radar {
+  padding: 0 4px !important;
+  font-size: 0.50rem !important;
+  height: 14px !important;
+  line-height: 14px !important;
+  border-radius: 3px !important;
 }
