@@ -1178,3 +1178,42 @@ body.app .page {
   margin-top: 4px;
   width: 100%;
 }
+
+/* Top utility buttons nowrap fix */
+.btn-top-util {
+  white-space: nowrap !important;
+}
+
+/* Ensure Order Block HUD fills viewport cleanly */
+#tab-orderblock.view-screen-tab.active {
+  display: flex !important;
+  flex-direction: column;
+  height: calc(100vh - 90px) !important;
+  overflow: hidden !important;
+  padding: 6px 12px !important;
+}
+
+.ob-xray-canvas-grid {
+  height: calc(100% - 46px) !important;
+  min-height: 520px !important;
+}
+
+.ob-source-list {
+  height: 100% !important;
+}
+
+.buildup-col {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: rgba(6, 10, 18, 0.72) !important;
+  border: 1px solid rgba(22, 34, 54, 0.85) !important;
+}
+
+.col-items-wrap {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+  overflow-y: auto !important;
+}

@@ -8,7 +8,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 (function () {
   'use strict';
 
-  let CURRENT_MARKET = 'crypto';
+  let CURRENT_MARKET = 'nse';
   let CURRENT_VIEW = 'orderblock';
   let MARKET_DATA = null;
   let ACTIVE_MODAL_SYMBOL = null;
@@ -179,12 +179,39 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   }
 
   window.initOrderBlockScreen = function() {
-    if (!MARKET_DATA && OB_FALLBACK_DATA[CURRENT_MARKET]) {
-      updateMarketState(JSON.parse(JSON.stringify(OB_FALLBACK_DATA[CURRENT_MARKET])));
-    } else if (MARKET_DATA) {
-      setTimeout(() => {
-        renderOrderBlockView(MARKET_DATA);
-      }, 50);
+    // Sync with TradeRadar currentMarketSegment if set
+    if (typeof currentMarketSegment !== 'undefined') {
+      if (currentMarketSegment === 'crypto') {
+        CURRENT_MARKET = 'crypto';
+      } else if (currentMarketSegment === 'metals') {
+        CURRENT_MARKET = 'us';
+      } else {
+        CURRENT_MARKET = 'nse';
+      }
+    }
+    
+    // Sync market switcher buttons in UI
+    document.querySelectorAll('.mkt-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.market === CURRENT_MARKET);
+    });
+
+    if (OB_FALLBACK_DATA[CURRENT_MARKET]) {
+      const copy = JSON.parse(JSON.stringify(OB_FALLBACK_DATA[CURRENT_MARKET]));
+      if (copy.top_bullish && copy.top_bullish.length > 0) {
+        HOVERED_SYMBOL = copy.top_bullish[0].symbol;
+      }
+      updateMarketState(copy);
+    }
+  };
+
+  // Bridge to TradeRadar TradingView Chart Engine
+  window.loadStockIntoRadar = function (sym) {
+    if (!sym) return;
+    const symUpper = sym.toUpperCase().trim();
+    if (typeof window.openTradeTicket === 'function') {
+      window.openTradeTicket(symUpper);
+    } else if (typeof window.openStockModal === 'function') {
+      window.openStockModal(symUpper);
     }
   };
 
@@ -816,15 +843,15 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
         </div>
 
         <div class="master-slider-row">
-          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">S1: ${s.s1.toFixed(1)}</span>
+          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">S1: ${fmtLevel(s.s1)}</span>
           <div class="slider-track">
             <div class="slider-knob ${isBull ? 'bull' : 'bear'}" style="left: ${isBull ? '65%' : '35%'};"></div>
           </div>
-          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">R2: ${s.r2.toFixed(1)}</span>
+          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">R2: ${fmtLevel(s.r2)}</span>
         </div>
 
         <div class="master-metrics-row">
-          <span>ZONE: <b>${s.zone.toFixed(1)}</b></span>
+          <span>ZONE: <b>${fmtLevel(s.zone)}</b></span>
           <span>RISK: <b>${riskPct}%</b></span>
           <span>R:R: <b style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}">1 : ${s.rr}</b></span>
           <button type="button" class="btn-trade-radar" onclick="event.stopPropagation(); if (typeof window.loadStockIntoRadar === 'function') window.loadStockIntoRadar('${s.symbol}');" style="background:rgba(0,229,255,0.12); border:1px solid #00e5ff; color:#00e5ff; border-radius:4px; font-size:0.62rem; font-weight:800; padding:1px 5px; cursor:pointer; margin-left:auto;" title="Send setup directly to TradeRadar Execution Pipeline">⚡ Radar</button>
@@ -1336,7 +1363,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     svgHtml += `
       <!-- Price Grid Lines -->
       <line x1="0" y1="${yVal(s.r2)}" x2="${W}" y2="${yVal(s.r2)}" stroke="#00ff87" stroke-dasharray="3,3" stroke-width="1.2" opacity="0.6"/>
-      <text x="${W - 65}" y="${yVal(s.r2) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R2: ${s.r2.toFixed(1)}</text>
+      <text x="${W - 65}" y="${yVal(s.r2) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R2: ${fmtLevel(s.r2)}</text>
 
       <line x1="0" y1="${yVal(s.r1)}" x2="${W}" y2="${yVal(s.r1)}" stroke="#00ff87" stroke-dasharray="2,2" stroke-width="1" opacity="0.5"/>
       <text x="${W - 65}" y="${yVal(s.r1) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R1: ${s.r1.toFixed(1)}</text>
@@ -1345,7 +1372,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       <text x="10" y="${yVal(s.zone) - 4}" fill="#00f0ff" font-size="10" font-family="JetBrains Mono" font-weight="800">ZONE (Z): ${s.zone.toFixed(1)}</text>
 
       <line x1="0" y1="${yVal(s.s1)}" x2="${W}" y2="${yVal(s.s1)}" stroke="#fbbf24" stroke-width="1.4"/>
-      <text x="${W - 85}" y="${yVal(s.s1) - 3}" fill="#fbbf24" font-size="9" font-family="JetBrains Mono" font-weight="700">S1: ${s.s1.toFixed(1)}</text>
+      <text x="${W - 85}" y="${yVal(s.s1) - 3}" fill="#fbbf24" font-size="9" font-family="JetBrains Mono" font-weight="700">S1: ${fmtLevel(s.s1)}</text>
 
       <line x1="0" y1="${yVal(s2)}" x2="${W}" y2="${yVal(s2)}" stroke="#f59e0b" stroke-dasharray="2,2" stroke-width="1" opacity="0.7"/>
       <text x="${W - 85}" y="${yVal(s2) - 3}" fill="#f59e0b" font-size="9" font-family="JetBrains Mono">S2: ${s2.toFixed(1)}</text>
