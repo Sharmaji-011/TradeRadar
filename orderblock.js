@@ -442,7 +442,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     if (!srcList || !data.stocks) return;
 
     // Render left stock list with onmouseover triggering laser stream
-    const stockEntries = Object.values(data.stocks);
+    const stockEntries = Object.values(data.stocks).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
     srcList.innerHTML = stockEntries.map(s => {
       const isHovered = s.symbol === HOVERED_SYMBOL;
       return `
@@ -461,7 +461,21 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     }).join('');
 
     // Categorization overlay (All 6 columns matching video)
-    const cats = data.categories || {};
+    let cats = data.categories;
+    if (!cats) {
+      cats = { long_buildup: [], short_covering: [], short_buildup: [], long_unwinding: [] };
+      stockEntries.forEach(s => {
+        const cat = (s.category || '').toUpperCase();
+        if (cat.includes('LONG') && cat.includes('BUILD')) cats.long_buildup.push(s);
+        else if (cat.includes('SHORT') && cat.includes('COVER')) cats.short_covering.push(s);
+        else if (cat.includes('SHORT') && cat.includes('BUILD')) cats.short_buildup.push(s);
+        else if (cat.includes('LONG') && cat.includes('UNWIND')) cats.long_unwinding.push(s);
+        else if (s.change_pct >= 2) cats.long_buildup.push(s);
+        else if (s.change_pct >= 0) cats.short_covering.push(s);
+        else if (s.change_pct <= -2) cats.short_buildup.push(s);
+        else cats.long_unwinding.push(s);
+      });
+    }
     const colLong1 = document.getElementById('col-long-buildup-1');
     const colLong2 = document.getElementById('col-long-buildup-2');
     const colShortCov = document.getElementById('col-short-covering');
@@ -469,10 +483,10 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     const colShortBd2 = document.getElementById('col-short-buildup-2');
     const colLongUnw = document.getElementById('col-long-unwinding');
 
-    const longList = cats.long_buildup || [];
-    const shortCovList = cats.short_covering || [];
-    const shortBdList = cats.short_buildup || [];
-    const longUnwList = cats.long_unwinding || [];
+    const longList = (cats.long_buildup || []).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    const shortCovList = (cats.short_covering || []).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    const shortBdList = (cats.short_buildup || []).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    const longUnwList = (cats.long_unwinding || []).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
 
     if (colLong1) colLong1.innerHTML = longList.slice(0, 4).map(s => createBuildupItemHtml(s)).join('');
     if (colLong2) colLong2.innerHTML = (longList.length > 4 ? longList.slice(4, 8) : longList.slice(0, 4)).map(s => createBuildupItemHtml(s)).join('');
@@ -483,7 +497,9 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     // Master picks (right: exactly 3 Bullish + 3 Bearish = 6 Master Cards)
     if (masterPicks) {
-      const topPicks = [...(data.top_bullish || []).slice(0, 3), ...(data.top_bearish || []).slice(0, 3)];
+      const topBull = (data.top_bullish || stockEntries.filter(s => s.change_pct >= 0)).slice(0, 3).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+      const topBear = (data.top_bearish || stockEntries.filter(s => s.change_pct < 0)).slice(0, 3);
+      const topPicks = [...topBull, ...topBear];
       masterPicks.innerHTML = topPicks.map(s => createMasterCardHtml(s)).join('');
     }
 
