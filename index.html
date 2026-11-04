@@ -2658,16 +2658,11 @@
     </div>
 
     <!-- ════════════ SCREEN 8: INSTITUTIONAL ORDER BLOCK & LIQUIDITY HUD ════════════ -->
-    <div class="view-screen-tab theme-dark" id="tab-orderblock">
+    <div class="view-screen-tab" id="tab-orderblock">
       <div id="view-orderblock" class="orderblock-view" style="display:flex;">
         
         <!-- Top Toolbar: Search + Market Selector + Scatter Matrix -->
         <div class="ob-top-toolbar">
-          <!-- Institutional White vs Dark Theme Toggle -->
-          <div class="ob-theme-toggle" id="obThemeToggle" style="display:flex; align-items:center; gap:2px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:6px; padding:2px 4px;">
-            <button type="button" class="theme-btn active" id="btn-theme-dark" onclick="setOBTheme('dark')" style="background:#0d1a2d; border:1px solid rgba(0,255,135,0.4); color:#00ff87; font-size:0.62rem; font-weight:800; padding:2px 6px; border-radius:4px; cursor:pointer; box-shadow:0 0 10px rgba(0,255,135,0.15);">🌙 Dark Mode</button>
-            <button type="button" class="theme-btn" id="btn-theme-white" onclick="setOBTheme('white')" style="background:transparent; border:none; color:#64748b; font-size:0.62rem; font-weight:700; padding:2px 6px; border-radius:4px; cursor:pointer;">🏛️ White Terminal</button>
-          </div>
           <div class="ob-search-bar-wrap">
             <svg class="ic sm" style="width:14px; height:14px; opacity:0.6;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <input type="text" class="ob-search-input" id="stockSearchInput" placeholder="Search assets (e.g. BTC, SOL, NVDA, SBIN)...">
@@ -2694,8 +2689,8 @@
           <div class="ob-scale-selector" style="display:flex; align-items:center; gap:2px; background:#090e1b; border:1px solid #1a273e; border-radius:6px; padding:2px 4px;">
             <span style="font-size:0.58rem; color:#64748b; font-weight:700; margin-right:2px;">ZOOM:</span>
             <button type="button" class="ob-scale-btn" onclick="setOBViewScale('75', this)" id="btn-scale-75" style="background:transparent; border:none; color:#94a3b8; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">75%</button>
-            <button type="button" class="ob-scale-btn active" onclick="setOBViewScale('85', this)" id="btn-scale-85" style="background:#0d1a2d; border:1px solid rgba(0,255,135,0.4); color:#00ff87; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">85%</button>
-            <button type="button" class="ob-scale-btn" onclick="setOBViewScale('100', this)" id="btn-scale-100" style="background:transparent; border:none; color:#94a3b8; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">100%</button>
+            <button type="button" class="ob-scale-btn" onclick="setOBViewScale('85', this)" id="btn-scale-85" style="background:transparent; border:none; color:#94a3b8; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">85%</button>
+            <button type="button" class="ob-scale-btn active" onclick="setOBViewScale('100', this)" id="btn-scale-100" style="background:#0d1a2d; border:1px solid rgba(0,255,135,0.4); color:#00ff87; font-size:0.62rem; font-weight:700; padding:2px 5px; border-radius:4px; cursor:pointer;">100%</button>
           </div>
 
           <!-- Scatter Matrix Radar Header (from video) -->
@@ -2722,119 +2717,65 @@
         <!-- The Mega Canvas Grid -->
         <div class="ob-xray-canvas-grid">
           
-          <!-- Stage 1 (Far Left): All Momentum Elements for Active Sector / Universe -->
-          <div class="ob-source-list-container">
-            <div class="source-list-filter-row">
-              <button type="button" class="src-filter-btn active" id="src-filter-all" onclick="filterSourceRail('all')">ALL</button>
-              <button type="button" class="src-filter-btn" id="src-filter-bull" onclick="filterSourceRail('bull')">🟢 BUY</button>
-              <button type="button" class="src-filter-btn" id="src-filter-bear" onclick="filterSourceRail('bear')">🔴 SELL</button>
-              <button type="button" class="src-filter-btn" id="src-filter-sectors" onclick="filterSourceRail('sectors')">📊 SECTORS</button>
-            </div>
-            <div class="ob-sector-filter-row">
-              <select id="ob-sector-select" onchange="filterOBSector(this.value)">
-                <option value="ALL">🌐 ALL SECTORS (ALL MOMENTUM)</option>
-                <option value="BANK">🏦 NIFTY BANK</option>
-                <option value="IT">💻 NIFTY IT</option>
-                <option value="AUTO">🚗 NIFTY AUTO</option>
-                <option value="REALTY">🏢 NIFTY REALTY</option>
-                <option value="METAL">⛏️ NIFTY METAL</option>
-                <option value="PHARMA">💊 NIFTY PHARMA</option>
-                <option value="ENERGY">⚡ NIFTY ENERGY</option>
-                <option value="FMCG">🛒 NIFTY FMCG</option>
-                <option value="FINANCIAL">📈 FIN SERVICES</option>
-              </select>
-            </div>
-            <div class="ob-source-list" id="ob-source-list"></div>
+          <!-- Left: Stock list source -->
+          <div class="ob-source-list-container" style="display:flex; flex-direction:column; height:100%; min-width:145px; max-width:160px;">
+  <div class="source-list-filter-row">
+    <button type="button" class="src-filter-btn active" id="src-filter-all" onclick="filterSourceRail('all')">ALL</button>
+    <button type="button" class="src-filter-btn" id="src-filter-bull" onclick="filterSourceRail('bull')">🟢 BUY</button>
+    <button type="button" class="src-filter-btn" id="src-filter-bear" onclick="filterSourceRail('bear')">🔴 SELL</button>
+  </div>
+  <div class="ob-sector-filter-row" style="padding:2px 4px; background:#070b16; border-bottom:1px solid #142036;">
+    <select id="ob-sector-select" onchange="filterOBSector(this.value)" style="width:100%; background:#090f1e; border:1px solid #1c2e4c; color:#38bdf8; font-size:0.62rem; font-family:var(--font-mono); font-weight:700; border-radius:4px; padding:2px 4px; outline:none; cursor:pointer;">
+      <option value="ALL">🌐 ALL SECTORS (ALL MOMENTUM)</option>
+      <option value="BANK">🏦 NIFTY BANK</option>
+      <option value="IT">💻 NIFTY IT</option>
+      <option value="AUTO">🚗 NIFTY AUTO</option>
+      <option value="REALTY">🏢 NIFTY REALTY</option>
+      <option value="METAL">⛏️ NIFTY METAL</option>
+      <option value="PHARMA">💊 NIFTY PHARMA</option>
+      <option value="ENERGY">⚡ NIFTY ENERGY</option>
+      <option value="FMCG">🛒 NIFTY FMCG</option>
+      <option value="FINANCIAL">📈 FIN SERVICES</option>
+    </select>
+  </div>
+  <div class="ob-source-list" id="ob-source-list" style="flex:1;"></div>
           </div>
 
-          <!-- Stage 2 & 3: Two-Tier Categorized Pipeline Decks (Bullish Top Row & Bearish Bottom Row) -->
-          <!-- Stage 2 (In-between Pipeline Conduit Gap): Animated Flow Lasers -->
-          <div class="ob-pipeline-laser-gap">
-            <svg class="sankey-svg-canvas" id="sankey-canvas" viewBox="0 0 320 680" preserveAspectRatio="none"></svg>
-          </div>
-
-          <!-- Stage 3: Two-Tier Categorized Pipeline Decks (Bullish Top Row & Bearish Bottom Row) -->
-          <div class="ob-pipeline-decks-container">
-
-            <!-- 🟢 TOP DECK: BULLISH MOMENTUM ORDER FLOW (BUY PIPELINE) -->
-            <div class="ob-deck-section bull-section">
-              <div class="ob-deck-header-bar bull">
-                <div class="ob-deck-title"><span class="pulse-dot green"></span> ▲ BULLISH ORDER FLOW · BUY PIPELINE (RANKS 01–20)</div>
-                <div class="ob-deck-tags">
-                  <span class="ob-flow-badge green">CONVERGENCE 94–98%</span>
-                  <span class="ob-flow-badge cyan">VWAP + DELIVERY SURGE</span>
-                </div>
+          <!-- Center: Neural Sankey Flow Canvas with Live Laser Streams -->
+          <div class="sankey-center-stage">
+            <svg class="sankey-svg-canvas" id="sankey-canvas" viewBox="0 0 740 680" preserveAspectRatio="none"></svg>
+            
+            <!-- 6-Matrix Derivatives Build-up Overlay (3 Bullish Top, 3 Bearish Bottom matching Screenshot 3) -->
+            <div class="buildup-categories-overlay">
+              <div class="buildup-col">
+                <span class="buildup-pill long">▲ BUY TOP 04-08</span>
+                <div id="col-long-buildup-1" class="col-items-wrap"></div>
               </div>
-              <div class="ob-deck-grid bull">
-                <!-- Col 1: Ranks 13-20 -->
-                <div class="ob-col-wrap">
-                  <div class="ob-col-title bull">RANKS 13–20 · VOLUME</div>
-                  <div id="col-bull-13-20" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 2: Ranks 08-12 -->
-                <div class="ob-col-wrap">
-                  <div class="ob-col-title bull">RANKS 08–12 · BUILD-UP</div>
-                  <div id="col-bull-08-12" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 3: Ranks 04-07 -->
-                <div class="ob-col-wrap">
-                  <div class="ob-col-title bull">RANKS 04–07 · CONDUIT</div>
-                  <div id="col-bull-04-07" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 4: Ranks 01-03 Primary Conduit -->
-                <div class="ob-col-wrap primary-col">
-                  <div class="ob-col-title bull-primary">★ TOP 01–03 PRIMARY</div>
-                  <div id="col-bull-01-03" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 5: Master Deck (Top 3 Performers) -->
-                <div class="ob-col-wrap master-col">
-                  <div class="ob-col-title bull-master">★ TOP 3 MASTER PICKS</div>
-                  <div id="col-bull-master" class="ob-master-scroll"></div>
-                </div>
+              <div class="buildup-col">
+                <span class="buildup-pill long">▲ BUY TOP 09-13</span>
+                <div id="col-long-buildup-2" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill short-cov">▲ SHORT COVERING</span>
+                <div id="col-short-covering" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill short-bd">▼ SELL TOP 04-08</span>
+                <div id="col-short-buildup-1" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill short-bd">▼ SELL TOP 09-13</span>
+                <div id="col-short-buildup-2" class="col-items-wrap"></div>
+              </div>
+              <div class="buildup-col">
+                <span class="buildup-pill long-unw">▼ LONG UNWINDING</span>
+                <div id="col-long-unwinding" class="col-items-wrap"></div>
               </div>
             </div>
-
-            <!-- 🔴 BOTTOM DECK: BEARISH MOMENTUM ORDER FLOW (SELL PIPELINE) -->
-            <div class="ob-deck-section bear-section">
-              <div class="ob-deck-header-bar bear">
-                <div class="ob-deck-title"><span class="pulse-dot red"></span> ▼ BEARISH ORDER FLOW · SELL PIPELINE (RANKS 01–20)</div>
-                <div class="ob-deck-tags">
-                  <span class="ob-flow-badge red">DISTRIBUTION 93–98%</span>
-                  <span class="ob-flow-badge amber">BELOW VWAP · UNWINDING</span>
-                </div>
-              </div>
-              <div class="ob-deck-grid bear">
-                <!-- Col 1: Ranks 13-20 -->
-                <div class="ob-col-wrap">
-                  <div class="ob-col-title bear">RANKS 13–20 · VOLUME</div>
-                  <div id="col-bear-13-20" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 2: Ranks 08-12 -->
-                <div class="ob-col-wrap">
-                  <div class="ob-col-title bear">RANKS 08–12 · BUILD-UP</div>
-                  <div id="col-bear-08-12" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 3: Ranks 04-07 -->
-                <div class="ob-col-wrap">
-                  <div class="ob-col-title bear">RANKS 04–07 · CONDUIT</div>
-                  <div id="col-bear-04-07" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 4: Ranks 01-03 Primary Conduit -->
-                <div class="ob-col-wrap primary-col">
-                  <div class="ob-col-title bear-primary">★ TOP 01–03 PRIMARY</div>
-                  <div id="col-bear-01-03" class="ob-col-scroll"></div>
-                </div>
-                <!-- Col 5: Master Deck (Bottom 3 Performers) -->
-                <div class="ob-col-wrap master-col">
-                  <div class="ob-col-title bear-master">★ TOP 3 MASTER PICKS</div>
-                  <div id="col-bear-master" class="ob-master-scroll"></div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Global Test / Selector Support Container -->
-            <div id="ob-master-picks" style="display:none;"></div>
           </div>
+
+          <!-- Right: Master Pick Active Cards (3 Bullish + 3 Bearish) -->
+          <div class="ob-master-picks" id="ob-master-picks"></div>
 
         </div>
 
@@ -2843,79 +2784,97 @@
     </div>
   </main>
 
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- 🎯 ORDER BLOCK 10-SECOND MODAL & HOVER PREVIEW CARD          -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
   <!-- ================= MODAL: THE 10-SECOND ORDER BLOCK POPUP (IMAGE 2) ================= -->
   <div class="modal-overlay" id="stockModalOverlay" onclick="closeModalOnBackdrop(event)">
     <div class="ob-modal" id="stockModal">
       
-      <button class="modal-close-btn" onclick="closeStockModal()" style="position:absolute; top:12px; right:12px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:50%; width:26px; height:26px; font-weight:800; color:#0f172a; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10;">✕</button>
+      <button class="modal-close-btn" onclick="closeStockModal()">✕</button>
       
-      <!-- Modal Header (Matching Photo 1) -->
-      <div class="modal-header-top" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid #e2e8f0;">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <div id="modal-logo-icon" style="width:28px; height:28px; border-radius:6px; background:#2563eb; color:#ffffff; font-weight:900; font-size:0.75rem; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); box-shadow:0 2px 4px rgba(37,99,235,0.2);">BF</div>
-          <div>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <h2 id="modal-symbol" class="blur-target" style="margin:0; font-size:1.15rem; font-weight:900; color:#0f172a; letter-spacing:-0.3px;">BAJAJFINSV</h2>
-              <span class="tag-badge bull" id="modal-bias-badge" style="font-size:0.58rem; padding:1px 5px; border-radius:3px;">BULLISH #2</span>
-            </div>
-            <div id="modal-sector" style="font-size:0.65rem; color:#64748b; font-weight:600;">BAJAJFINSV · NBFC</div>
-          </div>
+      <div class="modal-header-top">
+        <div class="modal-sym-title">
+          <h2 id="modal-symbol" class="blur-target">SBIN</h2>
+          <span class="modal-sec-badge" id="modal-sector">NIFTY BANK</span>
+          <span class="tag-badge bull" id="modal-bias-badge">BULLISH #1</span>
         </div>
-        <div style="width:80px; height:24px;">
-          <svg id="modal-header-sparkline" viewBox="0 0 80 24" style="width:100%; height:100%; overflow:visible;"></svg>
+        <div class="modal-price-box">
+          <div class="modal-price-val" id="modal-cmp">₹782.50</div>
+          <div class="modal-chg-val up" id="modal-chg">+2.84%</div>
         </div>
       </div>
 
-      <!-- Price & Change Line (Matching Photo 1) -->
-      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
-        <div class="modal-price-val" id="modal-cmp" style="font-size:1.45rem; font-weight:900; color:#0f172a; font-family:var(--font-mono);">₹1,748.60</div>
-        <div style="font-family:var(--font-mono); font-size:0.85rem; font-weight:800;">
-          <span class="modal-chg-val up" id="modal-chg" style="color:#16a34a; font-weight:800;">+1.78%</span>
-          <span id="modal-delta-pts" style="color:#64748b; margin-left:4px; font-weight:600;">+30.50</span>
+  
+      <div class="metrics-grid">
+        <div class="metric-cell">
+          <span class="metric-label">Rank</span>
+          <span class="metric-val green" id="m-rank">p99.8 · #1/130</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Rule</span>
+          <span class="metric-val" id="m-rule">ORDER BLOCK RETEST</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">OB Zone</span>
+          <span class="metric-val amber" id="m-ob">774.20 - 777.50</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Z / S1 (Stop)</span>
+          <span class="metric-val" id="m-zs1">775.85 / 771.90</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">R:R Ratio</span>
+          <span class="metric-val green" id="m-rr">1 : 2.7</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">R1 / R2 (Targets)</span>
+          <span class="metric-val" id="m-r1r2">788.00 / 796.50</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">OI Build-up</span>
+          <span class="metric-val green" id="m-oi">+12.4%</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">VWAP</span>
+          <span class="metric-val" id="m-vwap">₹778.20</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Delta (Δ)</span>
+          <span class="metric-val" id="m-delta">+62.4</span>
+        </div>
+        <div class="metric-cell">
+          <span class="metric-label">Conviction</span>
+          <span class="metric-val green">HIGH (MSB)</span>
         </div>
       </div>
 
-      <!-- 5-Row Institutional Quantitative Table (Exact Replication of Photo 1) -->
-      <div class="metrics-grid-institutional" style="display:grid; grid-template-columns:1fr 1fr; gap:3px 12px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 10px; margin-bottom:8px; font-family:var(--font-mono); font-size:0.66rem;">
-        <!-- Row 1 -->
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">RANK</span><span id="m-rank" style="color:#0f172a; font-weight:800;">p99.3 · #2/149</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">CONV</span><span id="m-conv" style="color:#16a34a; font-weight:800;">96 •••••</span></div>
-        <!-- Row 2 -->
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">OI</span><span id="m-oi" style="color:#16a34a; font-weight:800;">+6.9% · LONG BUILD-UP</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">Δ</span><span id="m-delta" style="color:#0284c7; font-weight:800;">+38.3K ▼ below VWAP</span></div>
-        <!-- Row 3 -->
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">VWAP</span><span id="m-vwap" style="color:#0f172a; font-weight:800;">1,762.56</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">OB</span><span id="m-ob" style="color:#0284c7; font-weight:800;">1,724.30 - 1,734.30</span></div>
-        <!-- Row 4 -->
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">Z/S1</span><span id="m-zs1" style="color:#d97706; font-weight:800;">1,736.30 - 1,723.50</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">R1/R2</span><span id="m-r1r2" style="color:#16a34a; font-weight:800;">1,751.80 - 1,767.10</span></div>
-        <!-- Row 5 -->
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">R:R</span><span id="m-rr" style="color:#16a34a; font-weight:800;">1 : 2.4</span></div>
-        <div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-weight:700;">RULE</span><span id="m-rule" style="color:#0284c7; font-weight:800;">PICK · BULLISH #2</span></div>
-      </div>
-
-      <!-- High-Precision Candlestick Chart Stage (Matching Photo 1) -->
-      <div class="modal-chart-stage" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; height:240px; padding:2px; margin-bottom:6px;">
-        <svg id="modal-candlestick-svg" viewBox="0 0 690 240" style="width:100%; height:100%; overflow:visible;"></svg>
+      <!-- Interactive Candlestick Chart Stage -->
+      <div class="modal-chart-stage">
+        <svg id="modal-candlestick-svg" viewBox="0 0 690 250" style="width:100%; height:100%;"></svg>
       </div>
 
       <!-- Price Position Slider Bar -->
-      <div class="modal-slider-box" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:6px 10px;">
-        <div class="slider-labels-top" style="display:flex; justify-content:space-between; font-size:0.64rem; font-family:var(--font-mono); margin-bottom:4px;">
-          <span style="color:#dc2626;">S1 (Stop): <b id="lbl-s1">1,723.50</b></span>
-          <span style="color:#0284c7;">Zone (Z): <b id="lbl-z">1,736.30</b></span>
-          <span style="color:#16a34a;">R1: <b id="lbl-r1">1,751.80</b></span>
-          <span style="color:#16a34a;">R2: <b id="lbl-r2">1,767.10</b></span>
+      <div class="modal-slider-box">
+        <div class="slider-labels-top">
+          <span style="color:var(--bear-red);">S1 (Stop): <b id="lbl-s1">771.90</b></span>
+          <span style="color:#00f0ff;">Zone (Z): <b id="lbl-z">775.85</b></span>
+          <span style="color:var(--bull-green);">R1: <b id="lbl-r1">788.00</b></span>
+          <span style="color:var(--bull-green);">R2: <b id="lbl-r2">796.50</b></span>
         </div>
-        <div class="slider-bar-track" style="height:6px; background:#e2e8f0; border-radius:3px; position:relative; margin-bottom:4px;">
-          <div class="slider-bar-fill" id="modal-slider-fill" style="width:65%; height:100%; background:#16a34a; border-radius:3px;"></div>
-          <div class="slider-pin" id="modal-slider-pin" style="position:absolute; top:-3px; left:65%; width:12px; height:12px; border-radius:50%; background:#0f172a; border:2px solid #ffffff; box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>
+        <div class="slider-bar-track">
+          <div class="slider-bar-fill" id="modal-slider-fill" style="width: 70%;"></div>
+          <div class="slider-pin" id="modal-slider-pin" style="left: 70%;"></div>
+        </div>
+        <div style="font-size: 0.68rem; color: var(--text-dim); text-align: center;">
+          Current Price sits between <b>Zone (Z)</b> and <b>R1 Target</b> · Favourable First Retest
         </div>
       </div>
 
     </div>
   </div>
 
+  
   <!-- ================= FLOATING ANIMATED HOVER PREVIEW CARD (VIDEO FEATURE) ================= -->
   <div id="hover-stock-card" class="hover-floating-card">
     <div class="hover-header-row" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;"><div><div style="display:flex; align-items:center; gap:6px;"><h3 id="h-sym" class="hover-sym-title" style="margin:0; font-size:1.15rem; font-weight:800; color:#fff;">SBIN</h3><span id="h-name-sector" style="font-size:0.68rem; color:#94a3b8; font-weight:600;">SBIN · NIFTY BANK</span></div></div><div id="h-mini-spark" style="width:65px; height:18px;"><svg id="h-sparkline-svg" viewBox="0 0 65 18" style="width:100%; height:100%; overflow:visible;"></svg></div></div><div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid rgba(255,255,255,0.08);"><div id="h-price" style="font-size:1.35rem; font-weight:900; font-family:var(--font-mono); color:#ffffff;">₹782.50</div><div id="h-delta-pts" style="font-size:0.85rem; font-weight:800; font-family:var(--font-mono);"><span id="h-chg" class="hover-chg-val up">+2.84%</span><span id="h-pts" style="margin-left:4px; opacity:0.85;">+21.40</span></div></div><div id="h-compact-section" style="display:none; grid-template-columns: 1fr 1fr; gap:3px 10px; font-size:0.65rem; font-family:var(--font-mono); margin-bottom:6px;"><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">RANK:</span> <b id="h-c-rank" style="color:#cbd5e1;">p99.8 · #1/120</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">GATE:</span> <b id="h-c-gate" style="color:#00ff87;">BREAKOUT</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">OI:</span> <b id="h-c-oi" style="color:#00ff87;">+12.4%</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Δ VOL:</span> <b id="h-c-delta" style="color:#38bdf8;">+5.1%</b></div></div><div id="h-full-section"><div class="hover-video-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:4px 12px; font-size:0.66rem; font-family:var(--font-mono); margin-bottom:6px;"><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">RANK:</span> <b id="h-rank" style="color:#cbd5e1;">p99.3 · #2/149</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">CONV:</span> <b id="h-conv" style="color:#00ff87;">96 🟢🟢🟢🟢🟢</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">OI:</span> <b id="h-oi" style="color:#00ff87;">+6.9% · LONG BUILD-UP</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Δ:</span> <b id="h-delta-vol" style="color:#38bdf8;">+38.3K · ▲ above VWAP</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">VWAP:</span> <b id="h-vwap" style="color:#e2e8f0;">₹778.20</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">OB:</span> <b id="h-ob" style="color:#00f0ff;">774.2 - 777.5</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;" id="h-zs1-lbl">Z/S1:</span> <b id="h-zs1-val" style="color:#fbbf24;">775.80 · 771.90</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;" id="h-r1r2-lbl">R1/R2:</span> <b id="h-r1r2-val" style="color:#00ff87;">788.00 · 796.50</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">R:R:</span> <b id="h-rr" style="color:#00ff87;">1:2.4</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">RULE:</span> <b id="h-rule" style="color:#38bdf8;">PICK · BULLISH #2</b></div></div><div class="hover-chart-box" style="height:135px; background:#040711; border-radius:6px; border:1px solid #142036; padding:2px;"><svg id="hover-candlestick-svg" viewBox="0 0 340 135" style="width:100%; height:100%;"></svg></div><div class="hover-slider-track" style="margin-top:6px;"><div class="hover-slider-fill" id="h-slider-fill" style="width:68%;"></div><div class="hover-slider-pin" id="h-slider-pin" style="left:68%;"></div></div><div style="display:flex; justify-content:space-between; font-size:0.56rem; color:var(--text-dim); font-family:var(--font-mono); margin-top:2px;"><span style="color:#fbbf24;">S1: <b id="h-s1-lbl">771.90</b></span><span style="color:#00f0ff;">Zone: <b id="h-z-lbl">775.80</b></span><span style="color:var(--bull-green);">R1: <b id="h-r1-lbl">788.00</b></span><span style="color:var(--bull-green);">R2: <b id="h-r2-lbl">796.50</b></span></div></div>

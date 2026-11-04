@@ -1,47 +1,3 @@
-
-  // Institutional White vs Dark Theme Switcher
-  window.CURRENT_OB_THEME = 'dark';
-
-  window.setOBTheme = function(theme) {
-    window.CURRENT_OB_THEME = theme;
-    const tab = document.getElementById('tab-orderblock');
-    const btnWhite = document.getElementById('btn-theme-white');
-    const btnDark = document.getElementById('btn-theme-dark');
-    if (tab) {
-      if (theme === 'dark') {
-        tab.classList.add('theme-dark');
-        tab.classList.remove('theme-white');
-        if (btnDark) {
-          btnDark.style.background = '#0d1a2d';
-          btnDark.style.border = '1px solid rgba(0,255,135,0.4)';
-          btnDark.style.color = '#00ff87';
-          btnDark.style.fontWeight = '800';
-        }
-        if (btnWhite) {
-          btnWhite.style.background = 'transparent';
-          btnWhite.style.border = 'none';
-          btnWhite.style.color = '#64748b';
-          btnWhite.style.fontWeight = '700';
-        }
-      } else {
-        tab.classList.remove('theme-dark');
-        tab.classList.add('theme-white');
-        if (btnWhite) {
-          btnWhite.style.background = '#ffffff';
-          btnWhite.style.border = '1px solid #cbd5e1';
-          btnWhite.style.color = '#0f172a';
-          btnWhite.style.fontWeight = '800';
-        }
-        if (btnDark) {
-          btnDark.style.background = 'transparent';
-          btnDark.style.border = 'none';
-          btnDark.style.color = '#64748b';
-          btnDark.style.fontWeight = '700';
-        }
-      }
-    }
-  };
-
 /* ============================================================
    ORDER BLOCK CYBERPUNK HUD ENGINE FOR TRADERADAR
    Integrated into TradeFinder Pro / TradeRadar (sharmaji-011.github.io/TradeRadar)
@@ -283,7 +239,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
   // Scale / Zoom Controller for HUD fitting
   window.setOBViewScale = function(scaleStr, btnEl) {
-    const scale = parseInt(scaleStr, 10) || 100;
+    const scale = parseInt(scaleStr, 10) || 85;
     const view = document.getElementById('view-orderblock');
     if (view) {
       view.style.zoom = (scale / 100);
@@ -334,15 +290,8 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   }
 
   window.initOrderBlockScreen = function() {
-    window.setOBTheme('dark');
     // Restore preferred zoom scale (defaults to 85% for compact fit)
-    if (typeof localStorage !== 'undefined') {
-      if (localStorage.getItem('traderadar_ob_scale') === '85' || !localStorage.getItem('traderadar_ob_scale_v2')) {
-        localStorage.removeItem('traderadar_ob_scale');
-        localStorage.setItem('traderadar_ob_scale_v2', '100');
-      }
-    }
-    const savedScale = '100';
+    const savedScale = (typeof localStorage !== 'undefined' && localStorage.getItem('traderadar_ob_scale')) || '100';
     if (typeof window.setOBViewScale === 'function') {
       window.setOBViewScale(savedScale);
     }
@@ -659,43 +608,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     // 1. Stage 1: Left List (All Momentum Elements)
     let stockEntries = allMarketStocks.slice();
-    if (CURRENT_SOURCE_FILTER === 'sectors') {
-      srcList.scrollTop = 0;
-      srcList.innerHTML = [
-        { name: 'REALTY', chg: 2.40 },
-        { name: 'CAP GOODS', chg: 2.18 },
-        { name: 'CONSUMER', chg: 2.15 },
-        { name: 'DEFENSE', chg: 1.65 },
-        { name: 'NBFC', chg: 1.55 },
-        { name: 'LOGISTICS', chg: 1.45 },
-        { name: 'POWER', chg: 1.38 },
-        { name: 'FMCG', chg: 1.12 },
-        { name: 'OIL & GAS', chg: 1.12 },
-        { name: 'AUTO', chg: 1.02 },
-        { name: 'OTHERS', chg: 0.95 },
-        { name: 'METAL', chg: 0.87 },
-        { name: 'CEMENT', chg: 0.84 },
-        { name: 'CHEM', chg: 0.64 },
-        { name: 'BANK', chg: 0.52 },
-        { name: 'PHARMA', chg: 0.42 },
-        { name: 'TELECOM', chg: 0.22 },
-        { name: 'CAP MKTS', chg: -0.05 },
-        { name: 'IT', chg: -1.01 }
-      ].map(sec => {
-        const isUp = sec.chg >= 0;
-        const w = Math.min(100, Math.max(15, Math.abs(sec.chg) * 35));
-        return `
-          <div class="sector-rank-row" onclick="filterOBSector('${sec.name}')" title="Click to filter ${sec.name} sector">
-            <span class="sec-name" style="font-weight:700; color:#0f172a; width:65px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sec.name}</span>
-            <div class="sec-bar-box">
-              <div class="sec-bar-fill ${isUp ? 'bull' : 'bear'}" style="width:${w.toFixed(0)}%;"></div>
-            </div>
-            <span class="sec-val ${isUp ? 'bull' : 'bear'}">${isUp ? '+' : ''}${sec.chg.toFixed(2)}%</span>
-          </div>
-        `;
-      }).join('');
-      // Still populate pipeline decks below!
-    } else if (CURRENT_SOURCE_FILTER === 'bull') {
+    if (CURRENT_SOURCE_FILTER === 'bull') {
       stockEntries = bullStocks;
     } else if (CURRENT_SOURCE_FILTER === 'bear') {
       stockEntries = bearStocks;
@@ -725,53 +638,47 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     if (bBull) bBull.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.advance || bullStocks.length) : bullStocks.length;
     if (bBear) bBear.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.decline || bearStocks.length) : bearStocks.length;
 
-    // 2. Stage 2 & 3: Two-Tier Categorized Pipeline Decks (Matching Video Reference)
-    
-    // 🟢 TOP DECK: BULLISH ORDER FLOW
-    const elBull13_20 = document.getElementById('col-bull-13-20');
-    const elBull08_12 = document.getElementById('col-bull-08-12');
-    const elBull04_07 = document.getElementById('col-bull-04-07');
-    const elBull01_03 = document.getElementById('col-bull-01-03');
-    const elBullMaster = document.getElementById('col-bull-master');
+    // 2. Stage 2: Central Pipeline — NEXT TOP 10 PERFORMERS (Buy Side and Sell Side)
+    // In video reference:
+    // Top 3 Master Performers are Ranks 01, 02, 03.
+    // The next Top 10 Performers are Ranks 04 through 13.
+    const buyTop10 = (bullStocks.length > 3 ? bullStocks.slice(3, 13) : bullStocks.slice(0, 10));
+    const sellTop10 = (bearStocks.length > 3 ? bearStocks.slice(3, 13) : bearStocks.slice(0, 10));
 
-    const bull13_20 = bullStocks.length > 12 ? bullStocks.slice(12, 20) : bullStocks.slice(0, 8);
-    const bull08_12 = bullStocks.length > 7 ? bullStocks.slice(7, 12) : bullStocks.slice(0, 5);
-    const bull04_07 = bullStocks.length > 3 ? bullStocks.slice(3, 7) : bullStocks.slice(0, 4);
-    const bull01_03 = bullStocks.slice(0, 3);
+    const colLong1 = document.getElementById('col-long-buildup-1');
+    const colLong2 = document.getElementById('col-long-buildup-2');
+    const colShortCov = document.getElementById('col-short-covering');
+    const colShortBd1 = document.getElementById('col-short-buildup-1');
+    const colShortBd2 = document.getElementById('col-short-buildup-2');
+    const colLongUnw = document.getElementById('col-long-unwinding');
 
-    if (elBull13_20) elBull13_20.innerHTML = bull13_20.map((s, i) => createMiniRankItemHtml(s, i + 13, true)).join('');
-    if (elBull08_12) elBull08_12.innerHTML = bull08_12.map((s, i) => createMidRankItemHtml(s, i + 8, true)).join('');
-    if (elBull04_07) elBull04_07.innerHTML = bull04_07.map((s, i) => createConduitRankItemHtml(s, i + 4, true)).join('');
-    if (elBull01_03) elBull01_03.innerHTML = bull01_03.map((s, i) => createPrimaryRankItemHtml(s, i + 1, true)).join('');
-    if (elBullMaster) elBullMaster.innerHTML = bull01_03.map((s, i) => createMasterCardHtml(s, i + 1, true)).join('');
+    // Buy Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
+    if (colLong1) colLong1.innerHTML = buyTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'LONG BUILD-UP')).join('');
+    if (colLong2) colLong2.innerHTML = (buyTop10.length > 5 ? buyTop10.slice(5, 10) : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'LONG BUILD-UP')).join('');
+    // Col 3: Extended Pipeline / Short Covering (Ranks 14-18)
+    const buyExt = bullStocks.slice(13, 18);
+    if (colShortCov) colShortCov.innerHTML = (buyExt.length > 0 ? buyExt : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'SHORT COVERING')).join('');
 
-    // 🔴 BOTTOM DECK: BEARISH ORDER FLOW
-    const elBear13_20 = document.getElementById('col-bear-13-20');
-    const elBear08_12 = document.getElementById('col-bear-08-12');
-    const elBear04_07 = document.getElementById('col-bear-04-07');
-    const elBear01_03 = document.getElementById('col-bear-01-03');
-    const elBearMaster = document.getElementById('col-bear-master');
+    // Sell Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
+    if (colShortBd1) colShortBd1.innerHTML = sellTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'SHORT BUILD-UP')).join('');
+    if (colShortBd2) colShortBd2.innerHTML = (sellTop10.length > 5 ? sellTop10.slice(5, 10) : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'SHORT BUILD-UP')).join('');
+    // Col 3: Extended Pipeline / Long Unwinding (Ranks 14-18)
+    const sellExt = bearStocks.slice(13, 18);
+    if (colLongUnw) colLongUnw.innerHTML = (sellExt.length > 0 ? sellExt : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'LONG UNWINDING')).join('');
 
-    const bear13_20 = bearStocks.length > 12 ? bearStocks.slice(12, 20) : bearStocks.slice(0, 8);
-    const bear08_12 = bearStocks.length > 7 ? bearStocks.slice(7, 12) : bearStocks.slice(0, 5);
-    const bear04_07 = bearStocks.length > 3 ? bearStocks.slice(3, 7) : bearStocks.slice(0, 4);
-    const bear01_03 = bearStocks.slice(0, 3);
-
-    if (elBear13_20) elBear13_20.innerHTML = bear13_20.map((s, i) => createMiniRankItemHtml(s, i + 13, false)).join('');
-    if (elBear08_12) elBear08_12.innerHTML = bear08_12.map((s, i) => createMidRankItemHtml(s, i + 8, false)).join('');
-    if (elBear04_07) elBear04_07.innerHTML = bear04_07.map((s, i) => createConduitRankItemHtml(s, i + 4, false)).join('');
-    if (elBear01_03) elBear01_03.innerHTML = bear01_03.map((s, i) => createPrimaryRankItemHtml(s, i + 1, false)).join('');
-    if (elBearMaster) elBearMaster.innerHTML = bear01_03.map((s, i) => createMasterCardHtml(s, i + 1, false)).join('');
-
-    // Global selector/audit compatibility for #ob-master-picks .master-card (length 6)
+    // 3. Stage 3: Far Right — TOP 3 MASTER PERFORMERS (3 Buy on top + 3 Sell on bottom)
     if (masterPicks) {
+      const topBull3 = bullStocks.slice(0, 3);
+      const topBear3 = bearStocks.slice(0, 3);
       masterPicks.innerHTML = [
-        ...bull01_03.map((s, i) => createMasterCardHtml(s, i + 1, true)),
-        ...bear01_03.map((s, i) => createMasterCardHtml(s, i + 1, false))
+        '<div class="master-deck-subhead bull">▲ BUY SIDE · TOP 3 PERFORMERS</div>',
+        ...topBull3.map((s, i) => createMasterCardHtml(s, i + 1, true)),
+        '<div class="master-deck-subhead bear" style="margin-top:6px;">▼ SELL SIDE · TOP 3 PERFORMERS</div>',
+        ...topBear3.map((s, i) => createMasterCardHtml(s, i + 1, false))
       ].join('');
     }
 
-    // Populate Top Scatter Radar Dots
+  // Populate Top Scatter Radar Dots
     renderTopScatterDots();
 
     // Render Full SVG Neural Canvas with 70+ live background flow lines
@@ -802,77 +709,113 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   function initStaticSankeyCanvas(marketKey) {
     const sankeySvg = document.getElementById('sankey-canvas');
     if (!sankeySvg) return;
-    const W = 320, H = 680;
+    const W = 740, H = 680;
     const midY = H / 2;
-    const bullTargetY = 55;
-    const bearTargetY = H - 55;
-    const targetX = W - 25;
+    const slitX = 330;
+    const bgOpacity = '0.24';
 
     let svgHtml = `
       <defs>
-        <filter id="neonLaser" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="3.5" result="glow"/>
+        <filter id="neonLaser" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="2" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <filter id="greenGlow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="2.5" result="glow"/>
+        <filter id="greenGlow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="1.5" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <filter id="redGlow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="2.5" result="glow"/>
+        <filter id="redGlow" x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="1.5" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
+        <linearGradient id="gridBlue" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.04"/>
+          <stop offset="50%" stop-color="#00f0ff" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="#00f0ff" stop-opacity="0.0"/>
+        </linearGradient>
       </defs>
 
-      <!-- Center Zero Boundary Guideline -->
-      <line x1="0" y1="${midY}" x2="${W}" y2="${midY}" stroke="rgba(0, 240, 255, 0.2)" stroke-width="1.2" stroke-dasharray="4,4"/>
+      <!-- Horizontal Benchmark Gridlines -->
+      <line x1="0" y1="${midY - 180}" x2="${W}" y2="${midY - 180}" stroke="url(#gridBlue)" stroke-width="1"/>
+      <line x1="0" y1="${midY}" x2="${W}" y2="${midY}" stroke="url(#gridBlue)" stroke-width="1.5" stroke-dasharray="4,4"/>
+      <line x1="0" y1="${midY + 180}" x2="${W}" y2="${midY + 180}" stroke="url(#gridBlue)" stroke-width="1"/>
 
-      <!-- Ambient Neural Pipeline Filaments (Green Bullish Top, Red Bearish Bottom) -->
+      <!-- Static Background Neural Streams (Runs at smooth 60fps GPU) -->
       <g id="sankey-bg-streams">
     `;
 
-    // 24 Green Neural Streams
-    for (let i = 0; i < 24; i++) {
-      const startY = 20 + i * 13;
-      const endY = bullTargetY + (i % 5) * 4 - 8;
-      const cp1X = 65 + (i % 4) * 20;
-      const cp2X = 185 + (i % 3) * 25;
-      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${targetX} ${endY.toFixed(1)}`;
-      svgHtml += `<path d="${pathD}" fill="none" stroke="#00ff87" stroke-width="0.8" opacity="0.18"/>`;
-      if (i % 3 === 0) {
-        const dur = (1.5 + (i % 3) * 0.4).toFixed(1);
-        const delay = ((i * 0.25) % 1.5).toFixed(2);
+    // 44 Green Neural Streams
+    for (let i = 0; i < 44; i++) {
+      const startY = 12 + i * 7.2;
+      const endY = 35 + (i * 6.8) % 285;
+      const cp1X = 90 + (i % 6) * 18;
+      const cp2X = 210 + (i % 5) * 20;
+      const isSlow = i % 2 === 0;
+      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${slitX} ${endY.toFixed(1)}`;
+      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bull ${isSlow ? 'slow' : ''}" stroke="#00ff87" stroke-width="1.2" opacity="${bgOpacity}"/>`;
+      if (i % 4 === 0) {
+        const dur = (1.4 + (i % 3) * 0.4).toFixed(1);
+        const delay = ((i * 0.18) % 1.2).toFixed(2);
         svgHtml += `
-          <circle r="1.6" fill="#00ff87" filter="url(#greenGlow)" opacity="0.85">
+          <circle r="2.2" fill="#ffffff" filter="url(#greenGlow)" opacity="0.95">
             <animateMotion path="${pathD}" dur="${dur}s" begin="${delay}s" repeatCount="indefinite"/>
           </circle>
         `;
       }
     }
 
-    // 24 Red Neural Streams
-    for (let i = 0; i < 24; i++) {
-      const startY = midY + 15 + i * 13;
-      const endY = bearTargetY + (i % 5) * 4 - 8;
-      const cp1X = 65 + (i % 4) * 20;
-      const cp2X = 185 + (i % 3) * 25;
-      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${targetX} ${endY.toFixed(1)}`;
-      svgHtml += `<path d="${pathD}" fill="none" stroke="#ff2a55" stroke-width="0.8" opacity="0.18"/>`;
-      if (i % 3 === 0) {
-        const dur = (1.5 + (i % 3) * 0.4).toFixed(1);
-        const delay = ((i * 0.25) % 1.5).toFixed(2);
+    // 44 Red Neural Streams
+    for (let i = 0; i < 44; i++) {
+      const startY = midY + 12 + i * 7.2;
+      const endY = midY + 35 + (i * 6.8) % 285;
+      const cp1X = 90 + (i % 6) * 18;
+      const cp2X = 210 + (i % 5) * 20;
+      const isSlow = i % 2 === 0;
+      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${slitX} ${endY.toFixed(1)}`;
+      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bear ${isSlow ? 'slow' : ''}" stroke="#ff2a55" stroke-width="1.2" opacity="${bgOpacity}"/>`;
+      if (i % 4 === 0) {
+        const dur = (1.4 + (i % 3) * 0.4).toFixed(1);
+        const delay = ((i * 0.18) % 1.2).toFixed(2);
         svgHtml += `
-          <circle r="1.6" fill="#ff2a55" filter="url(#redGlow)" opacity="0.85">
+          <circle r="2.2" fill="#ffffff" filter="url(#redGlow)" opacity="0.95">
             <animateMotion path="${pathD}" dur="${dur}s" begin="${delay}s" repeatCount="indefinite"/>
+          </circle>
+        `;
+      }
+    }
+
+    // Streams fanning out from slit into columns
+    for (let i = 0; i < 22; i++) {
+      const startY = 45 + i * 13;
+      const endY = 30 + (i * 15) % 310;
+      const pathD = `M ${slitX} ${startY} C ${slitX + 60} ${startY}, ${slitX + 180} ${endY}, ${W} ${endY}`;
+      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bull" stroke="#00ff87" stroke-width="1.0" opacity="${bgOpacity}"/>`;
+      if (i % 5 === 0) {
+        svgHtml += `
+          <circle r="1.8" fill="#00ff87" filter="url(#greenGlow)" opacity="0.9">
+            <animateMotion path="${pathD}" dur="1.6s" begin="${(i*0.2).toFixed(1)}s" repeatCount="indefinite"/>
+          </circle>
+        `;
+      }
+    }
+    for (let i = 0; i < 22; i++) {
+      const startY = midY + 45 + i * 13;
+      const endY = midY + 30 + (i * 15) % 310;
+      const pathD = `M ${slitX} ${startY} C ${slitX + 60} ${startY}, ${slitX + 180} ${endY}, ${W} ${endY}`;
+      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bear" stroke="#ff2a55" stroke-width="1.0" opacity="${bgOpacity}"/>`;
+      if (i % 5 === 0) {
+        svgHtml += `
+          <circle r="1.8" fill="#ff2a55" filter="url(#redGlow)" opacity="0.9">
+            <animateMotion path="${pathD}" dur="1.6s" begin="${(i*0.2).toFixed(1)}s" repeatCount="indefinite"/>
           </circle>
         `;
       }
@@ -880,30 +823,19 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     svgHtml += `</g>`;
 
-    // Glowing Target Conduit Hubs at the right exit of the gap
+    // Central Hourglass Waist Silhouette & Slit
     svgHtml += `
-      <g id="sankey-hubs">
-        <!-- Top Bullish Conduit Hub -->
-        <circle cx="${targetX}" cy="${bullTargetY}" r="18" fill="rgba(0, 255, 135, 0.08)" stroke="#00ff87" stroke-width="1.5" stroke-dasharray="3,3" filter="url(#greenGlow)"/>
-        <circle cx="${targetX}" cy="${bullTargetY}" r="7" fill="none" stroke="#00ff87" stroke-width="1.8"/>
-        <circle cx="${targetX}" cy="${bullTargetY}" r="3" fill="#00ff87">
-          <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
-        </circle>
-        <text x="${targetX - 35}" y="${bullTargetY - 24}" fill="#00ff87" font-size="8.5" font-family="'JetBrains Mono', monospace" font-weight="900" letter-spacing="0.8">▲ BUY PIPELINE</text>
-
-        <!-- Bottom Bearish Conduit Hub -->
-        <circle cx="${targetX}" cy="${bearTargetY}" r="18" fill="rgba(255, 42, 85, 0.08)" stroke="#ff2a55" stroke-width="1.5" stroke-dasharray="3,3" filter="url(#redGlow)"/>
-        <circle cx="${targetX}" cy="${bearTargetY}" r="7" fill="none" stroke="#ff2a55" stroke-width="1.8"/>
-        <circle cx="${targetX}" cy="${bearTargetY}" r="3" fill="#ff2a55">
-          <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
-        </circle>
-        <text x="${targetX - 35}" y="${bearTargetY + 32}" fill="#ff2a55" font-size="8.5" font-family="'JetBrains Mono', monospace" font-weight="900" letter-spacing="0.8">▼ SELL PIPELINE</text>
+      <g id="sankey-slit-pillar">
+        <path d="M ${slitX - 28} 8 Q ${slitX + 10} ${midY}, ${slitX - 28} ${H - 8} L ${slitX + 28} ${H - 8} Q ${slitX - 10} ${midY}, ${slitX + 28} 8 Z" fill="#03060f" stroke="#121e33" stroke-width="1.6"/>
+        <rect x="${slitX - 18}" y="10" width="36" height="42" fill="none" stroke="#00ff87" stroke-width="1.8" opacity="0.85" filter="url(#greenGlow)"/>
+        <circle cx="${slitX}" cy="31" r="4" fill="#00ff87" opacity="0.9"/>
+        <rect x="${slitX - 18}" y="${H - 52}" width="36" height="42" fill="none" stroke="#ff2a55" stroke-width="1.8" opacity="0.85" filter="url(#redGlow)"/>
+        <circle cx="${slitX}" cy="${H - 31}" r="4" fill="#ff2a55" opacity="0.9"/>
+        <line x1="${slitX}" y1="8" x2="${slitX}" y2="${H - 8}" stroke="#00f0ff" stroke-width="2.2" stroke-dasharray="4,4" opacity="0.9" filter="drop-shadow(0 0 10px #00f0ff)"/>
       </g>
     `;
 
-    // Dedicated Active Laser Trajectory Layer
+    // High-performance Dedicated Active Laser Layer (Updated instantaneously on hover)
     svgHtml += `<g id="active-laser-layer"></g>`;
 
     sankeySvg.innerHTML = svgHtml;
@@ -926,12 +858,16 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       return;
     }
 
-    const W = 320, H = 680;
+    const W = 740, H = 680;
     const midY = H / 2;
+    const slitX = 330;
     const isBull = stock.change_pct >= 0;
     const laserColor = isBull ? '#00ff87' : '#ff2a55';
-    const targetY = isBull ? 55 : (H - 55);
-    const targetX = W - 25;
+
+    const topBull = (data.top_bullish || []).map(s => s.symbol);
+    const topBear = (data.top_bearish || []).map(s => s.symbol);
+    const bullRank = topBull.indexOf(stock.symbol);
+    const bearRank = topBear.indexOf(stock.symbol);
 
     // Calculate dynamic startY matching the hovered stock row in the left list!
     let startY = midY;
@@ -942,31 +878,59 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       const listRect = listEl.getBoundingClientRect();
       if (listRect.height > 0) {
         const relRatio = (rowRect.top + rowRect.height / 2 - listRect.top) / listRect.height;
-        startY = Math.max(20, Math.min(H - 20, relRatio * H));
+        startY = Math.max(16, Math.min(H - 16, relRatio * H));
       }
     } else {
       startY = isBull ? (midY - 140) : (midY + 140);
     }
 
-    const cp1X = 90;
-    const cp2X = 220;
-    const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${targetY}, ${targetX} ${targetY}`;
+    const startX = 0;
+    const apexY = isBull ? Math.min(startY, 85) : Math.max(startY, H - 85);
+    const slitTargetY = isBull ? 31 : (H - 31);
 
-    laserLayer.innerHTML = `
-      <!-- Glowing Outer Laser Aura -->
-      <path d="${pathD}" fill="none" stroke="${laserColor}" stroke-width="4.5" opacity="0.45" filter="url(#neonLaser)"/>
-      <!-- Intense Core Laser Filament -->
-      <path d="${pathD}" fill="none" stroke="${laserColor}" stroke-width="2.2" opacity="0.95"/>
-      <!-- Ultra-Bright Center Beam -->
-      <path d="${pathD}" fill="none" stroke="#ffffff" stroke-width="0.9" opacity="1"/>
-      <!-- Fast Orbiting Laser Photon Particles -->
-      <circle r="3.5" fill="#ffffff" filter="url(#neonLaser)">
-        <animateMotion path="${pathD}" dur="0.9s" repeatCount="indefinite"/>
+    let laserPath = `M ${startX} ${startY.toFixed(1)} `;
+    laserPath += `C 70 ${startY.toFixed(1)}, 140 ${apexY.toFixed(1)}, 230 ${apexY.toFixed(1)} `;
+    laserPath += `S ${slitX - 40} ${slitTargetY}, ${slitX} ${slitTargetY} `;
+
+    let conduitTargetY = midY;
+    if (bullRank !== -1) {
+      conduitTargetY = 65 + bullRank * 110;
+    } else if (bearRank !== -1) {
+      conduitTargetY = midY + 50 + bearRank * 110;
+    } else {
+      conduitTargetY = isBull ? (midY - 80) : (midY + 80);
+    }
+
+    const conduitPath = `M ${slitX} ${slitTargetY} C ${slitX + 90} ${slitTargetY}, ${W - 120} ${conduitTargetY}, ${W} ${conduitTargetY}`;
+
+    let layerHtml = `
+      <!-- 1. Outer Glow Beam -->
+      <path d="${laserPath}" fill="none" stroke="${laserColor}" stroke-width="12" opacity="0.45" filter="url(#neonLaser)"/>
+      <path d="${conduitPath}" fill="none" stroke="${laserColor}" stroke-width="10" opacity="0.45" filter="url(#neonLaser)"/>
+
+      <!-- 2. Colored Core Laser -->
+      <path d="${laserPath}" fill="none" stroke="${laserColor}" stroke-width="4.5"/>
+      <path d="${conduitPath}" fill="none" stroke="${laserColor}" stroke-width="3.5"/>
+
+      <!-- 3. Bright White Electric Centerline -->
+      <path d="${laserPath}" fill="none" stroke="#ffffff" stroke-width="2.2" class="laser-active-path" filter="drop-shadow(0 0 10px ${laserColor})"/>
+      <path d="${conduitPath}" fill="none" stroke="#ffffff" stroke-width="1.8" class="laser-active-path" filter="drop-shadow(0 0 8px ${laserColor})"/>
+
+      <!-- 4. Slit Reticle Rings -->
+      <circle cx="${slitX}" cy="${slitTargetY}" r="15" fill="none" stroke="${laserColor}" stroke-width="2.6" filter="drop-shadow(0 0 12px ${laserColor})"/>
+      <circle cx="${slitX}" cy="${slitTargetY}" r="7" fill="none" stroke="#ffffff" stroke-width="2.2"/>
+      <circle cx="${slitX}" cy="${slitTargetY}" r="3.5" fill="${laserColor}"/>
+
+      <!-- 5. Real-Time Photons on Laser Path -->
+      <circle r="4" fill="#ffffff" filter="url(#${isBull ? 'greenGlow' : 'redGlow'})">
+        <animateMotion path="${laserPath}" dur="0.9s" repeatCount="indefinite"/>
       </circle>
-      <circle r="2" fill="${laserColor}">
-        <animateMotion path="${pathD}" dur="0.9s" repeatCount="indefinite"/>
+      <circle r="3.5" fill="#ffffff" filter="url(#${isBull ? 'greenGlow' : 'redGlow'})">
+        <animateMotion path="${conduitPath}" dur="0.7s" begin="0.2s" repeatCount="indefinite"/>
       </circle>
     `;
+
+    laserLayer.innerHTML = layerHtml;
   }
 
   window.highlightStockTrajectory = function (sym) {
@@ -981,7 +945,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     });
 
     // 2. Highlight buildup item in center columns
-    document.querySelectorAll('.buildup-item, .rank-mini-item, .rank-mid-item, .rank-conduit-item, .rank-primary-item').forEach(el => {
+    document.querySelectorAll('.buildup-item').forEach(el => {
       const match = (el.dataset.sym || '').toUpperCase() === sym.toUpperCase();
       el.classList.toggle('highlighted', match);
       el.classList.toggle('active', match);
@@ -1070,174 +1034,11 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     `;
   }
 
-  
-  // Helper for Ranks 13-20 (Mini Compact Items)
-  function createMiniRankItemHtml(s, rankNum, isBull) {
-    if (!s) return '';
-    const isHovered = s.symbol === HOVERED_SYMBOL;
-    const barColor = isBull ? 'rgba(0, 255, 135, 0.45)' : 'rgba(255, 42, 85, 0.45)';
-    const seed = Math.abs(Math.sin((s.cmp || 100) * 17)) * 1000;
-    const w1 = (30 + (seed % 40)).toFixed(0);
-    const w2 = (45 + ((seed * 3) % 40)).toFixed(0);
-    const w3 = (20 + ((seed * 7) % 50)).toFixed(0);
-    const rankStr = String(rankNum || 13).padStart(2, '0');
-    return `
-      <div class="rank-mini-item ${isHovered ? 'active' : ''}" 
-           id="mini-${s.symbol}"
-           data-sym="${s.symbol}"
-           onmouseenter="showStockHover('${s.symbol}', this, event, 'compact')"
-           onmouseleave="hideStockHover()"
-           onclick="openStockModal('${s.symbol}')">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:4px;">
-            <span class="rank-mini-badge">${rankStr}</span>
-            <span style="font-size:0.65rem; font-weight:700; color:#fff;">${s.symbol}</span>
-          </div>
-          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.65rem; font-weight:700;">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
-          </span>
-        </div>
-        <div style="display:flex; gap:2px; margin-top:2px;">
-          <div style="height:2px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
-          <div style="height:2px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
-          <div style="height:2px; border-radius:1px; background:${barColor}; width:${w3}%;"></div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Helper for Ranks 08-12 (Mid Items)
-  function createMidRankItemHtml(s, rankNum, isBull) {
-    if (!s) return '';
-    const isHovered = s.symbol === HOVERED_SYMBOL;
-    const barColor = isBull ? 'rgba(0, 255, 135, 0.55)' : 'rgba(255, 42, 85, 0.55)';
-    const seed = Math.abs(Math.sin((s.cmp || 100) * 19)) * 1000;
-    const w1 = (40 + (seed % 45)).toFixed(0);
-    const w2 = (55 + ((seed * 3) % 40)).toFixed(0);
-    const rankStr = String(rankNum || 8).padStart(2, '0');
-    return `
-      <div class="rank-mid-item ${isHovered ? 'active' : ''}" 
-           id="mid-${s.symbol}"
-           data-sym="${s.symbol}"
-           onmouseenter="showStockHover('${s.symbol}', this, event, 'compact')"
-           onmouseleave="hideStockHover()"
-           onclick="openStockModal('${s.symbol}')">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:4px;">
-            <span class="rank-mini-badge" style="background:rgba(56,189,248,0.15); color:#38bdf8;">${rankStr}</span>
-            <span style="font-size:0.68rem; font-weight:800; color:#fff;">${s.symbol}</span>
-          </div>
-          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.68rem; font-weight:800;">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
-          </span>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
-          <div style="display:flex; gap:2px; width:55%;">
-            <div style="height:2.5px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
-            <div style="height:2.5px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
-          </div>
-          <span style="font-size:0.58rem; color:#94a3b8; font-family:var(--font-mono);">${fmtPrice(s.cmp)}</span>
-        </div>
-      </div>
-    `;
-  }
-
-  // Helper for Ranks 04-07 (Conduit Items with Derivative Tag & Price Tag)
-  function createConduitRankItemHtml(s, rankNum, isBull) {
-    if (!s) return '';
-    const isHovered = s.symbol === HOVERED_SYMBOL;
-    const barColor = isBull ? 'rgba(0, 255, 135, 0.7)' : 'rgba(255, 42, 85, 0.7)';
-    const seed = Math.abs(Math.sin((s.cmp || 100) * 23)) * 1000;
-    const w1 = (50 + (seed % 45)).toFixed(0);
-    const w2 = (70 + ((seed * 5) % 25)).toFixed(0);
-    const rankStr = String(rankNum || 4).padStart(2, '0');
-    const actionLabel = isBull ? (rankNum % 2 === 0 ? 'LONG BUILD-UP' : 'SHORT COVERING') : (rankNum % 2 === 0 ? 'SHORT BUILD-UP' : 'LONG UNWINDING');
-    return `
-      <div class="rank-conduit-item ${isBull ? 'bull' : 'bear'} ${isHovered ? 'active' : ''}" 
-           id="conduit-${s.symbol}"
-           data-sym="${s.symbol}"
-           onmouseenter="showStockHover('${s.symbol}', this, event, 'full')"
-           onmouseleave="hideStockHover()"
-           onclick="openStockModal('${s.symbol}')">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:5px;">
-            <span class="rank-mini-badge" style="background:${isBull ? 'rgba(0,255,135,0.2)' : 'rgba(255,42,85,0.2)'}; color:${isBull ? '#00ff87' : '#ff2a55'};">${rankStr}</span>
-            <span style="font-size:0.72rem; font-weight:800; color:#fff;">${s.symbol}</span>
-          </div>
-          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.72rem; font-weight:800;">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
-          </span>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">
-          <span style="font-size:0.56rem; font-family:var(--font-mono); font-weight:700; color:${isBull ? '#38bdf8' : '#fbbf24'};">${actionLabel}</span>
-          <span class="dark-price-pill">${fmtPrice(s.cmp)}</span>
-        </div>
-        <div style="display:flex; gap:2px; margin-top:3px;">
-          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
-          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Helper for Ranks 01-03 (Primary Conduit with Stars & Volume Profile)
-  function createPrimaryRankItemHtml(s, rankNum, isBull) {
-    if (!s) return '';
-    const isHovered = s.symbol === HOVERED_SYMBOL;
-    const barColor = isBull ? '#00ff87' : '#ff2a55';
-    const seed = Math.abs(Math.sin((s.cmp || 100) * 29)) * 1000;
-    const w1 = (60 + (seed % 35)).toFixed(0);
-    const w2 = (80 + ((seed * 7) % 18)).toFixed(0);
-    const w3 = (45 + ((seed * 11) % 45)).toFixed(0);
-    const rankStr = String(rankNum || 1).padStart(2, '0');
-    const initials = (s.symbol || 'ST').substring(0, 2);
-    return `
-      <div class="rank-primary-item ${isBull ? 'bull' : 'bear'} ${isHovered ? 'active' : ''}" 
-           id="primary-${s.symbol}"
-           data-sym="${s.symbol}"
-           onmouseenter="showStockHover('${s.symbol}', this, event, 'full')"
-           onmouseleave="hideStockHover()"
-           onclick="openStockModal('${s.symbol}')">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span class="logo-initials-badge">${initials}</span>
-            <span style="font-size:0.78rem; font-weight:900; color:#fff;">${s.symbol}</span>
-            <span class="rank-mini-badge" style="background:${isBull ? 'rgba(0,255,135,0.25)' : 'rgba(255,42,85,0.25)'}; color:${isBull ? '#00ff87' : '#ff2a55'}; font-weight:900;">${rankStr}</span>
-          </div>
-          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.78rem; font-weight:900;">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
-          </span>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">
-          <div style="display:flex; align-items:center; gap:4px;">
-            <span style="font-size:0.58rem; font-family:var(--font-mono); font-weight:800; color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">
-              ${isBull ? 'LONG BUILD-UP' : 'SHORT BUILD-UP'}
-            </span>
-            <span class="primary-star-row">★★★★★</span>
-          </div>
-          <span class="dark-price-pill" style="background:#090f1d; border-color:${isBull ? 'rgba(0,255,135,0.4)' : 'rgba(255,42,85,0.4)'}; color:#fff;">${fmtPrice(s.cmp)}</span>
-        </div>
-        <div style="display:flex; gap:3px; margin-top:4px;">
-          <div style="height:3px; border-radius:1.5px; background:${barColor}; width:${w1}%;"></div>
-          <div style="height:3px; border-radius:1.5px; background:${barColor}; width:${w2}%;"></div>
-          <div style="height:3px; border-radius:1.5px; background:${barColor}; width:${w3}%;"></div>
-        </div>
-      </div>
-    `;
-  }
-
   function createMasterCardHtml(s, rankIdx, isBullSide) {
     const isBull = (typeof isBullSide !== 'undefined') ? isBullSide : (s.change_pct >= 0);
     const sign = s.change_pct > 0 ? '+' : '';
-    const riskPct = Math.abs(((s.cmp - s.s1) / s.cmp) * 100).toFixed(2);
-    const rankNum = rankIdx || 1;
-    const convScore = isBull ? (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 94)) : (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 93));
-    const oiVal = Math.min(24.5, Math.max(3.2, Math.abs((s.change_pct || 0) * 3.8))).toFixed(1);
-    const deltaVol = Math.abs(Math.sin((s.cmp || 100) * 3.1) * 85 + 20).toFixed(1);
-    const deltaPts = ((s.cmp || 0) * ((s.change_pct || 0) / 100)).toFixed(2);
-    const flowTag = isBull ? ('LONG BUILD-UP · OI +' + oiVal + '% · Δ +' + deltaVol + 'K') : ('SHORT BUILD-UP · OI +' + oiVal + '% · Δ -' + deltaVol + 'K');
+    const riskPct = Math.abs(((s.cmp - s.s1) / s.cmp) * 100).toFixed(2); const rankNum = rankIdx || 1; const convScore = isBull ? (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 94)) : (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 93)); const oiVal = Math.min(24.5, Math.max(3.2, Math.abs((s.change_pct || 0) * 3.8))).toFixed(1); const deltaVol = Math.abs(Math.sin((s.cmp || 100) * 3.1) * 85 + 20).toFixed(1); const deltaPts = ((s.cmp || 0) * ((s.change_pct || 0) / 100)).toFixed(2); const flowTag = isBull ? ('LONG BUILD-UP · OI +' + oiVal + '% · Δ +' + deltaVol + 'K') : ('SHORT BUILD-UP · OI +' + oiVal + '% · Δ -' + deltaVol + 'K');
     const isHovered = s.symbol === HOVERED_SYMBOL;
-    const initials = (s.symbol || 'ST').substring(0, 2);
 
     return `
       <div class="master-card hud-card ${isBull ? 'bull' : 'bear'} ${isHovered ? 'active' : ''}" 
@@ -1245,46 +1046,36 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
            data-sym="${s.symbol}"
            onmouseenter="showStockHover('${s.symbol}', this, event, 'full')"
            onmouseleave="hideStockHover()"
-           onclick="openStockModal('${s.symbol}')"
-           style="display:flex; justify-content:space-between; align-items:stretch; gap:8px; padding:6px 8px; cursor:pointer;">
-        
-        <!-- Left Info Column (Matching Photo 3) -->
-        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; min-width:0;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span class="logo-initials-badge" style="background:${isBull ? '#059669' : '#dc2626'}; color:#ffffff; width:20px; height:20px; font-size:0.65rem; font-weight:900;">${initials}</span>
-              <b class="master-card-sym blur-target" style="font-size:0.88rem; font-weight:900;">${s.symbol}</b>
-              <span class="tag-badge ${isBull ? 'bull' : 'bear'}" style="font-size:0.56rem; padding:1px 5px; border-radius:3px;">${isBull ? 'BULLISH' : 'BEARISH'}</span>
-              <span class="master-conv-circle ${isBull ? 'bull' : 'bear'}" style="width:18px; height:18px; font-size:0.58rem; font-weight:900;">${convScore}</span>
-            </div>
+           onclick="openStockModal('${s.symbol}')">
+        <div class="master-card-head">
+          <div class="master-card-badge-row">
+            <span class="master-conv-circle ${isBull ? 'bull' : 'bear'}">${convScore}</span><span class="master-radio-dot ${isBull ? 'bull' : 'bear'}"></span>
+            <span class="tag-badge ${isBull ? 'bull' : 'bear'}">${isBull ? 'BULL' : 'BEAR'}</span>
+            <b class="master-card-sym blur-target" style="color:#fff; margin-left:5px; font-size:0.88rem; font-weight:800;">${s.symbol}</b>
           </div>
-
-          <div style="display:flex; align-items:baseline; gap:8px; margin:2px 0;">
-            <span style="font-family:var(--font-mono); font-size:1.15rem; font-weight:900; color:${isBull ? '#15803d' : '#b91c1c'};">
-              ${sign}${s.change_pct.toFixed(2)}%
-            </span>
-            <span class="master-card-cmp" style="font-family:var(--font-mono); font-size:0.75rem; font-weight:800;">
-              ${fmtPrice(s.cmp)} <span style="font-size:0.65rem; color:#64748b; font-weight:600;">(${sign}${deltaPts})</span>
-            </span>
-          </div>
-
-          <div style="font-size:0.56rem; font-family:var(--font-mono); color:${isBull ? '#15803d' : '#b91c1c'}; font-weight:700;">
-            ${flowTag}
-          </div>
-
-          <div class="master-levels-row" style="display:flex; gap:6px; font-size:0.54rem; font-family:var(--font-mono); color:#94a3b8; font-weight:700; border-top:1px solid rgba(255,255,255,0.08); padding-top:2px; margin-top:2px;">
-            <span>S1: <b style="color:${isBull ? '#15803d' : '#b91c1c'};">${fmtLevel(s.s1)}</b></span>
-            <span>ZONE: <b style="color:#0284c7;">${fmtLevel(s.zone)}</b></span>
-            <span>R1: <b style="color:${isBull ? '#15803d' : '#b91c1c'};">${fmtLevel(s.r1)}</b></span>
-            <span>R:R: <b>1:${s.rr || '2.4'}</b></span>
-          </div>
+          <div style="text-align:right;"><div style="font-family: var(--font-mono); color: ${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.88rem; font-weight:900;">
+            ${sign}${s.change_pct.toFixed(2)}%</div><div style="font-family: var(--font-mono); font-size:0.62rem; color:#94a3b8; font-weight:600;">${fmtPrice(s.cmp)} <span style="opacity:0.8;">(${sign}${deltaPts})</span></div></div><div class="master-flow-tag" style="font-size:0.60rem; font-family:var(--font-mono); color:${isBull ? 'rgba(0,255,135,0.85)' : 'rgba(255,42,85,0.85)'}; margin-bottom:3px; font-weight:600;">${flowTag}</div><!--
+          -->
         </div>
 
-        <!-- Right Embedded Candlestick Chart (Matching Photo 3) -->
-        <div class="master-chart-wrap" style="width:105px; height:48px; flex-shrink:0; border-radius:4px; padding:1px; overflow:hidden;">
+        <div class="master-chart-wrap">
           ${renderMicroCandles(s.candles || s.sparkline, isBull, s.ob_high, s.ob_low)}
         </div>
 
+        <div class="master-slider-row">
+          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">S1: ${fmtLevel(s.s1)}</span>
+          <div class="slider-track">
+            <div class="slider-knob ${isBull ? 'bull' : 'bear'}" style="left: ${isBull ? '65%' : '35%'};"></div>
+          </div>
+          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">R2: ${fmtLevel(s.r2)}</span>
+        </div>
+
+        <div class="master-metrics-row">
+          <span>ZONE: <b>${fmtLevel(s.zone)}</b></span>
+          <span>RISK: <b>${riskPct}%</b></span>
+          <span>R:R: <b style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}">1 : ${s.rr}</b></span>
+          <button type="button" class="btn-trade-radar" onclick="event.stopPropagation(); if (typeof window.loadStockIntoRadar === 'function') window.loadStockIntoRadar('${s.symbol}');" style="background:rgba(0,229,255,0.12); border:1px solid #00e5ff; color:#00e5ff; border-radius:4px; font-size:0.62rem; font-weight:800; padding:1px 5px; cursor:pointer; margin-left:auto;" title="Send setup directly to TradeRadar Execution Pipeline">⚡ Radar</button>
+        </div>
       </div>
     `;
   }
@@ -1706,7 +1497,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     if (!sym && activeHoverElement) {
       sym = activeHoverElement.dataset.sym || activeHoverElement.dataset.symbol;
     }
-    sym = String(sym || 'BAJAJFINSV').trim();
+    sym = String(sym || 'BTC').trim();
     if (typeof window.highlightStockTrajectory === 'function') window.highlightStockTrajectory(sym);
     ACTIVE_MODAL_SYMBOL = sym;
     const modal = document.getElementById('stockModalOverlay');
@@ -1720,122 +1511,9 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       const key = Object.keys(MARKET_DATA.stocks).find(k => k.toUpperCase() === symUpper);
       if (key) stock = MARKET_DATA.stocks[key];
     }
-    if (!stock) {
-      const symUpper = String(sym || 'BAJAJFINSV').toUpperCase();
-      if (symUpper.includes('BAJAJ')) {
-        stock = {
-          symbol: 'BAJAJFINSV',
-          sector: 'NBFC',
-          cmp: 1748.60,
-          change_pct: 1.78,
-          base_price: 1718.10,
-          rule: 'PICK · BULLISH #2',
-          rank_p: 'p99.3',
-          rank_side: '#2/149',
-          conv: 96,
-          ob_low: 1724.30,
-          ob_high: 1734.30,
-          zone: 1736.30,
-          s1: 1723.50,
-          r1: 1751.80,
-          r2: 1767.10,
-          rr: '2.4',
-          vwap: 1762.56,
-          oi_pct: 6.9,
-          delta: 38.3
-        };
-      } else if (symUpper.includes('MUTHOOT')) {
-        stock = {
-          symbol: 'MUTHOOTFIN',
-          sector: 'NBFC',
-          cmp: 2697.00,
-          change_pct: 6.68,
-          base_price: 2528.20,
-          rule: 'PICK · BULLISH #3',
-          rank_p: 'p98.8',
-          rank_side: '#3/149',
-          conv: 94,
-          ob_low: 2626.60,
-          ob_high: 2636.60,
-          zone: 2642.00,
-          s1: 2624.45,
-          r1: 2705.80,
-          r2: 2723.35,
-          rr: '4.6',
-          vwap: 2635.75,
-          oi_pct: 15.2,
-          delta: 145.0
-        };
-      } else if (symUpper.includes('ZYDUS')) {
-        stock = {
-          symbol: 'ZYDUSLIFE',
-          sector: 'PHARMA',
-          cmp: 1195.10,
-          change_pct: -3.67,
-          base_price: 1240.60,
-          rule: 'PICK · BEARISH #1',
-          rank_p: 'p0.5',
-          rank_side: '#1/65',
-          conv: 97,
-          ob_low: 1246.47,
-          ob_high: 1261.50,
-          zone: 1250.00,
-          s1: 1182.40,
-          r1: 1246.47,
-          r2: 1269.50,
-          rr: '3.6',
-          vwap: 1225.00,
-          oi_pct: 15.4,
-          delta: -99.6
-        };
-      } else if (symUpper.includes('MPHASIS')) {
-        stock = {
-          symbol: 'MPHASIS',
-          sector: 'IT',
-          cmp: 2476.60,
-          change_pct: -2.32,
-          base_price: 2535.30,
-          rule: 'PICK · BEARISH #2',
-          rank_p: 'p0.7',
-          rank_side: '#2/63',
-          conv: 96,
-          ob_low: 2544.00,
-          ob_high: 2548.10,
-          zone: 2540.45,
-          s1: 2467.80,
-          r1: 2540.45,
-          r2: 2549.50,
-          rr: '9.0',
-          vwap: 2500.16,
-          oi_pct: 11.9,
-          delta: -23.7
-        };
-      } else {
-        const dummyCmp = 1500;
-        stock = {
-          symbol: sym,
-          sector: 'NIFTY 50',
-          cmp: dummyCmp,
-          change_pct: 2.15,
-          base_price: dummyCmp * 0.98,
-          rule: 'PICK · ACTIVE',
-          rank_p: 'p95.0',
-          rank_side: '#5/100',
-          conv: 92,
-          ob_low: dummyCmp * 0.99,
-          ob_high: dummyCmp * 1.005,
-          zone: dummyCmp * 0.995,
-          s1: dummyCmp * 0.985,
-          r1: dummyCmp * 1.015,
-          r2: dummyCmp * 1.025,
-          rr: '2.5',
-          vwap: dummyCmp * 0.995,
-          oi_pct: 8.5,
-          delta: 42.0
-        };
-      }
+    if (stock) {
+      renderModalData(stock);
     }
-    renderModalData(stock);
   };
 
   window.closeStockModal = function () {
@@ -1854,242 +1532,146 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   };
 
   function renderModalData(s) {
-    if (!s) return;
-    const cmp = typeof s.cmp === 'number' ? s.cmp : 1000;
-    const isBull = (s.change_pct || 0) >= 0;
-    const sign = (s.change_pct || 0) > 0 ? '+' : '';
-    const deltaPts = (cmp * ((s.change_pct || 0) / 100)).toFixed(2);
-    const initials = (s.symbol || 'ST').substring(0, 2);
+    document.getElementById('modal-symbol').textContent = s.symbol;
+    document.getElementById('modal-sector').textContent = s.sector;
+    document.getElementById('modal-bias-badge').textContent = s.rule;
+    document.getElementById('modal-bias-badge').className = `tag-badge ${s.change_pct >= 0 ? 'bull' : 'bear'}`;
 
-    const s1 = typeof s.s1 === 'number' ? s.s1 : (cmp * 0.985);
-    const s2 = typeof s.s2 === 'number' ? s.s2 : (cmp * 0.975);
-    const r1 = typeof s.r1 === 'number' ? s.r1 : (cmp * 1.015);
-    const r2 = typeof s.r2 === 'number' ? s.r2 : (cmp * 1.025);
-    const ob_low = typeof s.ob_low === 'number' ? s.ob_low : (cmp * 0.992);
-    const ob_high = typeof s.ob_high === 'number' ? s.ob_high : (cmp * 1.006);
-    const zone = typeof s.zone === 'number' ? s.zone : (cmp * 0.996);
-
-    const logoEl = document.getElementById('modal-logo-icon');
-    if (logoEl) {
-      logoEl.textContent = initials;
-      logoEl.style.background = isBull ? '#059669' : '#dc2626';
-    }
-
-    const symEl = document.getElementById('modal-symbol');
-    if (symEl) symEl.textContent = s.symbol;
-
-    const secEl = document.getElementById('modal-sector');
-    if (secEl) secEl.textContent = `${s.symbol} · ${s.sector || 'NIFTY 50'}`;
-
-    const biasEl = document.getElementById('modal-bias-badge');
-    if (biasEl) {
-      biasEl.textContent = s.rule || (isBull ? 'BULLISH #1' : 'BEARISH #1');
-      biasEl.className = `tag-badge ${isBull ? 'bull' : 'bear'}`;
-    }
-
-    const cmpEl = document.getElementById('modal-cmp');
-    if (cmpEl) cmpEl.textContent = fmtPrice(cmp);
-
+    document.getElementById('modal-cmp').textContent = fmtPrice(s.cmp);
     const chgEl = document.getElementById('modal-chg');
-    if (chgEl) {
-      chgEl.textContent = `${sign}${(s.change_pct || 0).toFixed(2)}%`;
-      chgEl.style.color = isBull ? '#16a34a' : '#dc2626';
-    }
+    chgEl.textContent = `${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%`;
+    chgEl.className = `modal-chg-val ${s.change_pct >= 0 ? 'up' : 'down'}`;
 
-    const deltaPtsEl = document.getElementById('modal-delta-pts');
-    if (deltaPtsEl) deltaPtsEl.textContent = `${sign}${deltaPts}`;
-
-    // 5-Row Institutional Quantitative Table
-    const oiVal = Math.min(24.5, Math.max(3.2, Math.abs((s.change_pct || 0) * 3.8))).toFixed(1);
-    const deltaVol = Math.abs(Math.sin(cmp * 3.1) * 85 + 20).toFixed(1);
-
-    const elRank = document.getElementById('m-rank');
-    if (elRank) elRank.textContent = `${s.rank_p || 'p99.3'} · ${s.rank_side || '#1/149'}`;
-
-    const elConv = document.getElementById('m-conv');
-    if (elConv) {
-      elConv.textContent = `${s.conv || (isBull ? 96 : 94)} •••••`;
-      elConv.style.color = isBull ? '#16a34a' : '#dc2626';
-    }
-
-    const elOi = document.getElementById('m-oi');
-    if (elOi) {
-      elOi.textContent = `+${oiVal}% · ${isBull ? 'LONG BUILD-UP' : 'SHORT BUILD-UP'}`;
-      elOi.style.color = isBull ? '#16a34a' : '#dc2626';
-    }
-
-    const elDelta = document.getElementById('m-delta');
-    if (elDelta) {
-      elDelta.textContent = `+${deltaVol}K ${isBull ? '▲ above VWAP' : '▼ below VWAP'}`;
-      elDelta.style.color = '#0284c7';
-    }
-
-    const elVwap = document.getElementById('m-vwap');
-    if (elVwap) elVwap.textContent = fmtPrice(s.vwap || (cmp * 0.995));
-
-    const elOb = document.getElementById('m-ob');
-    if (elOb) elOb.textContent = `${ob_low.toFixed(2)} - ${ob_high.toFixed(2)}`;
-
-    const elZs1 = document.getElementById('m-zs1');
-    if (elZs1) elZs1.textContent = `${zone.toFixed(2)} - ${s1.toFixed(2)}`;
-
-    const elR1r2 = document.getElementById('m-r1r2');
-    if (elR1r2) elR1r2.textContent = `${r1.toFixed(2)} - ${r2.toFixed(2)}`;
-
-    const elRr = document.getElementById('m-rr');
-    if (elRr) elRr.textContent = `1 : ${s.rr || '2.4'}`;
-
-    const elRule = document.getElementById('m-rule');
-    if (elRule) elRule.textContent = `PICK · ${isBull ? 'BULLISH' : 'BEARISH'} #1`;
+    // Metrics grid
+    document.getElementById('m-rank').textContent = `${s.rank_p} · ${s.rank_side}`;
+    document.getElementById('m-rule').textContent = s.rule;
+    document.getElementById('m-ob').textContent = `${s.ob_low.toFixed(2)} - ${s.ob_high.toFixed(2)}`;
+    document.getElementById('m-zs1').textContent = `${s.zone.toFixed(2)} / ${s.s1.toFixed(2)}`;
+    document.getElementById('m-rr').textContent = `1 : ${s.rr}`;
+    document.getElementById('m-r1r2').textContent = `${s.r1.toFixed(2)} / ${s.r2.toFixed(2)}`;
+    document.getElementById('m-oi').textContent = `${s.oi_pct > 0 ? '+' : ''}${s.oi_pct}%`;
+    document.getElementById('m-vwap').textContent = fmtPrice(s.vwap);
+    document.getElementById('m-delta').textContent = `${s.delta > 0 ? '+' : ''}${s.delta}`;
 
     // Slider numbers
-    const lblS1 = document.getElementById('lbl-s1');
-    if (lblS1) lblS1.textContent = s1.toFixed(2);
-    const lblZ = document.getElementById('lbl-z');
-    if (lblZ) lblZ.textContent = zone.toFixed(2);
-    const lblR1 = document.getElementById('lbl-r1');
-    if (lblR1) lblR1.textContent = r1.toFixed(2);
-    const lblR2 = document.getElementById('lbl-r2');
-    if (lblR2) lblR2.textContent = r2.toFixed(2);
+    document.getElementById('lbl-s1').textContent = s.s1.toFixed(2);
+    document.getElementById('lbl-z').textContent = s.zone.toFixed(2);
+    document.getElementById('lbl-r1').textContent = s.r1.toFixed(2);
+    document.getElementById('lbl-r2').textContent = s.r2.toFixed(2);
 
-    const totalSpan = Math.abs(r2 - s1) || 1;
-    const currDist = Math.abs(cmp - s1);
+    const totalSpan = Math.abs(s.r2 - s.s1) || 1;
+    const currDist = Math.abs(s.cmp - s.s1);
     const sliderPct = Math.min(95, Math.max(5, (currDist / totalSpan) * 100));
-    const fillEl = document.getElementById('modal-slider-fill');
-    if (fillEl) fillEl.style.width = `${sliderPct}%`;
-    const pinEl = document.getElementById('modal-slider-pin');
-    if (pinEl) pinEl.style.left = `${sliderPct}%`;
-
-    // Render Mini Smooth Sparkline in Header
-    const sparkSvg = document.getElementById('modal-header-sparkline');
-    if (sparkSvg) {
-      const pts = [];
-      for (let i = 0; i < 14; i++) {
-        const y = isBull ? (18 - (i * 1.1 + Math.sin(i) * 3)) : (6 + (i * 1.1 + Math.sin(i) * 3));
-        pts.push(`${(i * 6).toFixed(1)},${Math.max(3, Math.min(21, y)).toFixed(1)}`);
-      }
-      sparkSvg.innerHTML = `
-        <polyline points="${pts.join(' ')}" fill="none" stroke="${isBull ? '#16a34a' : '#dc2626'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="${pts[pts.length - 1].split(',')[0]}" cy="${pts[pts.length - 1].split(',')[1]}" r="2.5" fill="${isBull ? '#16a34a' : '#dc2626'}"/>
-      `;
-    }
+    document.getElementById('modal-slider-fill').style.width = `${sliderPct}%`;
+    document.getElementById('modal-slider-pin').style.left = `${sliderPct}%`;
 
     renderModalCandlestickChart(s);
   }
 
   function renderModalCandlestickChart(s) {
     const svg = document.getElementById('modal-candlestick-svg');
-    if (!svg) return;
+    if (!svg || !s.candles) return;
 
-    const W = 690, H = 240;
-    const cmp = typeof s.cmp === 'number' ? s.cmp : 1000;
-    const isBull = (s.change_pct || 0) >= 0;
-
-    const s1 = typeof s.s1 === 'number' ? s.s1 : (cmp * 0.985);
-    const r1 = typeof s.r1 === 'number' ? s.r1 : (cmp * 1.015);
-    const r2 = typeof s.r2 === 'number' ? s.r2 : (cmp * 1.025);
-    const ob_low = typeof s.ob_low === 'number' ? s.ob_low : (cmp * 0.992);
-    const ob_high = typeof s.ob_high === 'number' ? s.ob_high : (cmp * 1.006);
-    const zone = typeof s.zone === 'number' ? s.zone : (cmp * 0.996);
-
-    let candles = s.candles;
-    if (!candles || candles.length === 0) {
-      const startP = s.base_price || (cmp / (1 + (s.change_pct || 0) / 100));
-      candles = [];
-      let curr = startP;
-      for (let i = 0; i < 24; i++) {
-        const progress = (i + 1) / 24;
-        const target = startP + (cmp - startP) * progress;
-        const noise = (Math.sin(i * 1.5 + (cmp % 10)) * 0.003 + ((i % 3) - 1) * 0.0015) * cmp;
-        const open = curr;
-        const close = i === 23 ? cmp : (target + noise);
-        const high = Math.max(open, close) + Math.abs(noise) * 0.8 + (cmp * 0.001);
-        const low = Math.min(open, close) - Math.abs(noise) * 0.8 - (cmp * 0.001);
-        candles.push({ open, high, low, close });
-        curr = close;
-      }
-    }
-
+    const W = 690, H = 250;
+    const candles = s.candles;
     const lows = candles.map(c => c.low);
     const highs = candles.map(c => c.high);
-    const minP = Math.min(...lows, s1, ob_low) * 0.998;
-    const maxP = Math.max(...highs, r2, ob_high) * 1.002;
+    const minP = Math.min(...lows, s.s1, s.ob_low) * 0.998;
+    const maxP = Math.max(...highs, s.r2, s.ob_high) * 1.002;
     const range = maxP - minP || 1;
 
-    const yVal = p => H - 32 - ((p - minP) / range) * (H - 58);
-
-    // Order Block Shaded Box with Horizontal Hatching (Matching Photo 1)
-    const obTop = yVal(Math.max(ob_high, ob_low));
-    const obBot = yVal(Math.min(ob_high, ob_low));
-    const obHeight = Math.max(16, obBot - obTop);
+    const yVal = p => H - 20 - ((p - minP) / range) * (H - 40);
 
     let svgHtml = `
-      <!-- Chart Clean Background (Photo 1) -->
-      <rect width="${W}" height="${H}" fill="#ffffff"/>
-      
-      <!-- Horizontal Hatching Order Block Zone (Exact Photo 1 replication) -->
-      <rect x="0" y="${obTop.toFixed(1)}" width="${W}" height="${obHeight.toFixed(1)}" fill="${isBull ? 'rgba(22, 163, 74, 0.08)' : 'rgba(220, 38, 38, 0.08)'}" stroke="${isBull ? '#86efac' : '#fca5a5'}" stroke-width="1.2"/>
-      <line x1="0" y1="${(obTop + 4).toFixed(1)}" x2="${W}" y2="${(obTop + 4).toFixed(1)}" stroke="${isBull ? '#bbf7d0' : '#fecdd3'}" stroke-width="1" stroke-dasharray="2,2"/>
-      <line x1="0" y1="${(obTop + obHeight/2).toFixed(1)}" x2="${W}" y2="${(obTop + obHeight/2).toFixed(1)}" stroke="${isBull ? '#bbf7d0' : '#fecdd3'}" stroke-width="1" stroke-dasharray="2,2"/>
-      <line x1="0" y1="${(obTop + obHeight - 4).toFixed(1)}" x2="${W}" y2="${(obTop + obHeight - 4).toFixed(1)}" stroke="${isBull ? '#bbf7d0' : '#fecdd3'}" stroke-width="1" stroke-dasharray="2,2"/>
-      <text x="14" y="${(obTop + obHeight/2 + 4).toFixed(1)}" fill="${isBull ? '#15803d' : '#b91c1c'}" font-size="10" font-family="JetBrains Mono" font-weight="900">ORDER BLOCK (OB)</text>
+      <!-- Price Grid Lines -->
+      <line x1="0" y1="${yVal(s.r2)}" x2="${W}" y2="${yVal(s.r2)}" stroke="#00ff87" stroke-dasharray="3,3" stroke-width="1.2" opacity="0.6"/>
+      <text x="${W - 65}" y="${yVal(s.r2) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R2: ${s.r2}</text>
 
-      <!-- Key Horizontal Price Levels (R2, R1, Z, S1) -->
-      <line x1="0" y1="${yVal(r2).toFixed(1)}" x2="${W}" y2="${yVal(r2).toFixed(1)}" stroke="#64748b" stroke-dasharray="4,4" stroke-width="1.2"/>
-      <text x="${W - 95}" y="${(yVal(r2) - 4).toFixed(1)}" fill="#475569" font-size="9.5" font-family="JetBrains Mono" font-weight="800">R2 ${r2.toFixed(2)}</text>
+      <line x1="0" y1="${yVal(s.r1)}" x2="${W}" y2="${yVal(s.r1)}" stroke="#00ff87" stroke-dasharray="2,2" stroke-width="1" opacity="0.5"/>
+      <text x="${W - 65}" y="${yVal(s.r1) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R1: ${s.r1}</text>
 
-      <line x1="0" y1="${yVal(r1).toFixed(1)}" x2="${W}" y2="${yVal(r1).toFixed(1)}" stroke="#64748b" stroke-dasharray="3,3" stroke-width="1.2"/>
-      <text x="${W - 95}" y="${(yVal(r1) - 4).toFixed(1)}" fill="#475569" font-size="9.5" font-family="JetBrains Mono" font-weight="800">R1 ${r1.toFixed(2)}</text>
+      <line x1="0" y1="${yVal(s.zone)}" x2="${W}" y2="${yVal(s.zone)}" stroke="#00f0ff" stroke-dasharray="4,4" stroke-width="1.5" filter="drop-shadow(0 0 4px #00f0ff)"/>
+      <text x="10" y="${yVal(s.zone) - 4}" fill="#00f0ff" font-size="10" font-family="JetBrains Mono" font-weight="800">ZONE (Z): ${s.zone}</text>
 
-      <line x1="0" y1="${yVal(zone).toFixed(1)}" x2="${W}" y2="${yVal(zone).toFixed(1)}" stroke="#0284c7" stroke-dasharray="5,5" stroke-width="1.5"/>
-      <text x="14" y="${(yVal(zone) - 4).toFixed(1)}" fill="#0284c7" font-size="10" font-family="JetBrains Mono" font-weight="900">Z ${zone.toFixed(2)}</text>
-
-      <line x1="0" y1="${yVal(s1).toFixed(1)}" x2="${W}" y2="${yVal(s1).toFixed(1)}" stroke="#dc2626" stroke-width="1.5"/>
-      <text x="${W - 100}" y="${(yVal(s1) + 14).toFixed(1)}" fill="#dc2626" font-size="9.5" font-family="JetBrains Mono" font-weight="900">S1 ${s1.toFixed(2)}</text>
+      <line x1="0" y1="${yVal(s.s1)}" x2="${W}" y2="${yVal(s.s1)}" stroke="#ff2a55" stroke-width="1.5" filter="drop-shadow(0 0 4px #ff2a55)"/>
+      <text x="${W - 85}" y="${yVal(s.s1) + 12}" fill="#ff2a55" font-size="9" font-family="JetBrains Mono" font-weight="800">S1 (STOP): ${s.s1}</text>
     `;
 
-    // Draw Smooth Dashed VWAP Curve Line Across Candles
-    const vwapPts = [];
-    const barW = Math.max(7, Math.floor((W - 80) / candles.length) - 4);
-    candles.forEach((c, i) => {
-      const cx = 35 + i * (barW + 5);
-      const vwapY = yVal(c.close * 0.998);
-      vwapPts.push(`${cx.toFixed(1)},${vwapY.toFixed(1)}`);
-    });
+    // Order Block Shaded Box
+    const obTop = yVal(Math.max(s.ob_high, s.ob_low));
+    const obBot = yVal(Math.min(s.ob_high, s.ob_low));
+    const obHeight = Math.max(8, obBot - obTop);
     svgHtml += `
-      <polyline points="${vwapPts.join(' ')}" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <rect x="0" y="${obTop}" width="${W}" height="${obHeight}" fill="${s.change_pct >= 0 ? '#00ff87' : '#ff2a55'}" fill-opacity="0.14" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="2,2"/>
+      <text x="${W/2 - 50}" y="${obTop + obHeight/2 + 4}" fill="#fbbf24" font-size="10" font-family="JetBrains Mono" font-weight="800">ORDER BLOCK (OB)</text>
     `;
 
-    // Draw Candlesticks (Green #16a34a / Red #dc2626 with precise bodies and wicks)
+    // Horizontal Price Lines (R2, R1, Z, S1, S2, S3, S4)
+    const s2 = s.s1 * 0.995;
+    const s3 = s.s1 * 0.990;
+    const s4 = s.s1 * 0.985;
+
+    svgHtml += `
+      <!-- Price Grid Lines -->
+      <line x1="0" y1="${yVal(s.r2)}" x2="${W}" y2="${yVal(s.r2)}" stroke="#00ff87" stroke-dasharray="3,3" stroke-width="1.2" opacity="0.6"/>
+      <text x="${W - 65}" y="${yVal(s.r2) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R2: ${fmtLevel(s.r2)}</text>
+
+      <line x1="0" y1="${yVal(s.r1)}" x2="${W}" y2="${yVal(s.r1)}" stroke="#00ff87" stroke-dasharray="2,2" stroke-width="1" opacity="0.5"/>
+      <text x="${W - 65}" y="${yVal(s.r1) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R1: ${s.r1.toFixed(1)}</text>
+
+      <line x1="0" y1="${yVal(s.zone)}" x2="${W}" y2="${yVal(s.zone)}" stroke="#00f0ff" stroke-dasharray="4,4" stroke-width="1.5" filter="drop-shadow(0 0 4px #00f0ff)"/>
+      <text x="10" y="${yVal(s.zone) - 4}" fill="#00f0ff" font-size="10" font-family="JetBrains Mono" font-weight="800">ZONE (Z): ${s.zone.toFixed(1)}</text>
+
+      <line x1="0" y1="${yVal(s.s1)}" x2="${W}" y2="${yVal(s.s1)}" stroke="#fbbf24" stroke-width="1.4"/>
+      <text x="${W - 85}" y="${yVal(s.s1) - 3}" fill="#fbbf24" font-size="9" font-family="JetBrains Mono" font-weight="700">S1: ${fmtLevel(s.s1)}</text>
+
+      <line x1="0" y1="${yVal(s2)}" x2="${W}" y2="${yVal(s2)}" stroke="#f59e0b" stroke-dasharray="2,2" stroke-width="1" opacity="0.7"/>
+      <text x="${W - 85}" y="${yVal(s2) - 3}" fill="#f59e0b" font-size="9" font-family="JetBrains Mono">S2: ${s2.toFixed(1)}</text>
+
+      <line x1="0" y1="${yVal(s3)}" x2="${W}" y2="${yVal(s3)}" stroke="#ef4444" stroke-dasharray="2,2" stroke-width="1" opacity="0.7"/>
+      <text x="${W - 85}" y="${yVal(s3) - 3}" fill="#ef4444" font-size="9" font-family="JetBrains Mono">S3: ${s3.toFixed(1)}</text>
+
+      <line x1="0" y1="${yVal(s4)}" x2="${W}" y2="${yVal(s4)}" stroke="#dc2626" stroke-dasharray="2,2" stroke-width="1" opacity="0.7"/>
+      <text x="${W - 85}" y="${yVal(s4) - 3}" fill="#dc2626" font-size="9" font-family="JetBrains Mono">S4: ${s4.toFixed(1)}</text>
+    `;
+
+    // Candlesticks
+    const candleW = 12;
+    const step = (W - 120) / candles.length;
     candles.forEach((c, i) => {
-      const cx = 35 + i * (barW + 5);
-      const isUp = c.close >= c.open;
-      const col = isUp ? '#16a34a' : '#dc2626';
-      const top = yVal(Math.max(c.open, c.close));
-      const bot = yVal(Math.min(c.open, c.close));
-      const h = Math.max(2, bot - top);
-      const wickT = yVal(c.high);
-      const wickB = yVal(c.low);
+      const x = 30 + i * step;
+      const isGreen = c.close >= c.open;
+      const color = isGreen ? '#00ff87' : '#ff2a55';
+      const wickTop = yVal(c.high);
+      const wickBot = yVal(c.low);
+      const bodyTop = yVal(Math.max(c.open, c.close));
+      const bodyBot = yVal(Math.min(c.open, c.close));
+      const bodyH = Math.max(2, bodyBot - bodyTop);
 
       svgHtml += `
-        <!-- Wick -->
-        <line x1="${(cx + barW / 2).toFixed(1)}" y1="${wickT.toFixed(1)}" x2="${(cx + barW / 2).toFixed(1)}" y2="${wickB.toFixed(1)}" stroke="${col}" stroke-width="1.5"/>
-        <!-- Body -->
-        <rect x="${cx.toFixed(1)}" y="${top.toFixed(1)}" width="${barW}" height="${h.toFixed(1)}" fill="${col}" rx="1"/>
+        <line x1="${(x + candleW/2).toFixed(1)}" y1="${wickTop.toFixed(1)}" x2="${(x + candleW/2).toFixed(1)}" y2="${wickBot.toFixed(1)}" stroke="${color}" stroke-width="1.2"/>
+        <rect x="${x.toFixed(1)}" y="${bodyTop.toFixed(1)}" width="${candleW}" height="${bodyH.toFixed(1)}" rx="1" fill="${color}" filter="drop-shadow(0 0 2px ${color})"/>
       `;
     });
 
-    // Time Axis at Bottom (Matching Photo 1: 10:00, 11:00, 12:00, 13:00)
+    // Time Axis at Bottom
+    const timeLabels = ['09:30', '10:30', '11:30', '12:30', '13:30', '14:30', '15:30'];
+    timeLabels.forEach((t, i) => {
+      const x = 30 + (i / (timeLabels.length - 1)) * (W - 120);
+      svgHtml += `<text x="${x.toFixed(1)}" y="${H - 4}" fill="#475569" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">${t}</text>`;
+    });
+
+    // Centered Lock Badge (from Image 2)
     svgHtml += `
-      <line x1="20" y1="${H - 18}" x2="${W - 20}" y2="${H - 18}" stroke="#e2e8f0" stroke-width="1"/>
-      <text x="50" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">10:00</text>
-      <text x="${W * 0.35}" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">11:00</text>
-      <text x="${W * 0.65}" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">12:00</text>
-      <text x="${W - 85}" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">13:00</text>
+      <g style="cursor:pointer;" onclick="openUnlockModal()">
+        <rect x="${W/2 - 80}" y="${H/2 - 16}" width="160" height="32" rx="16" fill="rgba(8, 12, 22, 0.9)" stroke="#7c3aed" stroke-width="1.5" filter="drop-shadow(0 0 10px rgba(124, 58, 237, 0.5))"/>
+        <text x="${W/2}" y="${H/2 + 5}" fill="#fff" font-size="10.5" font-family="Inter Tight" font-weight="700" text-anchor="middle">🔒 ACCESS LOCKED</text>
+      </g>
     `;
 
     svg.innerHTML = svgHtml;
   }
+
   window.toggleGuestBlur = function () {
     const isBlur = document.body.classList.toggle('guest-blur-active');
     const txt = document.getElementById('blurStateText');
