@@ -8,7 +8,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 (function () {
   'use strict';
 
-  let CURRENT_MARKET = 'nse';
+  let CURRENT_MARKET = 'nse'; window.CURRENT_MARKET = CURRENT_MARKET;
   let CURRENT_VIEW = 'orderblock';
   let MARKET_DATA = null;
   let ACTIVE_MODAL_SYMBOL = null;
@@ -67,7 +67,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   };
 
   window.switchMarket = async function(mkt) {
-    CURRENT_MARKET = mkt;
+    CURRENT_MARKET = mkt; window.CURRENT_MARKET = mkt;
     document.querySelectorAll('.mkt-tab').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.market === mkt);
     });

@@ -1873,7 +1873,7 @@
           <div class="blue-dot-bullet"></div>
           ACTIVE
         </div>
-        <div style="margin-left:auto; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px; flex-wrap:wrap;"><div style="display:inline-flex; background:#0f172a; padding:2px; border-radius:6px; border:1px solid #334155; margin-right:8px;"><button class="custom-select-pill active" id="btn-tm" onclick="toggleSectorView('tm')" style="font-size:11px;">🗺️ Treemap</button><button class="custom-select-pill" id="btn-wf" onclick="toggleSectorView('wf')" style="font-size:11px;">📊 Waterfall</button></div>
           <span style="font-size:11px; color:#64748b; font-weight:600;">⚡ Jump to Sector:</span>
           <button class="custom-select-pill" onclick="scrollToSector('IT')">IT 🚀</button>
           <button class="custom-select-pill" onclick="scrollToSector('CEMENT')">CEMENT</button>
@@ -3817,7 +3817,7 @@
       const adviceText = document.getElementById('modalAdviceText');
       const actionBtn = document.getElementById('modalActionBtn');
 
-      if (!overlay) return;
+      if (!overlay) return; const tvContainer = document.getElementById('tvChartContainer'); if (tvContainer) tvContainer.style.display = 'block'; if (statsGrid) statsGrid.style.gridTemplateColumns = '';
 
       const rNum = parseFloat(rFac) || 2.0;
       const isGradeA = (symUpper === 'RVNL' || symUpper === 'IRFC');
@@ -4000,19 +4000,21 @@
         const overlay = document.getElementById('appModal');
         if (overlay) overlay.style.display = 'none';
         const container = document.getElementById('tvChartContainer');
-        if (container) container.innerHTML = '';
-        currentTvWidget = null;
+        if (container) { container.innerHTML = ''; container.style.display = 'block'; } const statsGrid = document.getElementById('ticketStatsGrid'); if (statsGrid) statsGrid.style.gridTemplateColumns = '';
+        currentTvWidget = null; } } function closeTradeTicket() { closeModal(); } function closeWatchlistDrawer() { closeModal(); } window.closeWatchlistDrawer = closeWatchlistDrawer; /*
       }
     }
 
-    function closeTradeTicket() {
-      closeModal();
+    }
+    function closeTradeTicket() { closeModal(); } function closeWatchlistDrawer() { closeModal(); }
+    window.closeWatchlistDrawer = closeWatchlistDrawer;
+      // close handled
     }
 
-    function executeMockOrder() {
+    */ function executeMockOrder() { closeModal();
       playChime(1174, 'triangle');
       showToast('🎉 <strong>Paper Trade Executed:</strong> Bracket order sent with automated stoploss & take-profit targets!');
-      closeModal();
+      // close handled
     }
 
     // ── WATCHLIST ──
@@ -4235,14 +4237,14 @@
       if (mode === 'wf') {
         document.getElementById('stage-waterfall').style.display = 'flex';
         document.getElementById('stage-treemap').style.display = 'none';
-        btnWf.classList.add('active');
-        btnTm.classList.remove('active');
+        btnWf?.classList.add('active');
+        btnTm?.classList.remove('active');
         buildWaterfallChart();
       } else {
         document.getElementById('stage-waterfall').style.display = 'none';
         document.getElementById('stage-treemap').style.display = 'grid';
-        btnTm.classList.add('active');
-        btnWf.classList.remove('active');
+        btnTm?.classList.add('active');
+        btnWf?.classList.remove('active');
       }
       playChime(620);
     }
