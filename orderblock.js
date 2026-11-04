@@ -283,7 +283,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
   // Scale / Zoom Controller for HUD fitting
   window.setOBViewScale = function(scaleStr, btnEl) {
-    const scale = parseInt(scaleStr, 10) || 85;
+    const scale = parseInt(scaleStr, 10) || 100;
     const view = document.getElementById('view-orderblock');
     if (view) {
       view.style.zoom = (scale / 100);
@@ -334,8 +334,15 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   }
 
   window.initOrderBlockScreen = function() {
+    window.setOBTheme('dark');
     // Restore preferred zoom scale (defaults to 85% for compact fit)
-    const savedScale = (typeof localStorage !== 'undefined' && localStorage.getItem('traderadar_ob_scale')) || '100';
+    if (typeof localStorage !== 'undefined') {
+      if (localStorage.getItem('traderadar_ob_scale') === '85' || !localStorage.getItem('traderadar_ob_scale_v2')) {
+        localStorage.removeItem('traderadar_ob_scale');
+        localStorage.setItem('traderadar_ob_scale_v2', '100');
+      }
+    }
+    const savedScale = '100';
     if (typeof window.setOBViewScale === 'function') {
       window.setOBViewScale(savedScale);
     }
@@ -911,14 +918,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     // Central Hourglass Waist Silhouette & Slit
     svgHtml += `
-      <g id="sankey-slit-pillar">
-        <path d="M ${slitX - 28} 8 Q ${slitX + 10} ${midY}, ${slitX - 28} ${H - 8} L ${slitX + 28} ${H - 8} Q ${slitX - 10} ${midY}, ${slitX + 28} 8 Z" fill="#03060f" stroke="#121e33" stroke-width="1.6"/>
-        <rect x="${slitX - 18}" y="10" width="36" height="42" fill="none" stroke="#00ff87" stroke-width="1.8" opacity="0.85" filter="url(#greenGlow)"/>
-        <circle cx="${slitX}" cy="31" r="4" fill="#00ff87" opacity="0.9"/>
-        <rect x="${slitX - 18}" y="${H - 52}" width="36" height="42" fill="none" stroke="#ff2a55" stroke-width="1.8" opacity="0.85" filter="url(#redGlow)"/>
-        <circle cx="${slitX}" cy="${H - 31}" r="4" fill="#ff2a55" opacity="0.9"/>
-        <line x1="${slitX}" y1="8" x2="${slitX}" y2="${H - 8}" stroke="#00f0ff" stroke-width="2.2" stroke-dasharray="4,4" opacity="0.9" filter="drop-shadow(0 0 10px #00f0ff)"/>
-      </g>
+      <!-- slit pillar removed -->
     `;
 
     // High-performance Dedicated Active Laser Layer (Updated instantaneously on hover)
