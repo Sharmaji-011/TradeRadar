@@ -802,113 +802,77 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   function initStaticSankeyCanvas(marketKey) {
     const sankeySvg = document.getElementById('sankey-canvas');
     if (!sankeySvg) return;
-    const W = 740, H = 680;
+    const W = 320, H = 680;
     const midY = H / 2;
-    const slitX = 330;
-    const bgOpacity = '0.24';
+    const bullTargetY = 55;
+    const bearTargetY = H - 55;
+    const targetX = W - 25;
 
     let svgHtml = `
       <defs>
-        <filter id="neonLaser" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="2" result="glow"/>
+        <filter id="neonLaser" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="3.5" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <filter id="greenGlow" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="1.5" result="glow"/>
+        <filter id="greenGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2.5" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <filter id="redGlow" x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="1.5" result="glow"/>
+        <filter id="redGlow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2.5" result="glow"/>
           <feMerge>
             <feMergeNode in="glow"/>
             <feMergeNode in="SourceGraphic"/>
           </feMerge>
         </filter>
-        <linearGradient id="gridBlue" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.04"/>
-          <stop offset="50%" stop-color="#00f0ff" stop-opacity="0.25"/>
-          <stop offset="100%" stop-color="#00f0ff" stop-opacity="0.0"/>
-        </linearGradient>
       </defs>
 
-      <!-- Horizontal Benchmark Gridlines -->
-      <line x1="0" y1="${midY - 180}" x2="${W}" y2="${midY - 180}" stroke="url(#gridBlue)" stroke-width="1"/>
-      <line x1="0" y1="${midY}" x2="${W}" y2="${midY}" stroke="url(#gridBlue)" stroke-width="1.5" stroke-dasharray="4,4"/>
-      <line x1="0" y1="${midY + 180}" x2="${W}" y2="${midY + 180}" stroke="url(#gridBlue)" stroke-width="1"/>
+      <!-- Center Zero Boundary Guideline -->
+      <line x1="0" y1="${midY}" x2="${W}" y2="${midY}" stroke="rgba(0, 240, 255, 0.2)" stroke-width="1.2" stroke-dasharray="4,4"/>
 
-      <!-- Static Background Neural Streams (Runs at smooth 60fps GPU) -->
+      <!-- Ambient Neural Pipeline Filaments (Green Bullish Top, Red Bearish Bottom) -->
       <g id="sankey-bg-streams">
     `;
 
-    // 44 Green Neural Streams
-    for (let i = 0; i < 44; i++) {
-      const startY = 12 + i * 7.2;
-      const endY = 35 + (i * 6.8) % 285;
-      const cp1X = 90 + (i % 6) * 18;
-      const cp2X = 210 + (i % 5) * 20;
-      const isSlow = i % 2 === 0;
-      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${slitX} ${endY.toFixed(1)}`;
-      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bull ${isSlow ? 'slow' : ''}" stroke="#00ff87" stroke-width="1.2" opacity="${bgOpacity}"/>`;
-      if (i % 4 === 0) {
-        const dur = (1.4 + (i % 3) * 0.4).toFixed(1);
-        const delay = ((i * 0.18) % 1.2).toFixed(2);
+    // 24 Green Neural Streams
+    for (let i = 0; i < 24; i++) {
+      const startY = 20 + i * 13;
+      const endY = bullTargetY + (i % 5) * 4 - 8;
+      const cp1X = 65 + (i % 4) * 20;
+      const cp2X = 185 + (i % 3) * 25;
+      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${targetX} ${endY.toFixed(1)}`;
+      svgHtml += `<path d="${pathD}" fill="none" stroke="#00ff87" stroke-width="0.8" opacity="0.18"/>`;
+      if (i % 3 === 0) {
+        const dur = (1.5 + (i % 3) * 0.4).toFixed(1);
+        const delay = ((i * 0.25) % 1.5).toFixed(2);
         svgHtml += `
-          <circle r="2.2" fill="#ffffff" filter="url(#greenGlow)" opacity="0.95">
+          <circle r="1.6" fill="#00ff87" filter="url(#greenGlow)" opacity="0.85">
             <animateMotion path="${pathD}" dur="${dur}s" begin="${delay}s" repeatCount="indefinite"/>
           </circle>
         `;
       }
     }
 
-    // 44 Red Neural Streams
-    for (let i = 0; i < 44; i++) {
-      const startY = midY + 12 + i * 7.2;
-      const endY = midY + 35 + (i * 6.8) % 285;
-      const cp1X = 90 + (i % 6) * 18;
-      const cp2X = 210 + (i % 5) * 20;
-      const isSlow = i % 2 === 0;
-      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${slitX} ${endY.toFixed(1)}`;
-      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bear ${isSlow ? 'slow' : ''}" stroke="#ff2a55" stroke-width="1.2" opacity="${bgOpacity}"/>`;
-      if (i % 4 === 0) {
-        const dur = (1.4 + (i % 3) * 0.4).toFixed(1);
-        const delay = ((i * 0.18) % 1.2).toFixed(2);
+    // 24 Red Neural Streams
+    for (let i = 0; i < 24; i++) {
+      const startY = midY + 15 + i * 13;
+      const endY = bearTargetY + (i % 5) * 4 - 8;
+      const cp1X = 65 + (i % 4) * 20;
+      const cp2X = 185 + (i % 3) * 25;
+      const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${endY.toFixed(1)}, ${targetX} ${endY.toFixed(1)}`;
+      svgHtml += `<path d="${pathD}" fill="none" stroke="#ff2a55" stroke-width="0.8" opacity="0.18"/>`;
+      if (i % 3 === 0) {
+        const dur = (1.5 + (i % 3) * 0.4).toFixed(1);
+        const delay = ((i * 0.25) % 1.5).toFixed(2);
         svgHtml += `
-          <circle r="2.2" fill="#ffffff" filter="url(#redGlow)" opacity="0.95">
+          <circle r="1.6" fill="#ff2a55" filter="url(#redGlow)" opacity="0.85">
             <animateMotion path="${pathD}" dur="${dur}s" begin="${delay}s" repeatCount="indefinite"/>
-          </circle>
-        `;
-      }
-    }
-
-    // Streams fanning out from slit into columns
-    for (let i = 0; i < 22; i++) {
-      const startY = 45 + i * 13;
-      const endY = 30 + (i * 15) % 310;
-      const pathD = `M ${slitX} ${startY} C ${slitX + 60} ${startY}, ${slitX + 180} ${endY}, ${W} ${endY}`;
-      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bull" stroke="#00ff87" stroke-width="1.0" opacity="${bgOpacity}"/>`;
-      if (i % 5 === 0) {
-        svgHtml += `
-          <circle r="1.8" fill="#00ff87" filter="url(#greenGlow)" opacity="0.9">
-            <animateMotion path="${pathD}" dur="1.6s" begin="${(i*0.2).toFixed(1)}s" repeatCount="indefinite"/>
-          </circle>
-        `;
-      }
-    }
-    for (let i = 0; i < 22; i++) {
-      const startY = midY + 45 + i * 13;
-      const endY = midY + 30 + (i * 15) % 310;
-      const pathD = `M ${slitX} ${startY} C ${slitX + 60} ${startY}, ${slitX + 180} ${endY}, ${W} ${endY}`;
-      svgHtml += `<path d="${pathD}" fill="none" class="bg-stream-line bear" stroke="#ff2a55" stroke-width="1.0" opacity="${bgOpacity}"/>`;
-      if (i % 5 === 0) {
-        svgHtml += `
-          <circle r="1.8" fill="#ff2a55" filter="url(#redGlow)" opacity="0.9">
-            <animateMotion path="${pathD}" dur="1.6s" begin="${(i*0.2).toFixed(1)}s" repeatCount="indefinite"/>
           </circle>
         `;
       }
@@ -916,12 +880,30 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     svgHtml += `</g>`;
 
-    // Central Hourglass Waist Silhouette & Slit
+    // Glowing Target Conduit Hubs at the right exit of the gap
     svgHtml += `
-      <!-- slit pillar removed -->
+      <g id="sankey-hubs">
+        <!-- Top Bullish Conduit Hub -->
+        <circle cx="${targetX}" cy="${bullTargetY}" r="18" fill="rgba(0, 255, 135, 0.08)" stroke="#00ff87" stroke-width="1.5" stroke-dasharray="3,3" filter="url(#greenGlow)"/>
+        <circle cx="${targetX}" cy="${bullTargetY}" r="7" fill="none" stroke="#00ff87" stroke-width="1.8"/>
+        <circle cx="${targetX}" cy="${bullTargetY}" r="3" fill="#00ff87">
+          <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <text x="${targetX - 35}" y="${bullTargetY - 24}" fill="#00ff87" font-size="8.5" font-family="'JetBrains Mono', monospace" font-weight="900" letter-spacing="0.8">▲ BUY PIPELINE</text>
+
+        <!-- Bottom Bearish Conduit Hub -->
+        <circle cx="${targetX}" cy="${bearTargetY}" r="18" fill="rgba(255, 42, 85, 0.08)" stroke="#ff2a55" stroke-width="1.5" stroke-dasharray="3,3" filter="url(#redGlow)"/>
+        <circle cx="${targetX}" cy="${bearTargetY}" r="7" fill="none" stroke="#ff2a55" stroke-width="1.8"/>
+        <circle cx="${targetX}" cy="${bearTargetY}" r="3" fill="#ff2a55">
+          <animate attributeName="r" values="2;4;2" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <text x="${targetX - 35}" y="${bearTargetY + 32}" fill="#ff2a55" font-size="8.5" font-family="'JetBrains Mono', monospace" font-weight="900" letter-spacing="0.8">▼ SELL PIPELINE</text>
+      </g>
     `;
 
-    // High-performance Dedicated Active Laser Layer (Updated instantaneously on hover)
+    // Dedicated Active Laser Trajectory Layer
     svgHtml += `<g id="active-laser-layer"></g>`;
 
     sankeySvg.innerHTML = svgHtml;
@@ -944,16 +926,12 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       return;
     }
 
-    const W = 740, H = 680;
+    const W = 320, H = 680;
     const midY = H / 2;
-    const slitX = 330;
     const isBull = stock.change_pct >= 0;
     const laserColor = isBull ? '#00ff87' : '#ff2a55';
-
-    const topBull = (data.top_bullish || []).map(s => s.symbol);
-    const topBear = (data.top_bearish || []).map(s => s.symbol);
-    const bullRank = topBull.indexOf(stock.symbol);
-    const bearRank = topBear.indexOf(stock.symbol);
+    const targetY = isBull ? 55 : (H - 55);
+    const targetX = W - 25;
 
     // Calculate dynamic startY matching the hovered stock row in the left list!
     let startY = midY;
@@ -964,59 +942,31 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       const listRect = listEl.getBoundingClientRect();
       if (listRect.height > 0) {
         const relRatio = (rowRect.top + rowRect.height / 2 - listRect.top) / listRect.height;
-        startY = Math.max(16, Math.min(H - 16, relRatio * H));
+        startY = Math.max(20, Math.min(H - 20, relRatio * H));
       }
     } else {
       startY = isBull ? (midY - 140) : (midY + 140);
     }
 
-    const startX = 0;
-    const apexY = isBull ? Math.min(startY, 85) : Math.max(startY, H - 85);
-    const slitTargetY = isBull ? 31 : (H - 31);
+    const cp1X = 90;
+    const cp2X = 220;
+    const pathD = `M 0 ${startY.toFixed(1)} C ${cp1X} ${startY.toFixed(1)}, ${cp2X} ${targetY}, ${targetX} ${targetY}`;
 
-    let laserPath = `M ${startX} ${startY.toFixed(1)} `;
-    laserPath += `C 70 ${startY.toFixed(1)}, 140 ${apexY.toFixed(1)}, 230 ${apexY.toFixed(1)} `;
-    laserPath += `S ${slitX - 40} ${slitTargetY}, ${slitX} ${slitTargetY} `;
-
-    let conduitTargetY = midY;
-    if (bullRank !== -1) {
-      conduitTargetY = 65 + bullRank * 110;
-    } else if (bearRank !== -1) {
-      conduitTargetY = midY + 50 + bearRank * 110;
-    } else {
-      conduitTargetY = isBull ? (midY - 80) : (midY + 80);
-    }
-
-    const conduitPath = `M ${slitX} ${slitTargetY} C ${slitX + 90} ${slitTargetY}, ${W - 120} ${conduitTargetY}, ${W} ${conduitTargetY}`;
-
-    let layerHtml = `
-      <!-- 1. Outer Glow Beam -->
-      <path d="${laserPath}" fill="none" stroke="${laserColor}" stroke-width="12" opacity="0.45" filter="url(#neonLaser)"/>
-      <path d="${conduitPath}" fill="none" stroke="${laserColor}" stroke-width="10" opacity="0.45" filter="url(#neonLaser)"/>
-
-      <!-- 2. Colored Core Laser -->
-      <path d="${laserPath}" fill="none" stroke="${laserColor}" stroke-width="4.5"/>
-      <path d="${conduitPath}" fill="none" stroke="${laserColor}" stroke-width="3.5"/>
-
-      <!-- 3. Bright White Electric Centerline -->
-      <path d="${laserPath}" fill="none" stroke="#ffffff" stroke-width="2.2" class="laser-active-path" filter="drop-shadow(0 0 10px ${laserColor})"/>
-      <path d="${conduitPath}" fill="none" stroke="#ffffff" stroke-width="1.8" class="laser-active-path" filter="drop-shadow(0 0 8px ${laserColor})"/>
-
-      <!-- 4. Slit Reticle Rings -->
-      <circle cx="${slitX}" cy="${slitTargetY}" r="15" fill="none" stroke="${laserColor}" stroke-width="2.6" filter="drop-shadow(0 0 12px ${laserColor})"/>
-      <circle cx="${slitX}" cy="${slitTargetY}" r="7" fill="none" stroke="#ffffff" stroke-width="2.2"/>
-      <circle cx="${slitX}" cy="${slitTargetY}" r="3.5" fill="${laserColor}"/>
-
-      <!-- 5. Real-Time Photons on Laser Path -->
-      <circle r="4" fill="#ffffff" filter="url(#${isBull ? 'greenGlow' : 'redGlow'})">
-        <animateMotion path="${laserPath}" dur="0.9s" repeatCount="indefinite"/>
+    laserLayer.innerHTML = `
+      <!-- Glowing Outer Laser Aura -->
+      <path d="${pathD}" fill="none" stroke="${laserColor}" stroke-width="4.5" opacity="0.45" filter="url(#neonLaser)"/>
+      <!-- Intense Core Laser Filament -->
+      <path d="${pathD}" fill="none" stroke="${laserColor}" stroke-width="2.2" opacity="0.95"/>
+      <!-- Ultra-Bright Center Beam -->
+      <path d="${pathD}" fill="none" stroke="#ffffff" stroke-width="0.9" opacity="1"/>
+      <!-- Fast Orbiting Laser Photon Particles -->
+      <circle r="3.5" fill="#ffffff" filter="url(#neonLaser)">
+        <animateMotion path="${pathD}" dur="0.9s" repeatCount="indefinite"/>
       </circle>
-      <circle r="3.5" fill="#ffffff" filter="url(#${isBull ? 'greenGlow' : 'redGlow'})">
-        <animateMotion path="${conduitPath}" dur="0.7s" begin="0.2s" repeatCount="indefinite"/>
+      <circle r="2" fill="${laserColor}">
+        <animateMotion path="${pathD}" dur="0.9s" repeatCount="indefinite"/>
       </circle>
     `;
-
-    laserLayer.innerHTML = layerHtml;
   }
 
   window.highlightStockTrajectory = function (sym) {
