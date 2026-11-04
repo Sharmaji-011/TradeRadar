@@ -1672,3 +1672,45 @@ body.app .page {
   font-family: var(--font-mono);
   margin-top: 1px;
 }
+
+/* Master Deck Subheaders */
+.master-deck-subhead {
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  font-weight: 800;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin: 1px 0 2px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: 0.3px;
+}
+.master-deck-subhead.bull {
+  background: rgba(0, 255, 135, 0.12);
+  color: #00ff87;
+  border: 1px solid rgba(0, 255, 135, 0.3);
+}
+.master-deck-subhead.bear {
+  background: rgba(255, 42, 85, 0.12);
+  color: #ff2a55;
+  border: 1px solid rgba(255, 42, 85, 0.3);
+}
+
+/* Interactive Sector Pills */
+.ob-sector-pill {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.ob-sector-pill:hover, .ob-sector-pill.active {
+  background: #0d1a2d;
+  color: #00f0ff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+}

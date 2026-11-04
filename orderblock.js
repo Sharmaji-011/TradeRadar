@@ -67,6 +67,8 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   };
 
   window.switchMarket = async function(mkt) {
+    CURRENT_OB_SECTOR = "ALL";
+    const sEl = document.getElementById("ob-sector-select"); if (sEl) sEl.value = "ALL";
     CURRENT_MARKET = mkt; window.CURRENT_MARKET = mkt;
     document.querySelectorAll('.mkt-tab').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.market === mkt);
@@ -556,7 +558,25 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     sectorSvg.innerHTML = svgHtml;
   }
 
-  let CURRENT_SOURCE_FILTER = 'all'; // 'all', 'bull', 'bear'
+  let CURRENT_SOURCE_FILTER = 'all';
+
+  let CURRENT_OB_SECTOR = 'ALL';
+  window.CURRENT_OB_SECTOR = CURRENT_OB_SECTOR;
+  window.filterOBSector = function(sec) {
+    CURRENT_OB_SECTOR = sec || 'ALL';
+    window.CURRENT_OB_SECTOR = CURRENT_OB_SECTOR;
+    const sel = document.getElementById('ob-sector-select');
+    if (sel && sel.value !== CURRENT_OB_SECTOR) {
+      sel.value = CURRENT_OB_SECTOR;
+    }
+    document.querySelectorAll('.ob-sector-pill').forEach(p => {
+      p.classList.toggle('active', (p.dataset.sector || '') === CURRENT_OB_SECTOR);
+    });
+    if (MARKET_DATA) {
+      renderOrderBlockView(MARKET_DATA);
+    }
+  };
+ // 'all', 'bull', 'bear'
   window.filterSourceRail = function(type) {
     CURRENT_SOURCE_FILTER = type;
     document.querySelectorAll('.src-filter-btn').forEach(b => {
@@ -572,17 +592,30 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     if (!srcList || !data.stocks) return;
 
-    // Render left stock list strictly sorted from top to bottom by percentage (Bullish to Bearish)
-    let stockEntries = Object.values(data.stocks);
+    // Filter stocks by Sector if selected
+    let allMarketStocks = Object.values(data.stocks);
+    if (CURRENT_OB_SECTOR && CURRENT_OB_SECTOR !== 'ALL') {
+      const q = CURRENT_OB_SECTOR.toUpperCase();
+      const secFiltered = allMarketStocks.filter(s => (s.sector || '').toUpperCase().includes(q));
+      if (secFiltered.length > 0) {
+        allMarketStocks = secFiltered;
+      }
+    }
+
+    // Sort Momentum elements (Bullish descending, Bearish descending)
+    const bullStocks = allMarketStocks.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    const bearStocks = allMarketStocks.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+
+    // 1. Stage 1: Left List (All Momentum Elements)
+    let stockEntries = allMarketStocks.slice();
     if (CURRENT_SOURCE_FILTER === 'bull') {
-      stockEntries = stockEntries.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+      stockEntries = bullStocks;
     } else if (CURRENT_SOURCE_FILTER === 'bear') {
-      // In bear filter, still maintain top-to-bottom descending percentage (least negative down to deepest breakdown)
-      stockEntries = stockEntries.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+      stockEntries = bearStocks;
     } else {
       stockEntries = stockEntries.sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
     }
-    srcList.scrollTop = 0; // Always start at the top so most bullish stocks are immediately visible
+    srcList.scrollTop = 0;
     srcList.innerHTML = stockEntries.map(s => {
       const isHovered = s.symbol === HOVERED_SYMBOL;
       return `
@@ -594,19 +627,23 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
              onclick="openStockModal('${s.symbol}')">
           <span class="source-sym">${s.symbol}</span>
           <span class="source-chg" style="color: ${s.change_pct >= 0 ? 'var(--bull-green)' : 'var(--bear-red)'}">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%</span><!--
-          -->
+            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%</span>
         </div>
       `;
     }).join('');
 
-    // Categorization overlay (All 6 columns matching video)
-    const allMarketStocks = Object.values(data.stocks);
-    // All 6 columns strictly sorted from Bullish to Bearish by percentage descending!
-    const longList = allMarketStocks.filter(s => (s.change_pct || 0) >= 2.0 || s.category === 'LONG BUILD-UP').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
-    const shortCovList = allMarketStocks.filter(s => ((s.change_pct || 0) >= 0 && (s.change_pct || 0) < 2.0) || s.category === 'SHORT COVERING').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
-    const shortBdList = allMarketStocks.filter(s => (s.change_pct || 0) <= -2.0 || s.category === 'SHORT BUILD-UP').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
-    const longUnwList = allMarketStocks.filter(s => ((s.change_pct || 0) < 0 && (s.change_pct || 0) > -2.0) || s.category === 'LONG UNWINDING').sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    // Update breadth counters for active sector / universe
+    const bBull = document.getElementById('ob-breadth-bull');
+    const bBear = document.getElementById('ob-breadth-bear');
+    if (bBull) bBull.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.advance || bullStocks.length) : bullStocks.length;
+    if (bBear) bBear.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.decline || bearStocks.length) : bearStocks.length;
+
+    // 2. Stage 2: Central Pipeline — NEXT TOP 10 PERFORMERS (Buy Side and Sell Side)
+    // In video reference:
+    // Top 3 Master Performers are Ranks 01, 02, 03.
+    // The next Top 10 Performers are Ranks 04 through 13.
+    const buyTop10 = (bullStocks.length > 3 ? bullStocks.slice(3, 13) : bullStocks.slice(0, 10));
+    const sellTop10 = (bearStocks.length > 3 ? bearStocks.slice(3, 13) : bearStocks.slice(0, 10));
 
     const colLong1 = document.getElementById('col-long-buildup-1');
     const colLong2 = document.getElementById('col-long-buildup-2');
@@ -615,29 +652,33 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     const colShortBd2 = document.getElementById('col-short-buildup-2');
     const colLongUnw = document.getElementById('col-long-unwinding');
 
-    if (colLong1) colLong1.innerHTML = longList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 1)).join('');
-    if (colLong2) colLong2.innerHTML = (longList.length > 4 ? longList.slice(4, 8) : longList.slice(0, 4)).map((s, i) => createBuildupItemHtml(s, i + 5)).join('');
-    if (colShortCov) colShortCov.innerHTML = shortCovList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 9)).join('');
-    if (colShortBd1) colShortBd1.innerHTML = shortBdList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 1)).join('');
-    if (colShortBd2) colShortBd2.innerHTML = (shortBdList.length > 4 ? shortBdList.slice(4, 8) : shortBdList.slice(0, 4)).map((s, i) => createBuildupItemHtml(s, i + 5)).join('');
-    if (colLongUnw) colLongUnw.innerHTML = longUnwList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 9)).join('');
-    const bBull = document.getElementById('ob-breadth-bull');
-    const bBear = document.getElementById('ob-breadth-bear');
-    if (bBull) bBull.textContent = (data.status && data.status.advance) ? data.status.advance : (allMarketStocks.filter(s => (s.change_pct || 0) >= 0).length || 149);
-    if (bBear) bBear.textContent = (data.status && data.status.decline) ? data.status.decline : (allMarketStocks.filter(s => (s.change_pct || 0) < 0).length || 63);
+    // Buy Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
+    if (colLong1) colLong1.innerHTML = buyTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'LONG BUILD-UP')).join('');
+    if (colLong2) colLong2.innerHTML = (buyTop10.length > 5 ? buyTop10.slice(5, 10) : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'LONG BUILD-UP')).join('');
+    // Col 3: Extended Pipeline / Short Covering (Ranks 14-18)
+    const buyExt = bullStocks.slice(13, 18);
+    if (colShortCov) colShortCov.innerHTML = (buyExt.length > 0 ? buyExt : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'SHORT COVERING')).join('');
 
-    // Master picks (right: exactly 3 Bullish + 3 Bearish = 6 Master Cards)
-    // Strictly ordered from top to bottom by percentage (Bullish to Bearish)!
+    // Sell Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
+    if (colShortBd1) colShortBd1.innerHTML = sellTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'SHORT BUILD-UP')).join('');
+    if (colShortBd2) colShortBd2.innerHTML = (sellTop10.length > 5 ? sellTop10.slice(5, 10) : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'SHORT BUILD-UP')).join('');
+    // Col 3: Extended Pipeline / Long Unwinding (Ranks 14-18)
+    const sellExt = bearStocks.slice(13, 18);
+    if (colLongUnw) colLongUnw.innerHTML = (sellExt.length > 0 ? sellExt : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'LONG UNWINDING')).join('');
+
+    // 3. Stage 3: Far Right — TOP 3 MASTER PERFORMERS (3 Buy on top + 3 Sell on bottom)
     if (masterPicks) {
-      const allStocks = Object.values(data.stocks);
-      const topBull = (data.top_bullish || allStocks.filter(s => (s.change_pct || 0) >= 0)).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
-      // Top Bearish movers sorted descending by percentage so Card 1 through Card 6 strictly descend:
-      const topBear = (data.top_bearish || allStocks.filter(s => (s.change_pct || 0) < 0)).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
-      const topPicks = [...topBull, ...topBear];
-      masterPicks.innerHTML = [...topBull.map((s, i) => createMasterCardHtml(s, i + 1, true)), ...topBear.map((s, i) => createMasterCardHtml(s, i + 1, false))].join('');
+      const topBull3 = bullStocks.slice(0, 3);
+      const topBear3 = bearStocks.slice(0, 3);
+      masterPicks.innerHTML = [
+        '<div class="master-deck-subhead bull">▲ BUY SIDE · TOP 3 PERFORMERS</div>',
+        ...topBull3.map((s, i) => createMasterCardHtml(s, i + 1, true)),
+        '<div class="master-deck-subhead bear" style="margin-top:6px;">▼ SELL SIDE · TOP 3 PERFORMERS</div>',
+        ...topBear3.map((s, i) => createMasterCardHtml(s, i + 1, false))
+      ].join('');
     }
 
-    // Populate Top Scatter Radar Dots
+  // Populate Top Scatter Radar Dots
     renderTopScatterDots();
 
     // Render Full SVG Neural Canvas with 70+ live background flow lines

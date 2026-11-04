@@ -2694,7 +2694,15 @@
           </div>
 
           <!-- Scatter Matrix Radar Header (from video) -->
-          <div class="ob-breadth-indicator-box" style="display:flex; align-items:center; gap:8px;"><div style="display:flex; align-items:center; gap:4px; background:rgba(0,255,135,0.08); border:1px solid rgba(0,255,135,0.3); padding:2px 7px; border-radius:4px; font-family:'JetBrains Mono';"><span style="width:6px; height:6px; border-radius:50%; background:#00ff87; box-shadow:0 0 6px #00ff87;"></span><span style="font-size:0.64rem; font-weight:800; color:#00ff87;">▲ BULLISH</span><span id="ob-breadth-bull" style="font-size:0.75rem; font-weight:900; color:#ffffff; margin-left:2px;">149</span></div><div style="display:flex; align-items:center; gap:4px; background:rgba(255,42,85,0.08); border:1px solid rgba(255,42,85,0.3); padding:2px 7px; border-radius:4px; font-family:'JetBrains Mono';"><span style="width:6px; height:6px; border-radius:50%; background:#ff2a55; box-shadow:0 0 6px #ff2a55;"></span><span style="font-size:0.64rem; font-weight:800; color:#ff2a55;">▼ BEARISH</span><span id="ob-breadth-bear" style="font-size:0.75rem; font-weight:900; color:#ffffff; margin-left:2px;">63</span></div></div><div class="ob-live-sector-ticker" style="display:flex; align-items:center; gap:6px; font-size:0.62rem; font-family:'JetBrains Mono';"><span style="color:#64748b; font-weight:700;">SECTORS:</span><span style="color:#00ff87; font-weight:700;">REALTY +2.43% ↗</span><span style="color:#00ff87; font-weight:700;">AUTO +1.85% ↗</span><span style="color:#ff2a55; font-weight:700;">IT -1.01% ↘</span></div><div class="ob-scatter-radar">
+          <div class="ob-breadth-indicator-box" style="display:flex; align-items:center; gap:8px;"><div style="display:flex; align-items:center; gap:4px; background:rgba(0,255,135,0.08); border:1px solid rgba(0,255,135,0.3); padding:2px 7px; border-radius:4px; font-family:'JetBrains Mono';"><span style="width:6px; height:6px; border-radius:50%; background:#00ff87; box-shadow:0 0 6px #00ff87;"></span><span style="font-size:0.64rem; font-weight:800; color:#00ff87;">▲ BULLISH</span><span id="ob-breadth-bull" style="font-size:0.75rem; font-weight:900; color:#ffffff; margin-left:2px;">149</span></div><div style="display:flex; align-items:center; gap:4px; background:rgba(255,42,85,0.08); border:1px solid rgba(255,42,85,0.3); padding:2px 7px; border-radius:4px; font-family:'JetBrains Mono';"><span style="width:6px; height:6px; border-radius:50%; background:#ff2a55; box-shadow:0 0 6px #ff2a55;"></span><span style="font-size:0.64rem; font-weight:800; color:#ff2a55;">▼ BEARISH</span><span id="ob-breadth-bear" style="font-size:0.75rem; font-weight:900; color:#ffffff; margin-left:2px;">63</span></div></div><div class="ob-live-sector-ticker" style="display:flex; align-items:center; gap:5px; font-size:0.62rem; font-family:'JetBrains Mono';">
+  <span style="color:#64748b; font-weight:700;">SECTORS:</span>
+  <span class="ob-sector-pill active" data-sector="ALL" onclick="filterOBSector('ALL')">🌐 ALL</span>
+  <span class="ob-sector-pill" data-sector="REALTY" onclick="filterOBSector('REALTY')">REALTY +2.43% ↗</span>
+  <span class="ob-sector-pill" data-sector="AUTO" onclick="filterOBSector('AUTO')">AUTO +1.85% ↗</span>
+  <span class="ob-sector-pill" data-sector="IT" onclick="filterOBSector('IT')">IT -1.01% ↘</span>
+  <span class="ob-sector-pill" data-sector="BANK" onclick="filterOBSector('BANK')">BANK +0.95% ↗</span>
+  <span class="ob-sector-pill" data-sector="METAL" onclick="filterOBSector('METAL')">METAL +0.72% ↗</span>
+</div><div class="ob-scatter-radar">
             <div class="scatter-row bull">
               <span class="scatter-label">▲ BULLISH</span>
               <div class="scatter-dots" id="bull-scatter-dots"></div>
@@ -2710,13 +2718,27 @@
         <div class="ob-xray-canvas-grid">
           
           <!-- Left: Stock list source -->
-          <div class="ob-source-list-container" style="display:flex; flex-direction:column; height:100%; min-width:138px; max-width:155px;">
-            <div class="source-list-filter-row">
-              <button type="button" class="src-filter-btn active" id="src-filter-all" onclick="filterSourceRail('all')">ALL</button>
-              <button type="button" class="src-filter-btn" id="src-filter-bull" onclick="filterSourceRail('bull')">🟢 BUY</button>
-              <button type="button" class="src-filter-btn" id="src-filter-bear" onclick="filterSourceRail('bear')">🔴 SELL</button>
-            </div>
-            <div class="ob-source-list" id="ob-source-list" style="flex:1;"></div>
+          <div class="ob-source-list-container" style="display:flex; flex-direction:column; height:100%; min-width:145px; max-width:160px;">
+  <div class="source-list-filter-row">
+    <button type="button" class="src-filter-btn active" id="src-filter-all" onclick="filterSourceRail('all')">ALL</button>
+    <button type="button" class="src-filter-btn" id="src-filter-bull" onclick="filterSourceRail('bull')">🟢 BUY</button>
+    <button type="button" class="src-filter-btn" id="src-filter-bear" onclick="filterSourceRail('bear')">🔴 SELL</button>
+  </div>
+  <div class="ob-sector-filter-row" style="padding:2px 4px; background:#070b16; border-bottom:1px solid #142036;">
+    <select id="ob-sector-select" onchange="filterOBSector(this.value)" style="width:100%; background:#090f1e; border:1px solid #1c2e4c; color:#38bdf8; font-size:0.62rem; font-family:var(--font-mono); font-weight:700; border-radius:4px; padding:2px 4px; outline:none; cursor:pointer;">
+      <option value="ALL">🌐 ALL SECTORS (ALL MOMENTUM)</option>
+      <option value="BANK">🏦 NIFTY BANK</option>
+      <option value="IT">💻 NIFTY IT</option>
+      <option value="AUTO">🚗 NIFTY AUTO</option>
+      <option value="REALTY">🏢 NIFTY REALTY</option>
+      <option value="METAL">⛏️ NIFTY METAL</option>
+      <option value="PHARMA">💊 NIFTY PHARMA</option>
+      <option value="ENERGY">⚡ NIFTY ENERGY</option>
+      <option value="FMCG">🛒 NIFTY FMCG</option>
+      <option value="FINANCIAL">📈 FIN SERVICES</option>
+    </select>
+  </div>
+  <div class="ob-source-list" id="ob-source-list" style="flex:1;"></div>
           </div>
 
           <!-- Center: Neural Sankey Flow Canvas with Live Laser Streams -->
@@ -2726,27 +2748,27 @@
             <!-- 6-Matrix Derivatives Build-up Overlay (3 Bullish Top, 3 Bearish Bottom matching Screenshot 3) -->
             <div class="buildup-categories-overlay">
               <div class="buildup-col">
-                <span class="buildup-pill long">LONG BUILD-UP •••••</span>
+                <span class="buildup-pill long">▲ BUY TOP 04-08</span>
                 <div id="col-long-buildup-1" class="col-items-wrap"></div>
               </div>
               <div class="buildup-col">
-                <span class="buildup-pill long">LONG BUILD-UP •••••</span>
+                <span class="buildup-pill long">▲ BUY TOP 09-13</span>
                 <div id="col-long-buildup-2" class="col-items-wrap"></div>
               </div>
               <div class="buildup-col">
-                <span class="buildup-pill short-cov">SHORT COVERING</span>
+                <span class="buildup-pill short-cov">▲ SHORT COVERING</span>
                 <div id="col-short-covering" class="col-items-wrap"></div>
               </div>
               <div class="buildup-col">
-                <span class="buildup-pill short-bd">SHORT BUILD-UP •••••</span>
+                <span class="buildup-pill short-bd">▼ SELL TOP 04-08</span>
                 <div id="col-short-buildup-1" class="col-items-wrap"></div>
               </div>
               <div class="buildup-col">
-                <span class="buildup-pill short-bd">SHORT BUILD-UP •••••</span>
+                <span class="buildup-pill short-bd">▼ SELL TOP 09-13</span>
                 <div id="col-short-buildup-2" class="col-items-wrap"></div>
               </div>
               <div class="buildup-col">
-                <span class="buildup-pill long-unw">LONG UNWINDING</span>
+                <span class="buildup-pill long-unw">▼ LONG UNWINDING</span>
                 <div id="col-long-unwinding" class="col-items-wrap"></div>
               </div>
             </div>
