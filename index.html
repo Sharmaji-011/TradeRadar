@@ -2717,65 +2717,113 @@
         <!-- The Mega Canvas Grid -->
         <div class="ob-xray-canvas-grid">
           
-          <!-- Left: Stock list source -->
-          <div class="ob-source-list-container" style="display:flex; flex-direction:column; height:100%; min-width:145px; max-width:160px;">
-  <div class="source-list-filter-row">
-    <button type="button" class="src-filter-btn active" id="src-filter-all" onclick="filterSourceRail('all')">ALL</button>
-    <button type="button" class="src-filter-btn" id="src-filter-bull" onclick="filterSourceRail('bull')">🟢 BUY</button>
-    <button type="button" class="src-filter-btn" id="src-filter-bear" onclick="filterSourceRail('bear')">🔴 SELL</button>
-  </div>
-  <div class="ob-sector-filter-row" style="padding:2px 4px; background:#070b16; border-bottom:1px solid #142036;">
-    <select id="ob-sector-select" onchange="filterOBSector(this.value)" style="width:100%; background:#090f1e; border:1px solid #1c2e4c; color:#38bdf8; font-size:0.62rem; font-family:var(--font-mono); font-weight:700; border-radius:4px; padding:2px 4px; outline:none; cursor:pointer;">
-      <option value="ALL">🌐 ALL SECTORS (ALL MOMENTUM)</option>
-      <option value="BANK">🏦 NIFTY BANK</option>
-      <option value="IT">💻 NIFTY IT</option>
-      <option value="AUTO">🚗 NIFTY AUTO</option>
-      <option value="REALTY">🏢 NIFTY REALTY</option>
-      <option value="METAL">⛏️ NIFTY METAL</option>
-      <option value="PHARMA">💊 NIFTY PHARMA</option>
-      <option value="ENERGY">⚡ NIFTY ENERGY</option>
-      <option value="FMCG">🛒 NIFTY FMCG</option>
-      <option value="FINANCIAL">📈 FIN SERVICES</option>
-    </select>
-  </div>
-  <div class="ob-source-list" id="ob-source-list" style="flex:1;"></div>
+          <!-- Stage 1 (Far Left): All Momentum Elements for Active Sector / Universe -->
+          <div class="ob-source-list-container">
+            <div class="source-list-filter-row">
+              <button type="button" class="src-filter-btn active" id="src-filter-all" onclick="filterSourceRail('all')">ALL</button>
+              <button type="button" class="src-filter-btn" id="src-filter-bull" onclick="filterSourceRail('bull')">🟢 BUY</button>
+              <button type="button" class="src-filter-btn" id="src-filter-bear" onclick="filterSourceRail('bear')">🔴 SELL</button>
+            </div>
+            <div class="ob-sector-filter-row">
+              <select id="ob-sector-select" onchange="filterOBSector(this.value)">
+                <option value="ALL">🌐 ALL SECTORS (ALL MOMENTUM)</option>
+                <option value="BANK">🏦 NIFTY BANK</option>
+                <option value="IT">💻 NIFTY IT</option>
+                <option value="AUTO">🚗 NIFTY AUTO</option>
+                <option value="REALTY">🏢 NIFTY REALTY</option>
+                <option value="METAL">⛏️ NIFTY METAL</option>
+                <option value="PHARMA">💊 NIFTY PHARMA</option>
+                <option value="ENERGY">⚡ NIFTY ENERGY</option>
+                <option value="FMCG">🛒 NIFTY FMCG</option>
+                <option value="FINANCIAL">📈 FIN SERVICES</option>
+              </select>
+            </div>
+            <div class="ob-source-list" id="ob-source-list"></div>
           </div>
 
-          <!-- Center: Neural Sankey Flow Canvas with Live Laser Streams -->
-          <div class="sankey-center-stage">
-            <svg class="sankey-svg-canvas" id="sankey-canvas" viewBox="0 0 740 680" preserveAspectRatio="none"></svg>
-            
-            <!-- 6-Matrix Derivatives Build-up Overlay (3 Bullish Top, 3 Bearish Bottom matching Screenshot 3) -->
-            <div class="buildup-categories-overlay">
-              <div class="buildup-col">
-                <span class="buildup-pill long">▲ BUY TOP 04-08</span>
-                <div id="col-long-buildup-1" class="col-items-wrap"></div>
+          <!-- Stage 2 & 3: Two-Tier Categorized Pipeline Decks (Bullish Top Row & Bearish Bottom Row) -->
+          <div class="ob-pipeline-decks-container">
+            <svg class="sankey-svg-canvas" id="sankey-canvas" viewBox="0 0 1000 680" preserveAspectRatio="none"></svg>
+
+            <!-- 🟢 TOP DECK: BULLISH MOMENTUM ORDER FLOW (BUY PIPELINE) -->
+            <div class="ob-deck-section bull-section">
+              <div class="ob-deck-header-bar bull">
+                <div class="ob-deck-title"><span class="pulse-dot green"></span> ▲ BULLISH ORDER FLOW · BUY PIPELINE (RANKS 01–20)</div>
+                <div class="ob-deck-tags">
+                  <span class="ob-flow-badge green">CONVERGENCE 94–98%</span>
+                  <span class="ob-flow-badge cyan">VWAP + DELIVERY SURGE</span>
+                </div>
               </div>
-              <div class="buildup-col">
-                <span class="buildup-pill long">▲ BUY TOP 09-13</span>
-                <div id="col-long-buildup-2" class="col-items-wrap"></div>
-              </div>
-              <div class="buildup-col">
-                <span class="buildup-pill short-cov">▲ SHORT COVERING</span>
-                <div id="col-short-covering" class="col-items-wrap"></div>
-              </div>
-              <div class="buildup-col">
-                <span class="buildup-pill short-bd">▼ SELL TOP 04-08</span>
-                <div id="col-short-buildup-1" class="col-items-wrap"></div>
-              </div>
-              <div class="buildup-col">
-                <span class="buildup-pill short-bd">▼ SELL TOP 09-13</span>
-                <div id="col-short-buildup-2" class="col-items-wrap"></div>
-              </div>
-              <div class="buildup-col">
-                <span class="buildup-pill long-unw">▼ LONG UNWINDING</span>
-                <div id="col-long-unwinding" class="col-items-wrap"></div>
+              <div class="ob-deck-grid bull">
+                <!-- Col 1: Ranks 13-20 -->
+                <div class="ob-col-wrap">
+                  <div class="ob-col-title bull">RANKS 13–20 · VOLUME</div>
+                  <div id="col-bull-13-20" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 2: Ranks 08-12 -->
+                <div class="ob-col-wrap">
+                  <div class="ob-col-title bull">RANKS 08–12 · BUILD-UP</div>
+                  <div id="col-bull-08-12" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 3: Ranks 04-07 -->
+                <div class="ob-col-wrap">
+                  <div class="ob-col-title bull">RANKS 04–07 · CONDUIT</div>
+                  <div id="col-bull-04-07" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 4: Ranks 01-03 Primary Conduit -->
+                <div class="ob-col-wrap primary-col">
+                  <div class="ob-col-title bull-primary">★ TOP 01–03 PRIMARY</div>
+                  <div id="col-bull-01-03" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 5: Master Deck (Top 3 Performers) -->
+                <div class="ob-col-wrap master-col">
+                  <div class="ob-col-title bull-master">★ TOP 3 MASTER PICKS</div>
+                  <div id="col-bull-master" class="ob-master-scroll"></div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Right: Master Pick Active Cards (3 Bullish + 3 Bearish) -->
-          <div class="ob-master-picks" id="ob-master-picks"></div>
+            <!-- 🔴 BOTTOM DECK: BEARISH MOMENTUM ORDER FLOW (SELL PIPELINE) -->
+            <div class="ob-deck-section bear-section">
+              <div class="ob-deck-header-bar bear">
+                <div class="ob-deck-title"><span class="pulse-dot red"></span> ▼ BEARISH ORDER FLOW · SELL PIPELINE (RANKS 01–20)</div>
+                <div class="ob-deck-tags">
+                  <span class="ob-flow-badge red">DISTRIBUTION 93–98%</span>
+                  <span class="ob-flow-badge amber">BELOW VWAP · UNWINDING</span>
+                </div>
+              </div>
+              <div class="ob-deck-grid bear">
+                <!-- Col 1: Ranks 13-20 -->
+                <div class="ob-col-wrap">
+                  <div class="ob-col-title bear">RANKS 13–20 · VOLUME</div>
+                  <div id="col-bear-13-20" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 2: Ranks 08-12 -->
+                <div class="ob-col-wrap">
+                  <div class="ob-col-title bear">RANKS 08–12 · BUILD-UP</div>
+                  <div id="col-bear-08-12" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 3: Ranks 04-07 -->
+                <div class="ob-col-wrap">
+                  <div class="ob-col-title bear">RANKS 04–07 · CONDUIT</div>
+                  <div id="col-bear-04-07" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 4: Ranks 01-03 Primary Conduit -->
+                <div class="ob-col-wrap primary-col">
+                  <div class="ob-col-title bear-primary">★ TOP 01–03 PRIMARY</div>
+                  <div id="col-bear-01-03" class="ob-col-scroll"></div>
+                </div>
+                <!-- Col 5: Master Deck (Bottom 3 Performers) -->
+                <div class="ob-col-wrap master-col">
+                  <div class="ob-col-title bear-master">★ TOP 3 MASTER PICKS</div>
+                  <div id="col-bear-master" class="ob-master-scroll"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Global Test / Selector Support Container -->
+            <div id="ob-master-picks" style="display:none;"></div>
+          </div>
 
         </div>
 
@@ -2784,9 +2832,6 @@
     </div>
   </main>
 
-  <!-- ═════════════════════════════════════════════════════════════ -->
-  <!-- 🎯 ORDER BLOCK 10-SECOND MODAL & HOVER PREVIEW CARD          -->
-  <!-- ═════════════════════════════════════════════════════════════ -->
   <!-- ================= MODAL: THE 10-SECOND ORDER BLOCK POPUP (IMAGE 2) ================= -->
   <div class="modal-overlay" id="stockModalOverlay" onclick="closeModalOnBackdrop(event)">
     <div class="ob-modal" id="stockModal">

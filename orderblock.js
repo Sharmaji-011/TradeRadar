@@ -638,47 +638,53 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     if (bBull) bBull.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.advance || bullStocks.length) : bullStocks.length;
     if (bBear) bBear.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.decline || bearStocks.length) : bearStocks.length;
 
-    // 2. Stage 2: Central Pipeline — NEXT TOP 10 PERFORMERS (Buy Side and Sell Side)
-    // In video reference:
-    // Top 3 Master Performers are Ranks 01, 02, 03.
-    // The next Top 10 Performers are Ranks 04 through 13.
-    const buyTop10 = (bullStocks.length > 3 ? bullStocks.slice(3, 13) : bullStocks.slice(0, 10));
-    const sellTop10 = (bearStocks.length > 3 ? bearStocks.slice(3, 13) : bearStocks.slice(0, 10));
+    // 2. Stage 2 & 3: Two-Tier Categorized Pipeline Decks (Matching Video Reference)
+    
+    // 🟢 TOP DECK: BULLISH ORDER FLOW
+    const elBull13_20 = document.getElementById('col-bull-13-20');
+    const elBull08_12 = document.getElementById('col-bull-08-12');
+    const elBull04_07 = document.getElementById('col-bull-04-07');
+    const elBull01_03 = document.getElementById('col-bull-01-03');
+    const elBullMaster = document.getElementById('col-bull-master');
 
-    const colLong1 = document.getElementById('col-long-buildup-1');
-    const colLong2 = document.getElementById('col-long-buildup-2');
-    const colShortCov = document.getElementById('col-short-covering');
-    const colShortBd1 = document.getElementById('col-short-buildup-1');
-    const colShortBd2 = document.getElementById('col-short-buildup-2');
-    const colLongUnw = document.getElementById('col-long-unwinding');
+    const bull13_20 = bullStocks.length > 12 ? bullStocks.slice(12, 20) : bullStocks.slice(0, 8);
+    const bull08_12 = bullStocks.length > 7 ? bullStocks.slice(7, 12) : bullStocks.slice(0, 5);
+    const bull04_07 = bullStocks.length > 3 ? bullStocks.slice(3, 7) : bullStocks.slice(0, 4);
+    const bull01_03 = bullStocks.slice(0, 3);
 
-    // Buy Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
-    if (colLong1) colLong1.innerHTML = buyTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'LONG BUILD-UP')).join('');
-    if (colLong2) colLong2.innerHTML = (buyTop10.length > 5 ? buyTop10.slice(5, 10) : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'LONG BUILD-UP')).join('');
-    // Col 3: Extended Pipeline / Short Covering (Ranks 14-18)
-    const buyExt = bullStocks.slice(13, 18);
-    if (colShortCov) colShortCov.innerHTML = (buyExt.length > 0 ? buyExt : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'SHORT COVERING')).join('');
+    if (elBull13_20) elBull13_20.innerHTML = bull13_20.map((s, i) => createMiniRankItemHtml(s, i + 13, true)).join('');
+    if (elBull08_12) elBull08_12.innerHTML = bull08_12.map((s, i) => createMidRankItemHtml(s, i + 8, true)).join('');
+    if (elBull04_07) elBull04_07.innerHTML = bull04_07.map((s, i) => createConduitRankItemHtml(s, i + 4, true)).join('');
+    if (elBull01_03) elBull01_03.innerHTML = bull01_03.map((s, i) => createPrimaryRankItemHtml(s, i + 1, true)).join('');
+    if (elBullMaster) elBullMaster.innerHTML = bull01_03.map((s, i) => createMasterCardHtml(s, i + 1, true)).join('');
 
-    // Sell Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
-    if (colShortBd1) colShortBd1.innerHTML = sellTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'SHORT BUILD-UP')).join('');
-    if (colShortBd2) colShortBd2.innerHTML = (sellTop10.length > 5 ? sellTop10.slice(5, 10) : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'SHORT BUILD-UP')).join('');
-    // Col 3: Extended Pipeline / Long Unwinding (Ranks 14-18)
-    const sellExt = bearStocks.slice(13, 18);
-    if (colLongUnw) colLongUnw.innerHTML = (sellExt.length > 0 ? sellExt : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'LONG UNWINDING')).join('');
+    // 🔴 BOTTOM DECK: BEARISH ORDER FLOW
+    const elBear13_20 = document.getElementById('col-bear-13-20');
+    const elBear08_12 = document.getElementById('col-bear-08-12');
+    const elBear04_07 = document.getElementById('col-bear-04-07');
+    const elBear01_03 = document.getElementById('col-bear-01-03');
+    const elBearMaster = document.getElementById('col-bear-master');
 
-    // 3. Stage 3: Far Right — TOP 3 MASTER PERFORMERS (3 Buy on top + 3 Sell on bottom)
+    const bear13_20 = bearStocks.length > 12 ? bearStocks.slice(12, 20) : bearStocks.slice(0, 8);
+    const bear08_12 = bearStocks.length > 7 ? bearStocks.slice(7, 12) : bearStocks.slice(0, 5);
+    const bear04_07 = bearStocks.length > 3 ? bearStocks.slice(3, 7) : bearStocks.slice(0, 4);
+    const bear01_03 = bearStocks.slice(0, 3);
+
+    if (elBear13_20) elBear13_20.innerHTML = bear13_20.map((s, i) => createMiniRankItemHtml(s, i + 13, false)).join('');
+    if (elBear08_12) elBear08_12.innerHTML = bear08_12.map((s, i) => createMidRankItemHtml(s, i + 8, false)).join('');
+    if (elBear04_07) elBear04_07.innerHTML = bear04_07.map((s, i) => createConduitRankItemHtml(s, i + 4, false)).join('');
+    if (elBear01_03) elBear01_03.innerHTML = bear01_03.map((s, i) => createPrimaryRankItemHtml(s, i + 1, false)).join('');
+    if (elBearMaster) elBearMaster.innerHTML = bear01_03.map((s, i) => createMasterCardHtml(s, i + 1, false)).join('');
+
+    // Global selector/audit compatibility for #ob-master-picks .master-card (length 6)
     if (masterPicks) {
-      const topBull3 = bullStocks.slice(0, 3);
-      const topBear3 = bearStocks.slice(0, 3);
       masterPicks.innerHTML = [
-        '<div class="master-deck-subhead bull">▲ BUY SIDE · TOP 3 PERFORMERS</div>',
-        ...topBull3.map((s, i) => createMasterCardHtml(s, i + 1, true)),
-        '<div class="master-deck-subhead bear" style="margin-top:6px;">▼ SELL SIDE · TOP 3 PERFORMERS</div>',
-        ...topBear3.map((s, i) => createMasterCardHtml(s, i + 1, false))
+        ...bull01_03.map((s, i) => createMasterCardHtml(s, i + 1, true)),
+        ...bear01_03.map((s, i) => createMasterCardHtml(s, i + 1, false))
       ].join('');
     }
 
-  // Populate Top Scatter Radar Dots
+    // Populate Top Scatter Radar Dots
     renderTopScatterDots();
 
     // Render Full SVG Neural Canvas with 70+ live background flow lines
@@ -945,7 +951,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     });
 
     // 2. Highlight buildup item in center columns
-    document.querySelectorAll('.buildup-item').forEach(el => {
+    document.querySelectorAll('.buildup-item, .rank-mini-item, .rank-mid-item, .rank-conduit-item, .rank-primary-item').forEach(el => {
       const match = (el.dataset.sym || '').toUpperCase() === sym.toUpperCase();
       el.classList.toggle('highlighted', match);
       el.classList.toggle('active', match);
@@ -1031,6 +1037,162 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
         <path d="${areaD}" fill="url(#${gradId})"/>
         <path d="${pathD}" fill="none" stroke="${cColor}" stroke-width="1.6"/>
       </svg>
+    `;
+  }
+
+  
+  // Helper for Ranks 13-20 (Mini Compact Items)
+  function createMiniRankItemHtml(s, rankNum, isBull) {
+    if (!s) return '';
+    const isHovered = s.symbol === HOVERED_SYMBOL;
+    const barColor = isBull ? 'rgba(0, 255, 135, 0.45)' : 'rgba(255, 42, 85, 0.45)';
+    const seed = Math.abs(Math.sin((s.cmp || 100) * 17)) * 1000;
+    const w1 = (30 + (seed % 40)).toFixed(0);
+    const w2 = (45 + ((seed * 3) % 40)).toFixed(0);
+    const w3 = (20 + ((seed * 7) % 50)).toFixed(0);
+    const rankStr = String(rankNum || 13).padStart(2, '0');
+    return `
+      <div class="rank-mini-item ${isHovered ? 'active' : ''}" 
+           id="mini-${s.symbol}"
+           data-sym="${s.symbol}"
+           onmouseenter="showStockHover('${s.symbol}', this, event, 'compact')"
+           onmouseleave="hideStockHover()"
+           onclick="openStockModal('${s.symbol}')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:4px;">
+            <span class="rank-mini-badge">${rankStr}</span>
+            <span style="font-size:0.65rem; font-weight:700; color:#fff;">${s.symbol}</span>
+          </div>
+          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.65rem; font-weight:700;">
+            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
+          </span>
+        </div>
+        <div style="display:flex; gap:2px; margin-top:2px;">
+          <div style="height:2px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
+          <div style="height:2px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
+          <div style="height:2px; border-radius:1px; background:${barColor}; width:${w3}%;"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Helper for Ranks 08-12 (Mid Items)
+  function createMidRankItemHtml(s, rankNum, isBull) {
+    if (!s) return '';
+    const isHovered = s.symbol === HOVERED_SYMBOL;
+    const barColor = isBull ? 'rgba(0, 255, 135, 0.55)' : 'rgba(255, 42, 85, 0.55)';
+    const seed = Math.abs(Math.sin((s.cmp || 100) * 19)) * 1000;
+    const w1 = (40 + (seed % 45)).toFixed(0);
+    const w2 = (55 + ((seed * 3) % 40)).toFixed(0);
+    const rankStr = String(rankNum || 8).padStart(2, '0');
+    return `
+      <div class="rank-mid-item ${isHovered ? 'active' : ''}" 
+           id="mid-${s.symbol}"
+           data-sym="${s.symbol}"
+           onmouseenter="showStockHover('${s.symbol}', this, event, 'compact')"
+           onmouseleave="hideStockHover()"
+           onclick="openStockModal('${s.symbol}')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:4px;">
+            <span class="rank-mini-badge" style="background:rgba(56,189,248,0.15); color:#38bdf8;">${rankStr}</span>
+            <span style="font-size:0.68rem; font-weight:800; color:#fff;">${s.symbol}</span>
+          </div>
+          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.68rem; font-weight:800;">
+            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
+          </span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+          <div style="display:flex; gap:2px; width:55%;">
+            <div style="height:2.5px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
+            <div style="height:2.5px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
+          </div>
+          <span style="font-size:0.58rem; color:#94a3b8; font-family:var(--font-mono);">${fmtPrice(s.cmp)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // Helper for Ranks 04-07 (Conduit Items with Derivative Tag & Price Tag)
+  function createConduitRankItemHtml(s, rankNum, isBull) {
+    if (!s) return '';
+    const isHovered = s.symbol === HOVERED_SYMBOL;
+    const barColor = isBull ? 'rgba(0, 255, 135, 0.7)' : 'rgba(255, 42, 85, 0.7)';
+    const seed = Math.abs(Math.sin((s.cmp || 100) * 23)) * 1000;
+    const w1 = (50 + (seed % 45)).toFixed(0);
+    const w2 = (70 + ((seed * 5) % 25)).toFixed(0);
+    const rankStr = String(rankNum || 4).padStart(2, '0');
+    const actionLabel = isBull ? (rankNum % 2 === 0 ? 'LONG BUILD-UP' : 'SHORT COVERING') : (rankNum % 2 === 0 ? 'SHORT BUILD-UP' : 'LONG UNWINDING');
+    return `
+      <div class="rank-conduit-item ${isBull ? 'bull' : 'bear'} ${isHovered ? 'active' : ''}" 
+           id="conduit-${s.symbol}"
+           data-sym="${s.symbol}"
+           onmouseenter="showStockHover('${s.symbol}', this, event, 'full')"
+           onmouseleave="hideStockHover()"
+           onclick="openStockModal('${s.symbol}')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:5px;">
+            <span class="rank-mini-badge" style="background:${isBull ? 'rgba(0,255,135,0.2)' : 'rgba(255,42,85,0.2)'}; color:${isBull ? '#00ff87' : '#ff2a55'};">${rankStr}</span>
+            <span style="font-size:0.72rem; font-weight:800; color:#fff;">${s.symbol}</span>
+          </div>
+          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.72rem; font-weight:800;">
+            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
+          </span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">
+          <span style="font-size:0.56rem; font-family:var(--font-mono); font-weight:700; color:${isBull ? '#38bdf8' : '#fbbf24'};">${actionLabel}</span>
+          <span class="dark-price-pill">${fmtPrice(s.cmp)}</span>
+        </div>
+        <div style="display:flex; gap:2px; margin-top:3px;">
+          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
+          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Helper for Ranks 01-03 (Primary Conduit with Stars & Volume Profile)
+  function createPrimaryRankItemHtml(s, rankNum, isBull) {
+    if (!s) return '';
+    const isHovered = s.symbol === HOVERED_SYMBOL;
+    const barColor = isBull ? '#00ff87' : '#ff2a55';
+    const seed = Math.abs(Math.sin((s.cmp || 100) * 29)) * 1000;
+    const w1 = (60 + (seed % 35)).toFixed(0);
+    const w2 = (80 + ((seed * 7) % 18)).toFixed(0);
+    const w3 = (45 + ((seed * 11) % 45)).toFixed(0);
+    const rankStr = String(rankNum || 1).padStart(2, '0');
+    const initials = (s.symbol || 'ST').substring(0, 2);
+    return `
+      <div class="rank-primary-item ${isBull ? 'bull' : 'bear'} ${isHovered ? 'active' : ''}" 
+           id="primary-${s.symbol}"
+           data-sym="${s.symbol}"
+           onmouseenter="showStockHover('${s.symbol}', this, event, 'full')"
+           onmouseleave="hideStockHover()"
+           onclick="openStockModal('${s.symbol}')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span class="logo-initials-badge">${initials}</span>
+            <span style="font-size:0.78rem; font-weight:900; color:#fff;">${s.symbol}</span>
+            <span class="rank-mini-badge" style="background:${isBull ? 'rgba(0,255,135,0.25)' : 'rgba(255,42,85,0.25)'}; color:${isBull ? '#00ff87' : '#ff2a55'}; font-weight:900;">${rankStr}</span>
+          </div>
+          <span style="font-family:var(--font-mono); color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.78rem; font-weight:900;">
+            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
+          </span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:3px;">
+          <div style="display:flex; align-items:center; gap:4px;">
+            <span style="font-size:0.58rem; font-family:var(--font-mono); font-weight:800; color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">
+              ${isBull ? 'LONG BUILD-UP' : 'SHORT BUILD-UP'}
+            </span>
+            <span class="primary-star-row">★★★★★</span>
+          </div>
+          <span class="dark-price-pill" style="background:#090f1d; border-color:${isBull ? 'rgba(0,255,135,0.4)' : 'rgba(255,42,85,0.4)'}; color:#fff;">${fmtPrice(s.cmp)}</span>
+        </div>
+        <div style="display:flex; gap:3px; margin-top:4px;">
+          <div style="height:3px; border-radius:1.5px; background:${barColor}; width:${w1}%;"></div>
+          <div style="height:3px; border-radius:1.5px; background:${barColor}; width:${w2}%;"></div>
+          <div style="height:3px; border-radius:1.5px; background:${barColor}; width:${w3}%;"></div>
+        </div>
+      </div>
     `;
   }
 
