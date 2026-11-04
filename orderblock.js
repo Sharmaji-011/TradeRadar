@@ -1,6 +1,6 @@
 
   // Institutional White vs Dark Theme Switcher
-  window.CURRENT_OB_THEME = 'white';
+  window.CURRENT_OB_THEME = 'dark';
 
   window.setOBTheme = function(theme) {
     window.CURRENT_OB_THEME = theme;
@@ -335,7 +335,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
   window.initOrderBlockScreen = function() {
     // Restore preferred zoom scale (defaults to 85% for compact fit)
-    const savedScale = (typeof localStorage !== 'undefined' && localStorage.getItem('traderadar_ob_scale')) || '85';
+    const savedScale = (typeof localStorage !== 'undefined' && localStorage.getItem('traderadar_ob_scale')) || '100';
     if (typeof window.setOBViewScale === 'function') {
       window.setOBViewScale(savedScale);
     }
@@ -1313,7 +1313,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
             <span style="font-family:var(--font-mono); font-size:1.15rem; font-weight:900; color:${isBull ? '#15803d' : '#b91c1c'};">
               ${sign}${s.change_pct.toFixed(2)}%
             </span>
-            <span style="font-family:var(--font-mono); font-size:0.75rem; font-weight:800; color:#0f172a;">
+            <span class="master-card-cmp" style="font-family:var(--font-mono); font-size:0.75rem; font-weight:800;">
               ${fmtPrice(s.cmp)} <span style="font-size:0.65rem; color:#64748b; font-weight:600;">(${sign}${deltaPts})</span>
             </span>
           </div>
@@ -1322,7 +1322,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
             ${flowTag}
           </div>
 
-          <div style="display:flex; gap:6px; font-size:0.54rem; font-family:var(--font-mono); color:#64748b; font-weight:700; border-top:1px solid #e2e8f0; padding-top:2px; margin-top:2px;">
+          <div class="master-levels-row" style="display:flex; gap:6px; font-size:0.54rem; font-family:var(--font-mono); color:#94a3b8; font-weight:700; border-top:1px solid rgba(255,255,255,0.08); padding-top:2px; margin-top:2px;">
             <span>S1: <b style="color:${isBull ? '#15803d' : '#b91c1c'};">${fmtLevel(s.s1)}</b></span>
             <span>ZONE: <b style="color:#0284c7;">${fmtLevel(s.zone)}</b></span>
             <span>R1: <b style="color:${isBull ? '#15803d' : '#b91c1c'};">${fmtLevel(s.r1)}</b></span>
@@ -1331,7 +1331,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
         </div>
 
         <!-- Right Embedded Candlestick Chart (Matching Photo 3) -->
-        <div class="master-chart-wrap" style="width:110px; height:75px; flex-shrink:0; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:2px; overflow:hidden;">
+        <div class="master-chart-wrap" style="width:105px; height:48px; flex-shrink:0; border-radius:4px; padding:1px; overflow:hidden;">
           ${renderMicroCandles(s.candles || s.sparkline, isBull, s.ob_high, s.ob_low)}
         </div>
 
