@@ -324,8 +324,14 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   window.loadStockIntoRadar = function (sym) {
     if (!sym) return;
     const symUpper = sym.toUpperCase().trim();
+    let stock = MARKET_DATA && MARKET_DATA.stocks ? MARKET_DATA.stocks[symUpper] : null;
     if (typeof window.openTradeTicket === 'function') {
-      window.openTradeTicket(symUpper);
+      if (stock) {
+        const sign = stock.change_pct > 0 ? '+' : '';
+        window.openTradeTicket(stock.symbol, stock.cmp, `${sign}${stock.change_pct.toFixed(2)}%`, stock.rr || 5.0, stock.change_pct >= 0);
+      } else {
+        window.openTradeTicket(symUpper);
+      }
     } else if (typeof window.openStockModal === 'function') {
       window.openStockModal(symUpper);
     }
@@ -1426,7 +1432,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     document.getElementById('modal-bias-badge').textContent = s.rule;
     document.getElementById('modal-bias-badge').className = `tag-badge ${s.change_pct >= 0 ? 'bull' : 'bear'}`;
 
-    document.getElementById('modal-cmp').textContent = `₹${s.cmp.toFixed(2)}`;
+    document.getElementById('modal-cmp').textContent = fmtPrice(s.cmp);
     const chgEl = document.getElementById('modal-chg');
     chgEl.textContent = `${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%`;
     chgEl.className = `modal-chg-val ${s.change_pct >= 0 ? 'up' : 'down'}`;
@@ -1439,7 +1445,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     document.getElementById('m-rr').textContent = `1 : ${s.rr}`;
     document.getElementById('m-r1r2').textContent = `${s.r1.toFixed(2)} / ${s.r2.toFixed(2)}`;
     document.getElementById('m-oi').textContent = `${s.oi_pct > 0 ? '+' : ''}${s.oi_pct}%`;
-    document.getElementById('m-vwap').textContent = `₹${s.vwap.toFixed(2)}`;
+    document.getElementById('m-vwap').textContent = fmtPrice(s.vwap);
     document.getElementById('m-delta').textContent = `${s.delta > 0 ? '+' : ''}${s.delta}`;
 
     // Slider numbers

@@ -3685,25 +3685,25 @@
     };
 
     function getTradingViewSymbol(sym) {
-      if (!sym) return 'BSE:SENSEX';
+      if (!sym) return 'NSE:NIFTY';
       const s = sym.toUpperCase().trim();
 
-      // Real Crypto Stream (Binance 24x7 live websocket)
+      // Real Crypto Stream (Matching Coinbase USD feed exactly with TradingView Coinbase feed)
       const cryptoMap = {
-        'BTC': 'BINANCE:BTCUSDT',
-        'ETH': 'BINANCE:ETHUSDT',
-        'SOL': 'BINANCE:SOLUSDT',
-        'DOGE': 'BINANCE:DOGEUSDT',
-        'XRP': 'BINANCE:XRPUSDT',
-        'LINK': 'BINANCE:LINKUSDT',
-        'SUI': 'BINANCE:SUIUSDT',
-        'AVAX': 'BINANCE:AVAXUSDT',
+        'BTC': 'COINBASE:BTCUSD',
+        'ETH': 'COINBASE:ETHUSD',
+        'SOL': 'COINBASE:SOLUSD',
+        'DOGE': 'COINBASE:DOGEUSD',
+        'XRP': 'COINBASE:XRPUSD',
+        'LINK': 'COINBASE:LINKUSD',
+        'SUI': 'COINBASE:SUIUSD',
+        'AVAX': 'COINBASE:AVAXUSD',
         'BNB': 'BINANCE:BNBUSDT',
-        'ADA': 'BINANCE:ADAUSDT'
+        'ADA': 'COINBASE:ADAUSD'
       };
       if (cryptoMap[s]) return cryptoMap[s];
 
-      // Real Metals & Commodities (TVC / NYMEX / COMEX Spot & Futures)
+      // Real Metals & Commodities (TVC Spot & NYMEX / COMEX)
       const metalsMap = {
         'GOLD': 'TVC:GOLD',
         'XAU': 'TVC:GOLD',
@@ -3718,13 +3718,12 @@
       };
       if (metalsMap[s]) return metalsMap[s];
 
-      // Indian Indices & Stocks
+      // Indian Indices & Stocks (Primary NSE feeds matching Terminal prices)
       if (s === 'NIFTY' || s === 'NIFTY50') return 'NSE:NIFTY';
       if (s === 'BANKNIFTY') return 'NSE:BANKNIFTY';
-      if (s === 'SENSEX') return 'BSE:SENSEX';
+      if (s === 'SENSEX' || s === 'BSE') return `BSE:${s}`;
 
-      // Indian Equities (BSE provides full historical daily data reliably on free TradingView embed)
-      return `BSE:${s}`;
+      return `NSE:${s}`;
     }
 
     function loadTradingViewWidget(sym, tf = '5m') {
@@ -3746,10 +3745,8 @@
       };
 
       let interval = intervalMap[tf] || '15';
-      // For Indian BSE equities, Daily (D) displays complete multi-year historical candles seamlessly
-      if (!isCrypto && !isMetal && (tf === '5m' || tf === '15m')) {
-        interval = 'D';
-      }
+      // Maintain accurate requested intraday / daily timeframe
+      // interval stays as requested
 
       if (typeof TradingView !== 'undefined') {
         try {
@@ -3794,9 +3791,9 @@
       const isCrypto = ['BTC', 'ETH', 'SOL', 'DOGE', 'SUI', 'LINK', 'XRP', 'AVAX'].includes(symUpper);
       const curr = (isMetal || isCrypto) ? '$' : '₹';
 
-      // Match price exactly from official TradingView Chart registry
-      if (typeof TRADINGVIEW_MARKET_PRICES !== 'undefined' && TRADINGVIEW_MARKET_PRICES[symUpper]) {
-        basePrice = TRADINGVIEW_MARKET_PRICES[symUpper];
+      // Always preserve the fresh live price from the terminal / lastPrices
+      if (typeof lastPrices !== 'undefined' && lastPrices[symUpper]) {
+        basePrice = lastPrices[symUpper];
       }
 
       currentModalSymbol = sym;
