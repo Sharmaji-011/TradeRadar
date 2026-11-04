@@ -1587,12 +1587,12 @@ body.app .page {
 }
 
 .master-chart-wrap {
-  height: 14px !important;
+  height: 28px !important;
   margin: 1px 0 !important;
 }
 
 .master-chart-wrap svg {
-  height: 14px !important;
+  height: 28px !important;
 }
 
 .master-slider-row {
@@ -1616,7 +1616,59 @@ body.app .page {
 .radar-btn, .btn-trade-radar {
   padding: 0 4px !important;
   font-size: 0.50rem !important;
-  height: 14px !important;
+  height: 16px !important;
   line-height: 14px !important;
   border-radius: 3px !important;
+}
+
+/* ============================================================
+   VIDEO REFERENCE POLISH: CONVICTION CIRCLES & BUILdup TAGS
+   ============================================================ */
+.master-conv-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 900;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+.master-conv-circle.bull {
+  background: rgba(0, 255, 135, 0.16);
+  border: 1.5px solid #00ff87;
+  color: #00ff87;
+  box-shadow: 0 0 8px rgba(0, 255, 135, 0.4);
+}
+.master-conv-circle.bear {
+  background: rgba(255, 42, 85, 0.16);
+  border: 1.5px solid #ff2a55;
+  color: #ff2a55;
+  box-shadow: 0 0 8px rgba(255, 42, 85, 0.4);
+}
+
+.buildup-rank {
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  font-weight: 800;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 4px;
+  border-radius: 3px;
+  letter-spacing: 0.2px;
+}
+
+.buildup-flow-tag {
+  letter-spacing: 0.3px;
+  font-size: 0.58rem;
+  font-weight: 700;
+}
+
+.master-flow-tag {
+  letter-spacing: 0.2px;
+  font-family: var(--font-mono);
+  margin-top: 1px;
 }

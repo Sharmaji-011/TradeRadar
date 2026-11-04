@@ -2694,7 +2694,7 @@
           </div>
 
           <!-- Scatter Matrix Radar Header (from video) -->
-          <div class="ob-scatter-radar">
+          <div class="ob-breadth-indicator-box" style="display:flex; align-items:center; gap:8px;"><div style="display:flex; align-items:center; gap:4px; background:rgba(0,255,135,0.08); border:1px solid rgba(0,255,135,0.3); padding:2px 7px; border-radius:4px; font-family:'JetBrains Mono';"><span style="width:6px; height:6px; border-radius:50%; background:#00ff87; box-shadow:0 0 6px #00ff87;"></span><span style="font-size:0.64rem; font-weight:800; color:#00ff87;">▲ BULLISH</span><span id="ob-breadth-bull" style="font-size:0.75rem; font-weight:900; color:#ffffff; margin-left:2px;">149</span></div><div style="display:flex; align-items:center; gap:4px; background:rgba(255,42,85,0.08); border:1px solid rgba(255,42,85,0.3); padding:2px 7px; border-radius:4px; font-family:'JetBrains Mono';"><span style="width:6px; height:6px; border-radius:50%; background:#ff2a55; box-shadow:0 0 6px #ff2a55;"></span><span style="font-size:0.64rem; font-weight:800; color:#ff2a55;">▼ BEARISH</span><span id="ob-breadth-bear" style="font-size:0.75rem; font-weight:900; color:#ffffff; margin-left:2px;">63</span></div></div><div class="ob-live-sector-ticker" style="display:flex; align-items:center; gap:6px; font-size:0.62rem; font-family:'JetBrains Mono';"><span style="color:#64748b; font-weight:700;">SECTORS:</span><span style="color:#00ff87; font-weight:700;">REALTY +2.43% ↗</span><span style="color:#00ff87; font-weight:700;">AUTO +1.85% ↗</span><span style="color:#ff2a55; font-weight:700;">IT -1.01% ↘</span></div><div class="ob-scatter-radar">
             <div class="scatter-row bull">
               <span class="scatter-label">▲ BULLISH</span>
               <div class="scatter-dots" id="bull-scatter-dots"></div>
@@ -2783,7 +2783,7 @@
         </div>
       </div>
 
-      <!-- 10-Second Key Metrics Grid -->
+  
       <div class="metrics-grid">
         <div class="metric-cell">
           <span class="metric-label">Rank</span>
@@ -2855,8 +2855,8 @@
   
   <!-- ================= FLOATING ANIMATED HOVER PREVIEW CARD (VIDEO FEATURE) ================= -->
   <div id="hover-stock-card" class="hover-floating-card">
-    <div class="hover-header-row">
-      <div class="hover-sym-group">
+    <div class="hover-header-row" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;"><div><div style="display:flex; align-items:center; gap:6px;"><h3 id="h-sym" class="hover-sym-title" style="margin:0; font-size:1.15rem; font-weight:800; color:#fff;">SBIN</h3><span id="h-name-sector" style="font-size:0.68rem; color:#94a3b8; font-weight:600;">SBIN · NIFTY BANK</span></div></div><div id="h-mini-spark" style="width:65px; height:18px;"><svg id="h-sparkline-svg" viewBox="0 0 65 18" style="width:100%; height:100%; overflow:visible;"></svg></div></div><div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; padding-bottom:4px; border-bottom:1px solid rgba(255,255,255,0.08);"><div id="h-price" style="font-size:1.35rem; font-weight:900; font-family:var(--font-mono); color:#ffffff;">₹782.50</div><div id="h-delta-pts" style="font-size:0.85rem; font-weight:800; font-family:var(--font-mono);"><span id="h-chg" class="hover-chg-val up">+2.84%</span><span id="h-pts" style="margin-left:4px; opacity:0.85;">+21.40</span></div></div><div id="h-compact-section" style="display:none; grid-template-columns: 1fr 1fr; gap:3px 10px; font-size:0.65rem; font-family:var(--font-mono); margin-bottom:6px;"><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">RANK:</span> <b id="h-c-rank" style="color:#cbd5e1;">p99.8 · #1/120</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">GATE:</span> <b id="h-c-gate" style="color:#00ff87;">BREAKOUT</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">OI:</span> <b id="h-c-oi" style="color:#00ff87;">+12.4%</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Δ VOL:</span> <b id="h-c-delta" style="color:#38bdf8;">+5.1%</b></div></div><div id="h-full-section"><div class="hover-video-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:4px 12px; font-size:0.66rem; font-family:var(--font-mono); margin-bottom:6px;"><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">RANK:</span> <b id="h-rank" style="color:#cbd5e1;">p99.3 · #2/149</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">CONV:</span> <b id="h-conv" style="color:#00ff87;">96 🟢🟢🟢🟢🟢</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">OI:</span> <b id="h-oi" style="color:#00ff87;">+6.9% · LONG BUILD-UP</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">Δ:</span> <b id="h-delta-vol" style="color:#38bdf8;">+38.3K · ▲ above VWAP</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">VWAP:</span> <b id="h-vwap" style="color:#e2e8f0;">₹778.20</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">OB:</span> <b id="h-ob" style="color:#00f0ff;">774.2 - 777.5</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;" id="h-zs1-lbl">Z/S1:</span> <b id="h-zs1-val" style="color:#fbbf24;">775.80 · 771.90</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;" id="h-r1r2-lbl">R1/R2:</span> <b id="h-r1r2-val" style="color:#00ff87;">788.00 · 796.50</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">R:R:</span> <b id="h-rr" style="color:#00ff87;">1:2.4</b></div><div style="display:flex; justify-content:space-between;"><span style="color:#64748b;">RULE:</span> <b id="h-rule" style="color:#38bdf8;">PICK · BULLISH #2</b></div></div><div class="hover-chart-box" style="height:135px; background:#040711; border-radius:6px; border:1px solid #142036; padding:2px;"><svg id="hover-candlestick-svg" viewBox="0 0 340 135" style="width:100%; height:100%;"></svg></div><div class="hover-slider-track" style="margin-top:6px;"><div class="hover-slider-fill" id="h-slider-fill" style="width:68%;"></div><div class="hover-slider-pin" id="h-slider-pin" style="left:68%;"></div></div><div style="display:flex; justify-content:space-between; font-size:0.56rem; color:var(--text-dim); font-family:var(--font-mono); margin-top:2px;"><span style="color:#fbbf24;">S1: <b id="h-s1-lbl">771.90</b></span><span style="color:#00f0ff;">Zone: <b id="h-z-lbl">775.80</b></span><span style="color:var(--bull-green);">R1: <b id="h-r1-lbl">788.00</b></span><span style="color:var(--bull-green);">R2: <b id="h-r2-lbl">796.50</b></span></div></div>
+      <!-- old-hover-trash-start
         <h3 id="h-sym" class="hover-sym-title">SBIN</h3>
         <span id="h-sector" class="hover-badge bull">NIFTY BANK</span>
         <span id="h-bias" class="hover-badge bull">BULLISH #1</span>
@@ -2867,7 +2867,7 @@
       </div>
     </div>
 
-    <!-- 10-Second Key Metrics Grid -->
+
     <div class="hover-metrics-grid">
       <div class="hover-cell"><span class="lbl">Rank</span><span class="val green" id="h-rank">p99.8 · #1/130</span></div>
       <div class="hover-cell"><span class="lbl">Rule</span><span class="val" id="h-rule">OB RETEST</span></div>
@@ -2881,12 +2881,12 @@
       <div class="hover-cell"><span class="lbl">Conviction</span><span class="val green">HIGH (MSB)</span></div>
     </div>
 
-    <!-- 5-Min Candlestick Mini-Chart SVG -->
+
     <div class="hover-chart-box">
       <svg id="hover-candlestick-svg" viewBox="0 0 340 140" style="width:100%; height:100%;"></svg>
     </div>
 
-    <!-- Position Slider Track -->
+
     <div class="hover-slider-track">
       <div class="hover-slider-fill" id="h-slider-fill" style="width:68%;"></div>
       <div class="hover-slider-pin" id="h-slider-pin" style="left:68%;"></div>
@@ -2895,14 +2895,12 @@
       <span style="color:#fbbf24;">S1: <b id="h-s1-lbl">771.90</b></span>
       <span style="color:#00f0ff;">Zone: <b id="h-z-lbl">775.80</b></span>
       <span style="color:var(--bull-green);">R1: <b id="h-r1-lbl">788.00</b></span>
-      <span style="color:var(--bull-green);">R2: <b id="h-r2-lbl">796.50</b></span>
+      old-hover-trash-end -->
     </div>
   </div>
 
   <!-- Flagship Cyberpunk Order Block Interactive Engine -->
   <script src="orderblock.js"></script>
-</body>
-</html>
     </div>
 
   </main>

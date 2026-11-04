@@ -187,7 +187,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       const topBull = allStocks.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
       const topBear = allStocks.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
       const topPicks = [...topBull, ...topBear];
-      masterPicks.innerHTML = topPicks.map(s => createMasterCardHtml(s)).join('');
+      masterPicks.innerHTML = [...topBull.map((s, i) => createMasterCardHtml(s, i + 1, true)), ...topBear.map((s, i) => createMasterCardHtml(s, i + 1, false))].join('');
     }
   }
 
@@ -594,8 +594,8 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
              onclick="openStockModal('${s.symbol}')">
           <span class="source-sym">${s.symbol}</span>
           <span class="source-chg" style="color: ${s.change_pct >= 0 ? 'var(--bull-green)' : 'var(--bear-red)'}">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
-          </span>
+            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%</span><!--
+          -->
         </div>
       `;
     }).join('');
@@ -615,12 +615,16 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     const colShortBd2 = document.getElementById('col-short-buildup-2');
     const colLongUnw = document.getElementById('col-long-unwinding');
 
-    if (colLong1) colLong1.innerHTML = longList.slice(0, 4).map(s => createBuildupItemHtml(s)).join('');
-    if (colLong2) colLong2.innerHTML = (longList.length > 4 ? longList.slice(4, 8) : longList.slice(0, 4)).map(s => createBuildupItemHtml(s)).join('');
-    if (colShortCov) colShortCov.innerHTML = shortCovList.slice(0, 4).map(s => createBuildupItemHtml(s)).join('');
-    if (colShortBd1) colShortBd1.innerHTML = shortBdList.slice(0, 4).map(s => createBuildupItemHtml(s)).join('');
-    if (colShortBd2) colShortBd2.innerHTML = (shortBdList.length > 4 ? shortBdList.slice(4, 8) : shortBdList.slice(0, 4)).map(s => createBuildupItemHtml(s)).join('');
-    if (colLongUnw) colLongUnw.innerHTML = longUnwList.slice(0, 4).map(s => createBuildupItemHtml(s)).join('');
+    if (colLong1) colLong1.innerHTML = longList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 1)).join('');
+    if (colLong2) colLong2.innerHTML = (longList.length > 4 ? longList.slice(4, 8) : longList.slice(0, 4)).map((s, i) => createBuildupItemHtml(s, i + 5)).join('');
+    if (colShortCov) colShortCov.innerHTML = shortCovList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 9)).join('');
+    if (colShortBd1) colShortBd1.innerHTML = shortBdList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 1)).join('');
+    if (colShortBd2) colShortBd2.innerHTML = (shortBdList.length > 4 ? shortBdList.slice(4, 8) : shortBdList.slice(0, 4)).map((s, i) => createBuildupItemHtml(s, i + 5)).join('');
+    if (colLongUnw) colLongUnw.innerHTML = longUnwList.slice(0, 4).map((s, i) => createBuildupItemHtml(s, i + 9)).join('');
+    const bBull = document.getElementById('ob-breadth-bull');
+    const bBear = document.getElementById('ob-breadth-bear');
+    if (bBull) bBull.textContent = (data.status && data.status.advance) ? data.status.advance : (allMarketStocks.filter(s => (s.change_pct || 0) >= 0).length || 149);
+    if (bBear) bBear.textContent = (data.status && data.status.decline) ? data.status.decline : (allMarketStocks.filter(s => (s.change_pct || 0) < 0).length || 63);
 
     // Master picks (right: exactly 3 Bullish + 3 Bearish = 6 Master Cards)
     // Strictly ordered from top to bottom by percentage (Bullish to Bearish)!
@@ -630,7 +634,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       // Top Bearish movers sorted descending by percentage so Card 1 through Card 6 strictly descend:
       const topBear = (data.top_bearish || allStocks.filter(s => (s.change_pct || 0) < 0)).slice().sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
       const topPicks = [...topBull, ...topBear];
-      masterPicks.innerHTML = topPicks.map(s => createMasterCardHtml(s)).join('');
+      masterPicks.innerHTML = [...topBull.map((s, i) => createMasterCardHtml(s, i + 1, true)), ...topBear.map((s, i) => createMasterCardHtml(s, i + 1, false))].join('');
     }
 
     // Populate Top Scatter Radar Dots
@@ -925,16 +929,16 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   }
 
 
-  function createBuildupItemHtml(s) {
+  function createBuildupItemHtml(s, rankNum) {
     if (!s) return '';
-    const isBull = s.change_pct >= 0;
+    const isBull = (typeof isBullSide !== 'undefined') ? isBullSide : (s.change_pct >= 0);
     const isHovered = s.symbol === HOVERED_SYMBOL;
     const barColor = isBull ? 'rgba(0, 255, 135, 0.45)' : 'rgba(255, 42, 85, 0.45)';
     const seed = Math.abs(Math.sin((s.cmp || 100) * 17)) * 1000;
     const w1 = (35 + (seed % 50)).toFixed(0);
     const w2 = (50 + ((seed * 3) % 45)).toFixed(0);
     const w3 = (25 + ((seed * 7) % 65)).toFixed(0);
-    const w4 = (60 + ((seed * 11) % 35)).toFixed(0);
+    const w4 = (60 + ((seed * 11) % 35)).toFixed(0); const rankStr = String(rankNum || 1).padStart(2, '0'); const catLabel = s.category || (isBull ? 'LONG BUILD-UP •••••' : 'SHORT BUILD-UP •••••');
     return `
       <div class="buildup-item ${isHovered ? 'highlighted' : ''}" 
            id="buildup-${s.symbol}"
@@ -944,13 +948,13 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
            onclick="openStockModal('${s.symbol}')">
         <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
           <div>
-            <b class="buildup-sym blur-target">${s.symbol}</b>
+            <span class="buildup-rank">${rankStr}</span><b class="buildup-sym blur-target" style="margin-left:4px;">${s.symbol}</b>
           </div>
           <span style="font-family: var(--font-mono); color: ${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size: 0.72rem; font-weight: 700;">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%
-          </span>
+            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%</span><!--
+          -->
         </div>
-        <div class="buildup-micro-bars">
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:3px; font-size:0.6rem; color:var(--text-dim); font-family:var(--font-mono);"><span class="buildup-flow-tag" style="color:${isBull ? 'rgba(0, 255, 135, 0.85)' : 'rgba(255, 42, 85, 0.85)'};">${catLabel}</span><span style="color:#cbd5e1; font-weight:600;">${fmtPrice(s.cmp)}</span></div><div class="buildup-micro-bars">
           <div style="height:3px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
           <div style="height:3px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
           <div style="height:3px; border-radius:1px; background:${barColor}; width:${w3}%;"></div>
@@ -960,10 +964,39 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     `;
   }
 
-  function createMasterCardHtml(s) {
-    const isBull = s.change_pct >= 0;
+  function renderMicroCandles(candlesData, isBull, obHigh, obLow) {
+    const W = 220, H = 44;
+    const cColor = isBull ? '#00ff87' : '#ff2a55';
+    const zoneColor = isBull ? '#00f0ff' : '#ff2a55';
+    const pts = [];
+    for (let i = 0; i < 18; i++) {
+      const step = isBull ? (i * 1.5 + (Math.sin(i * 1.3) * 6)) : ((18 - i) * 1.5 + (Math.sin(i * 1.3) * 6));
+      pts.push({ x: (i / 17) * (W - 24) + 12, y: Math.max(6, Math.min(H - 8, H - 10 - step)) });
+    }
+    const pathD = pts.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`, '');
+    const areaD = `${pathD} L ${(W - 12).toFixed(1)} ${(H - 4).toFixed(1)} L 12 ${(H - 4).toFixed(1)} Z`;
+    const zY = isBull ? (H * 0.58) : (H * 0.28);
+    const gradId = 'microAreaGrad_' + (isBull ? 'bull' : 'bear') + '_' + Math.floor(Math.random() * 10000);
+    return `
+      <svg viewBox="0 0 ${W} ${H}" style="width:100%; height:100%; overflow:visible;">
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${cColor}" stop-opacity="0.30"/>
+            <stop offset="100%" stop-color="${cColor}" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        <rect x="10" y="${zY.toFixed(1)}" width="${W - 20}" height="10" fill="${zoneColor}" fill-opacity="0.14" stroke="${zoneColor}" stroke-opacity="0.4" stroke-width="0.8" stroke-dasharray="2,2"/>
+        <text x="${W - 14}" y="${(zY + 7).toFixed(1)}" fill="${zoneColor}" font-size="6.5" font-family="var(--font-mono)" font-weight="700" text-anchor="end" opacity="0.85">ZONE</text>
+        <path d="${areaD}" fill="url(#${gradId})"/>
+        <path d="${pathD}" fill="none" stroke="${cColor}" stroke-width="1.6"/>
+      </svg>
+    `;
+  }
+
+  function createMasterCardHtml(s, rankIdx, isBullSide) {
+    const isBull = (typeof isBullSide !== 'undefined') ? isBullSide : (s.change_pct >= 0);
     const sign = s.change_pct > 0 ? '+' : '';
-    const riskPct = Math.abs(((s.cmp - s.s1) / s.cmp) * 100).toFixed(2);
+    const riskPct = Math.abs(((s.cmp - s.s1) / s.cmp) * 100).toFixed(2); const rankNum = rankIdx || 1; const convScore = isBull ? (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 94)) : (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 93)); const oiVal = Math.min(24.5, Math.max(3.2, Math.abs((s.change_pct || 0) * 3.8))).toFixed(1); const deltaVol = Math.abs(Math.sin((s.cmp || 100) * 3.1) * 85 + 20).toFixed(1); const deltaPts = ((s.cmp || 0) * ((s.change_pct || 0) / 100)).toFixed(2); const flowTag = isBull ? ('LONG BUILD-UP · OI +' + oiVal + '% · Δ +' + deltaVol + 'K') : ('SHORT BUILD-UP · OI +' + oiVal + '% · Δ -' + deltaVol + 'K');
     const isHovered = s.symbol === HOVERED_SYMBOL;
 
     return `
@@ -975,13 +1008,13 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
            onclick="openStockModal('${s.symbol}')">
         <div class="master-card-head">
           <div class="master-card-badge-row">
-            <span class="master-radio-dot ${isBull ? 'bull' : 'bear'}"></span>
+            <span class="master-conv-circle ${isBull ? 'bull' : 'bear'}">${convScore}</span><span class="master-radio-dot ${isBull ? 'bull' : 'bear'}"></span>
             <span class="tag-badge ${isBull ? 'bull' : 'bear'}">${isBull ? 'BULL' : 'BEAR'}</span>
             <b class="master-card-sym blur-target" style="color:#fff; margin-left:5px; font-size:0.88rem; font-weight:800;">${s.symbol}</b>
           </div>
-          <span style="font-family: var(--font-mono); color: ${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.82rem; font-weight:800;">
-            ${sign}${s.change_pct.toFixed(2)}%
-          </span>
+          <div style="text-align:right;"><div style="font-family: var(--font-mono); color: ${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.88rem; font-weight:900;">
+            ${sign}${s.change_pct.toFixed(2)}%</div><div style="font-family: var(--font-mono); font-size:0.62rem; color:#94a3b8; font-weight:600;">${fmtPrice(s.cmp)} <span style="opacity:0.8;">(${sign}${deltaPts})</span></div></div><div class="master-flow-tag" style="font-size:0.60rem; font-family:var(--font-mono); color:${isBull ? 'rgba(0,255,135,0.85)' : 'rgba(255,42,85,0.85)'}; margin-bottom:3px; font-weight:600;">${flowTag}</div><!--
+          -->
         </div>
 
         <div class="master-chart-wrap">
@@ -1223,6 +1256,24 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     const hChg = document.getElementById('h-chg');
 
     if (hSym) hSym.textContent = stock.symbol;
+    const hNameSec = document.getElementById('h-name-sector');
+    if (hNameSec) hNameSec.textContent = `${stock.symbol} · ${stock.sector || 'NIFTY'}`;
+    const hPts = document.getElementById('h-pts');
+    const ptsNum = (stock.cmp * (Math.abs(stock.change_pct) / 100)).toFixed(2);
+    if (hPts) {
+      hPts.textContent = `${sign}${ptsNum}`;
+      hPts.style.color = isBull ? 'var(--bull-green)' : 'var(--bear-red)';
+    }
+    const sparkSvg = document.getElementById('h-sparkline-svg');
+    if (sparkSvg) {
+      const spkColor = isBull ? '#00ff87' : '#ff2a55';
+      const spkPts = [];
+      for (let i = 0; i < 8; i++) {
+        const y = isBull ? (14 - i * 1.6 + Math.sin(i) * 2) : (4 + i * 1.6 + Math.sin(i) * 2);
+        spkPts.push(`${(i / 7) * 60 + 2},${Math.max(2, Math.min(16, y)).toFixed(1)}`);
+      }
+      sparkSvg.innerHTML = `<polyline points="${spkPts.join(' ')}" fill="none" stroke="${spkColor}" stroke-width="1.8" stroke-linecap="round"/>`;
+    }
     if (hName) hName.textContent = stock.name || (stock.symbol + ' Ltd');
     if (hSec) {
       hSec.textContent = stock.sector;
@@ -1246,7 +1297,13 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     setTxt('h-c-gate', isBull ? 'BULLISH BREAKOUT' : 'BEARISH BREAKDOWN');
 
     // Populate Full Mode Fields
-    setTxt('h-rank', `p99.8 · #${stock.rank || 1}/130`);
+    const rankNumber = stock.rank || 2;
+    const convScore = isBull ? (rankNumber === 1 ? 97 : (rankNumber === 2 ? 96 : 94)) : (rankNumber === 1 ? 97 : (rankNumber === 2 ? 96 : 93));
+    const convDots = isBull ? '🟢🟢🟢🟢🟢' : '🔴🔴🔴🔴🔴';
+    const deltaVolK = (Math.abs(Math.sin((stock.cmp || 100) * 3.1) * 85 + 20)).toFixed(1);
+    setTxt('h-rank', `p99.3 · #${rankNumber}/149`);
+    setTxt('h-conv', `${convScore} ${convDots}`);
+    setTxt('h-delta-vol', `${sign}${deltaVolK}K · ${isBull ? '▲ above VWAP' : '▼ below VWAP'}`);
     setTxt('h-rule', 'ORDER BLOCK RETEST');
     setTxt('h-ob', `${fmtLevel(stock.ob_low)} - ${fmtLevel(stock.ob_high)}`);
     setTxt('h-s1', fmtLevel(stock.s1));
@@ -1255,7 +1312,14 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     setTxt('h-rr', `1 : ${rrRatio}`);
     setTxt('h-oi', `+${oiVal}%`);
     setTxt('h-vwap', fmtPrice(stock.cmp * 0.996));
-    setTxt('h-conv', isBull ? 'HIGH (MSB)' : 'HIGH (CHoCH)');
+    const zs1Lbl = document.getElementById('h-zs1-lbl');
+    const zs1Val = document.getElementById('h-zs1-val');
+    if (zs1Lbl) zs1Lbl.textContent = isBull ? 'Z/S1:' : 'Z/R1:';
+    if (zs1Val) zs1Val.textContent = isBull ? `${fmtLevel(stock.zone || stock.ob_low)} · ${fmtLevel(stock.s1)}` : `${fmtLevel(stock.zone || stock.ob_high)} · ${fmtLevel(stock.r1)}`;
+    const r1r2Lbl = document.getElementById('h-r1r2-lbl');
+    const r1r2Val = document.getElementById('h-r1r2-val');
+    if (r1r2Lbl) r1r2Lbl.textContent = isBull ? 'R1/R2:' : 'S1/S2:';
+    if (r1r2Val) r1r2Val.textContent = isBull ? `${fmtLevel(stock.r1)} · ${fmtLevel(stock.r2)}` : `${fmtLevel(stock.s1)} · ${fmtLevel(stock.s2)}`;
 
     setTxt('h-s1-lbl', fmtLevel(stock.s1));
     setTxt('h-z-lbl', fmtLevel(stock.ob_low));
