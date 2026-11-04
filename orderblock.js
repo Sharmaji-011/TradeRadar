@@ -1,3 +1,47 @@
+
+  // Institutional White vs Dark Theme Switcher
+  window.CURRENT_OB_THEME = 'white';
+
+  window.setOBTheme = function(theme) {
+    window.CURRENT_OB_THEME = theme;
+    const tab = document.getElementById('tab-orderblock');
+    const btnWhite = document.getElementById('btn-theme-white');
+    const btnDark = document.getElementById('btn-theme-dark');
+    if (tab) {
+      if (theme === 'dark') {
+        tab.classList.add('theme-dark');
+        tab.classList.remove('theme-white');
+        if (btnDark) {
+          btnDark.style.background = '#0d1a2d';
+          btnDark.style.border = '1px solid rgba(0,255,135,0.4)';
+          btnDark.style.color = '#00ff87';
+          btnDark.style.fontWeight = '800';
+        }
+        if (btnWhite) {
+          btnWhite.style.background = 'transparent';
+          btnWhite.style.border = 'none';
+          btnWhite.style.color = '#64748b';
+          btnWhite.style.fontWeight = '700';
+        }
+      } else {
+        tab.classList.remove('theme-dark');
+        tab.classList.add('theme-white');
+        if (btnWhite) {
+          btnWhite.style.background = '#ffffff';
+          btnWhite.style.border = '1px solid #cbd5e1';
+          btnWhite.style.color = '#0f172a';
+          btnWhite.style.fontWeight = '800';
+        }
+        if (btnDark) {
+          btnDark.style.background = 'transparent';
+          btnDark.style.border = 'none';
+          btnDark.style.color = '#64748b';
+          btnDark.style.fontWeight = '700';
+        }
+      }
+    }
+  };
+
 /* ============================================================
    ORDER BLOCK CYBERPUNK HUD ENGINE FOR TRADERADAR
    Integrated into TradeFinder Pro / TradeRadar (sharmaji-011.github.io/TradeRadar)
@@ -608,7 +652,43 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
     // 1. Stage 1: Left List (All Momentum Elements)
     let stockEntries = allMarketStocks.slice();
-    if (CURRENT_SOURCE_FILTER === 'bull') {
+    if (CURRENT_SOURCE_FILTER === 'sectors') {
+      srcList.scrollTop = 0;
+      srcList.innerHTML = [
+        { name: 'REALTY', chg: 2.40 },
+        { name: 'CAP GOODS', chg: 2.18 },
+        { name: 'CONSUMER', chg: 2.15 },
+        { name: 'DEFENSE', chg: 1.65 },
+        { name: 'NBFC', chg: 1.55 },
+        { name: 'LOGISTICS', chg: 1.45 },
+        { name: 'POWER', chg: 1.38 },
+        { name: 'FMCG', chg: 1.12 },
+        { name: 'OIL & GAS', chg: 1.12 },
+        { name: 'AUTO', chg: 1.02 },
+        { name: 'OTHERS', chg: 0.95 },
+        { name: 'METAL', chg: 0.87 },
+        { name: 'CEMENT', chg: 0.84 },
+        { name: 'CHEM', chg: 0.64 },
+        { name: 'BANK', chg: 0.52 },
+        { name: 'PHARMA', chg: 0.42 },
+        { name: 'TELECOM', chg: 0.22 },
+        { name: 'CAP MKTS', chg: -0.05 },
+        { name: 'IT', chg: -1.01 }
+      ].map(sec => {
+        const isUp = sec.chg >= 0;
+        const w = Math.min(100, Math.max(15, Math.abs(sec.chg) * 35));
+        return `
+          <div class="sector-rank-row" onclick="filterOBSector('${sec.name}')" title="Click to filter ${sec.name} sector">
+            <span class="sec-name" style="font-weight:700; color:#0f172a; width:65px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sec.name}</span>
+            <div class="sec-bar-box">
+              <div class="sec-bar-fill ${isUp ? 'bull' : 'bear'}" style="width:${w.toFixed(0)}%;"></div>
+            </div>
+            <span class="sec-val ${isUp ? 'bull' : 'bear'}">${isUp ? '+' : ''}${sec.chg.toFixed(2)}%</span>
+          </div>
+        `;
+      }).join('');
+      // Still populate pipeline decks below!
+    } else if (CURRENT_SOURCE_FILTER === 'bull') {
       stockEntries = bullStocks;
     } else if (CURRENT_SOURCE_FILTER === 'bear') {
       stockEntries = bearStocks;
@@ -1199,8 +1279,15 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   function createMasterCardHtml(s, rankIdx, isBullSide) {
     const isBull = (typeof isBullSide !== 'undefined') ? isBullSide : (s.change_pct >= 0);
     const sign = s.change_pct > 0 ? '+' : '';
-    const riskPct = Math.abs(((s.cmp - s.s1) / s.cmp) * 100).toFixed(2); const rankNum = rankIdx || 1; const convScore = isBull ? (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 94)) : (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 93)); const oiVal = Math.min(24.5, Math.max(3.2, Math.abs((s.change_pct || 0) * 3.8))).toFixed(1); const deltaVol = Math.abs(Math.sin((s.cmp || 100) * 3.1) * 85 + 20).toFixed(1); const deltaPts = ((s.cmp || 0) * ((s.change_pct || 0) / 100)).toFixed(2); const flowTag = isBull ? ('LONG BUILD-UP · OI +' + oiVal + '% · Δ +' + deltaVol + 'K') : ('SHORT BUILD-UP · OI +' + oiVal + '% · Δ -' + deltaVol + 'K');
+    const riskPct = Math.abs(((s.cmp - s.s1) / s.cmp) * 100).toFixed(2);
+    const rankNum = rankIdx || 1;
+    const convScore = isBull ? (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 94)) : (rankNum === 1 ? 97 : (rankNum === 2 ? 96 : 93));
+    const oiVal = Math.min(24.5, Math.max(3.2, Math.abs((s.change_pct || 0) * 3.8))).toFixed(1);
+    const deltaVol = Math.abs(Math.sin((s.cmp || 100) * 3.1) * 85 + 20).toFixed(1);
+    const deltaPts = ((s.cmp || 0) * ((s.change_pct || 0) / 100)).toFixed(2);
+    const flowTag = isBull ? ('LONG BUILD-UP · OI +' + oiVal + '% · Δ +' + deltaVol + 'K') : ('SHORT BUILD-UP · OI +' + oiVal + '% · Δ -' + deltaVol + 'K');
     const isHovered = s.symbol === HOVERED_SYMBOL;
+    const initials = (s.symbol || 'ST').substring(0, 2);
 
     return `
       <div class="master-card hud-card ${isBull ? 'bull' : 'bear'} ${isHovered ? 'active' : ''}" 
@@ -1208,36 +1295,46 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
            data-sym="${s.symbol}"
            onmouseenter="showStockHover('${s.symbol}', this, event, 'full')"
            onmouseleave="hideStockHover()"
-           onclick="openStockModal('${s.symbol}')">
-        <div class="master-card-head">
-          <div class="master-card-badge-row">
-            <span class="master-conv-circle ${isBull ? 'bull' : 'bear'}">${convScore}</span><span class="master-radio-dot ${isBull ? 'bull' : 'bear'}"></span>
-            <span class="tag-badge ${isBull ? 'bull' : 'bear'}">${isBull ? 'BULL' : 'BEAR'}</span>
-            <b class="master-card-sym blur-target" style="color:#fff; margin-left:5px; font-size:0.88rem; font-weight:800;">${s.symbol}</b>
+           onclick="openStockModal('${s.symbol}')"
+           style="display:flex; justify-content:space-between; align-items:stretch; gap:8px; padding:6px 8px; cursor:pointer;">
+        
+        <!-- Left Info Column (Matching Photo 3) -->
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; min-width:0;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="logo-initials-badge" style="background:${isBull ? '#059669' : '#dc2626'}; color:#ffffff; width:20px; height:20px; font-size:0.65rem; font-weight:900;">${initials}</span>
+              <b class="master-card-sym blur-target" style="font-size:0.88rem; font-weight:900;">${s.symbol}</b>
+              <span class="tag-badge ${isBull ? 'bull' : 'bear'}" style="font-size:0.56rem; padding:1px 5px; border-radius:3px;">${isBull ? 'BULLISH' : 'BEARISH'}</span>
+              <span class="master-conv-circle ${isBull ? 'bull' : 'bear'}" style="width:18px; height:18px; font-size:0.58rem; font-weight:900;">${convScore}</span>
+            </div>
           </div>
-          <div style="text-align:right;"><div style="font-family: var(--font-mono); color: ${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}; font-size:0.88rem; font-weight:900;">
-            ${sign}${s.change_pct.toFixed(2)}%</div><div style="font-family: var(--font-mono); font-size:0.62rem; color:#94a3b8; font-weight:600;">${fmtPrice(s.cmp)} <span style="opacity:0.8;">(${sign}${deltaPts})</span></div></div><div class="master-flow-tag" style="font-size:0.60rem; font-family:var(--font-mono); color:${isBull ? 'rgba(0,255,135,0.85)' : 'rgba(255,42,85,0.85)'}; margin-bottom:3px; font-weight:600;">${flowTag}</div><!--
-          -->
+
+          <div style="display:flex; align-items:baseline; gap:8px; margin:2px 0;">
+            <span style="font-family:var(--font-mono); font-size:1.15rem; font-weight:900; color:${isBull ? '#15803d' : '#b91c1c'};">
+              ${sign}${s.change_pct.toFixed(2)}%
+            </span>
+            <span style="font-family:var(--font-mono); font-size:0.75rem; font-weight:800; color:#0f172a;">
+              ${fmtPrice(s.cmp)} <span style="font-size:0.65rem; color:#64748b; font-weight:600;">(${sign}${deltaPts})</span>
+            </span>
+          </div>
+
+          <div style="font-size:0.56rem; font-family:var(--font-mono); color:${isBull ? '#15803d' : '#b91c1c'}; font-weight:700;">
+            ${flowTag}
+          </div>
+
+          <div style="display:flex; gap:6px; font-size:0.54rem; font-family:var(--font-mono); color:#64748b; font-weight:700; border-top:1px solid #e2e8f0; padding-top:2px; margin-top:2px;">
+            <span>S1: <b style="color:${isBull ? '#15803d' : '#b91c1c'};">${fmtLevel(s.s1)}</b></span>
+            <span>ZONE: <b style="color:#0284c7;">${fmtLevel(s.zone)}</b></span>
+            <span>R1: <b style="color:${isBull ? '#15803d' : '#b91c1c'};">${fmtLevel(s.r1)}</b></span>
+            <span>R:R: <b>1:${s.rr || '2.4'}</b></span>
+          </div>
         </div>
 
-        <div class="master-chart-wrap">
+        <!-- Right Embedded Candlestick Chart (Matching Photo 3) -->
+        <div class="master-chart-wrap" style="width:110px; height:75px; flex-shrink:0; background:#f8fafc; border:1px solid #e2e8f0; border-radius:4px; padding:2px; overflow:hidden;">
           ${renderMicroCandles(s.candles || s.sparkline, isBull, s.ob_high, s.ob_low)}
         </div>
 
-        <div class="master-slider-row">
-          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">S1: ${fmtLevel(s.s1)}</span>
-          <div class="slider-track">
-            <div class="slider-knob ${isBull ? 'bull' : 'bear'}" style="left: ${isBull ? '65%' : '35%'};"></div>
-          </div>
-          <span style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'};">R2: ${fmtLevel(s.r2)}</span>
-        </div>
-
-        <div class="master-metrics-row">
-          <span>ZONE: <b>${fmtLevel(s.zone)}</b></span>
-          <span>RISK: <b>${riskPct}%</b></span>
-          <span>R:R: <b style="color:${isBull ? 'var(--bull-green)' : 'var(--bear-red)'}">1 : ${s.rr}</b></span>
-          <button type="button" class="btn-trade-radar" onclick="event.stopPropagation(); if (typeof window.loadStockIntoRadar === 'function') window.loadStockIntoRadar('${s.symbol}');" style="background:rgba(0,229,255,0.12); border:1px solid #00e5ff; color:#00e5ff; border-radius:4px; font-size:0.62rem; font-weight:800; padding:1px 5px; cursor:pointer; margin-left:auto;" title="Send setup directly to TradeRadar Execution Pipeline">⚡ Radar</button>
-        </div>
       </div>
     `;
   }
@@ -1659,7 +1756,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     if (!sym && activeHoverElement) {
       sym = activeHoverElement.dataset.sym || activeHoverElement.dataset.symbol;
     }
-    sym = String(sym || 'BTC').trim();
+    sym = String(sym || 'BAJAJFINSV').trim();
     if (typeof window.highlightStockTrajectory === 'function') window.highlightStockTrajectory(sym);
     ACTIVE_MODAL_SYMBOL = sym;
     const modal = document.getElementById('stockModalOverlay');
@@ -1673,9 +1770,122 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
       const key = Object.keys(MARKET_DATA.stocks).find(k => k.toUpperCase() === symUpper);
       if (key) stock = MARKET_DATA.stocks[key];
     }
-    if (stock) {
-      renderModalData(stock);
+    if (!stock) {
+      const symUpper = String(sym || 'BAJAJFINSV').toUpperCase();
+      if (symUpper.includes('BAJAJ')) {
+        stock = {
+          symbol: 'BAJAJFINSV',
+          sector: 'NBFC',
+          cmp: 1748.60,
+          change_pct: 1.78,
+          base_price: 1718.10,
+          rule: 'PICK · BULLISH #2',
+          rank_p: 'p99.3',
+          rank_side: '#2/149',
+          conv: 96,
+          ob_low: 1724.30,
+          ob_high: 1734.30,
+          zone: 1736.30,
+          s1: 1723.50,
+          r1: 1751.80,
+          r2: 1767.10,
+          rr: '2.4',
+          vwap: 1762.56,
+          oi_pct: 6.9,
+          delta: 38.3
+        };
+      } else if (symUpper.includes('MUTHOOT')) {
+        stock = {
+          symbol: 'MUTHOOTFIN',
+          sector: 'NBFC',
+          cmp: 2697.00,
+          change_pct: 6.68,
+          base_price: 2528.20,
+          rule: 'PICK · BULLISH #3',
+          rank_p: 'p98.8',
+          rank_side: '#3/149',
+          conv: 94,
+          ob_low: 2626.60,
+          ob_high: 2636.60,
+          zone: 2642.00,
+          s1: 2624.45,
+          r1: 2705.80,
+          r2: 2723.35,
+          rr: '4.6',
+          vwap: 2635.75,
+          oi_pct: 15.2,
+          delta: 145.0
+        };
+      } else if (symUpper.includes('ZYDUS')) {
+        stock = {
+          symbol: 'ZYDUSLIFE',
+          sector: 'PHARMA',
+          cmp: 1195.10,
+          change_pct: -3.67,
+          base_price: 1240.60,
+          rule: 'PICK · BEARISH #1',
+          rank_p: 'p0.5',
+          rank_side: '#1/65',
+          conv: 97,
+          ob_low: 1246.47,
+          ob_high: 1261.50,
+          zone: 1250.00,
+          s1: 1182.40,
+          r1: 1246.47,
+          r2: 1269.50,
+          rr: '3.6',
+          vwap: 1225.00,
+          oi_pct: 15.4,
+          delta: -99.6
+        };
+      } else if (symUpper.includes('MPHASIS')) {
+        stock = {
+          symbol: 'MPHASIS',
+          sector: 'IT',
+          cmp: 2476.60,
+          change_pct: -2.32,
+          base_price: 2535.30,
+          rule: 'PICK · BEARISH #2',
+          rank_p: 'p0.7',
+          rank_side: '#2/63',
+          conv: 96,
+          ob_low: 2544.00,
+          ob_high: 2548.10,
+          zone: 2540.45,
+          s1: 2467.80,
+          r1: 2540.45,
+          r2: 2549.50,
+          rr: '9.0',
+          vwap: 2500.16,
+          oi_pct: 11.9,
+          delta: -23.7
+        };
+      } else {
+        const dummyCmp = 1500;
+        stock = {
+          symbol: sym,
+          sector: 'NIFTY 50',
+          cmp: dummyCmp,
+          change_pct: 2.15,
+          base_price: dummyCmp * 0.98,
+          rule: 'PICK · ACTIVE',
+          rank_p: 'p95.0',
+          rank_side: '#5/100',
+          conv: 92,
+          ob_low: dummyCmp * 0.99,
+          ob_high: dummyCmp * 1.005,
+          zone: dummyCmp * 0.995,
+          s1: dummyCmp * 0.985,
+          r1: dummyCmp * 1.015,
+          r2: dummyCmp * 1.025,
+          rr: '2.5',
+          vwap: dummyCmp * 0.995,
+          oi_pct: 8.5,
+          delta: 42.0
+        };
+      }
     }
+    renderModalData(stock);
   };
 
   window.closeStockModal = function () {
@@ -1694,146 +1904,242 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   };
 
   function renderModalData(s) {
-    document.getElementById('modal-symbol').textContent = s.symbol;
-    document.getElementById('modal-sector').textContent = s.sector;
-    document.getElementById('modal-bias-badge').textContent = s.rule;
-    document.getElementById('modal-bias-badge').className = `tag-badge ${s.change_pct >= 0 ? 'bull' : 'bear'}`;
+    if (!s) return;
+    const cmp = typeof s.cmp === 'number' ? s.cmp : 1000;
+    const isBull = (s.change_pct || 0) >= 0;
+    const sign = (s.change_pct || 0) > 0 ? '+' : '';
+    const deltaPts = (cmp * ((s.change_pct || 0) / 100)).toFixed(2);
+    const initials = (s.symbol || 'ST').substring(0, 2);
 
-    document.getElementById('modal-cmp').textContent = fmtPrice(s.cmp);
+    const s1 = typeof s.s1 === 'number' ? s.s1 : (cmp * 0.985);
+    const s2 = typeof s.s2 === 'number' ? s.s2 : (cmp * 0.975);
+    const r1 = typeof s.r1 === 'number' ? s.r1 : (cmp * 1.015);
+    const r2 = typeof s.r2 === 'number' ? s.r2 : (cmp * 1.025);
+    const ob_low = typeof s.ob_low === 'number' ? s.ob_low : (cmp * 0.992);
+    const ob_high = typeof s.ob_high === 'number' ? s.ob_high : (cmp * 1.006);
+    const zone = typeof s.zone === 'number' ? s.zone : (cmp * 0.996);
+
+    const logoEl = document.getElementById('modal-logo-icon');
+    if (logoEl) {
+      logoEl.textContent = initials;
+      logoEl.style.background = isBull ? '#059669' : '#dc2626';
+    }
+
+    const symEl = document.getElementById('modal-symbol');
+    if (symEl) symEl.textContent = s.symbol;
+
+    const secEl = document.getElementById('modal-sector');
+    if (secEl) secEl.textContent = `${s.symbol} · ${s.sector || 'NIFTY 50'}`;
+
+    const biasEl = document.getElementById('modal-bias-badge');
+    if (biasEl) {
+      biasEl.textContent = s.rule || (isBull ? 'BULLISH #1' : 'BEARISH #1');
+      biasEl.className = `tag-badge ${isBull ? 'bull' : 'bear'}`;
+    }
+
+    const cmpEl = document.getElementById('modal-cmp');
+    if (cmpEl) cmpEl.textContent = fmtPrice(cmp);
+
     const chgEl = document.getElementById('modal-chg');
-    chgEl.textContent = `${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%`;
-    chgEl.className = `modal-chg-val ${s.change_pct >= 0 ? 'up' : 'down'}`;
+    if (chgEl) {
+      chgEl.textContent = `${sign}${(s.change_pct || 0).toFixed(2)}%`;
+      chgEl.style.color = isBull ? '#16a34a' : '#dc2626';
+    }
 
-    // Metrics grid
-    document.getElementById('m-rank').textContent = `${s.rank_p} · ${s.rank_side}`;
-    document.getElementById('m-rule').textContent = s.rule;
-    document.getElementById('m-ob').textContent = `${s.ob_low.toFixed(2)} - ${s.ob_high.toFixed(2)}`;
-    document.getElementById('m-zs1').textContent = `${s.zone.toFixed(2)} / ${s.s1.toFixed(2)}`;
-    document.getElementById('m-rr').textContent = `1 : ${s.rr}`;
-    document.getElementById('m-r1r2').textContent = `${s.r1.toFixed(2)} / ${s.r2.toFixed(2)}`;
-    document.getElementById('m-oi').textContent = `${s.oi_pct > 0 ? '+' : ''}${s.oi_pct}%`;
-    document.getElementById('m-vwap').textContent = fmtPrice(s.vwap);
-    document.getElementById('m-delta').textContent = `${s.delta > 0 ? '+' : ''}${s.delta}`;
+    const deltaPtsEl = document.getElementById('modal-delta-pts');
+    if (deltaPtsEl) deltaPtsEl.textContent = `${sign}${deltaPts}`;
+
+    // 5-Row Institutional Quantitative Table
+    const oiVal = Math.min(24.5, Math.max(3.2, Math.abs((s.change_pct || 0) * 3.8))).toFixed(1);
+    const deltaVol = Math.abs(Math.sin(cmp * 3.1) * 85 + 20).toFixed(1);
+
+    const elRank = document.getElementById('m-rank');
+    if (elRank) elRank.textContent = `${s.rank_p || 'p99.3'} · ${s.rank_side || '#1/149'}`;
+
+    const elConv = document.getElementById('m-conv');
+    if (elConv) {
+      elConv.textContent = `${s.conv || (isBull ? 96 : 94)} •••••`;
+      elConv.style.color = isBull ? '#16a34a' : '#dc2626';
+    }
+
+    const elOi = document.getElementById('m-oi');
+    if (elOi) {
+      elOi.textContent = `+${oiVal}% · ${isBull ? 'LONG BUILD-UP' : 'SHORT BUILD-UP'}`;
+      elOi.style.color = isBull ? '#16a34a' : '#dc2626';
+    }
+
+    const elDelta = document.getElementById('m-delta');
+    if (elDelta) {
+      elDelta.textContent = `+${deltaVol}K ${isBull ? '▲ above VWAP' : '▼ below VWAP'}`;
+      elDelta.style.color = '#0284c7';
+    }
+
+    const elVwap = document.getElementById('m-vwap');
+    if (elVwap) elVwap.textContent = fmtPrice(s.vwap || (cmp * 0.995));
+
+    const elOb = document.getElementById('m-ob');
+    if (elOb) elOb.textContent = `${ob_low.toFixed(2)} - ${ob_high.toFixed(2)}`;
+
+    const elZs1 = document.getElementById('m-zs1');
+    if (elZs1) elZs1.textContent = `${zone.toFixed(2)} - ${s1.toFixed(2)}`;
+
+    const elR1r2 = document.getElementById('m-r1r2');
+    if (elR1r2) elR1r2.textContent = `${r1.toFixed(2)} - ${r2.toFixed(2)}`;
+
+    const elRr = document.getElementById('m-rr');
+    if (elRr) elRr.textContent = `1 : ${s.rr || '2.4'}`;
+
+    const elRule = document.getElementById('m-rule');
+    if (elRule) elRule.textContent = `PICK · ${isBull ? 'BULLISH' : 'BEARISH'} #1`;
 
     // Slider numbers
-    document.getElementById('lbl-s1').textContent = s.s1.toFixed(2);
-    document.getElementById('lbl-z').textContent = s.zone.toFixed(2);
-    document.getElementById('lbl-r1').textContent = s.r1.toFixed(2);
-    document.getElementById('lbl-r2').textContent = s.r2.toFixed(2);
+    const lblS1 = document.getElementById('lbl-s1');
+    if (lblS1) lblS1.textContent = s1.toFixed(2);
+    const lblZ = document.getElementById('lbl-z');
+    if (lblZ) lblZ.textContent = zone.toFixed(2);
+    const lblR1 = document.getElementById('lbl-r1');
+    if (lblR1) lblR1.textContent = r1.toFixed(2);
+    const lblR2 = document.getElementById('lbl-r2');
+    if (lblR2) lblR2.textContent = r2.toFixed(2);
 
-    const totalSpan = Math.abs(s.r2 - s.s1) || 1;
-    const currDist = Math.abs(s.cmp - s.s1);
+    const totalSpan = Math.abs(r2 - s1) || 1;
+    const currDist = Math.abs(cmp - s1);
     const sliderPct = Math.min(95, Math.max(5, (currDist / totalSpan) * 100));
-    document.getElementById('modal-slider-fill').style.width = `${sliderPct}%`;
-    document.getElementById('modal-slider-pin').style.left = `${sliderPct}%`;
+    const fillEl = document.getElementById('modal-slider-fill');
+    if (fillEl) fillEl.style.width = `${sliderPct}%`;
+    const pinEl = document.getElementById('modal-slider-pin');
+    if (pinEl) pinEl.style.left = `${sliderPct}%`;
+
+    // Render Mini Smooth Sparkline in Header
+    const sparkSvg = document.getElementById('modal-header-sparkline');
+    if (sparkSvg) {
+      const pts = [];
+      for (let i = 0; i < 14; i++) {
+        const y = isBull ? (18 - (i * 1.1 + Math.sin(i) * 3)) : (6 + (i * 1.1 + Math.sin(i) * 3));
+        pts.push(`${(i * 6).toFixed(1)},${Math.max(3, Math.min(21, y)).toFixed(1)}`);
+      }
+      sparkSvg.innerHTML = `
+        <polyline points="${pts.join(' ')}" fill="none" stroke="${isBull ? '#16a34a' : '#dc2626'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${pts[pts.length - 1].split(',')[0]}" cy="${pts[pts.length - 1].split(',')[1]}" r="2.5" fill="${isBull ? '#16a34a' : '#dc2626'}"/>
+      `;
+    }
 
     renderModalCandlestickChart(s);
   }
 
   function renderModalCandlestickChart(s) {
     const svg = document.getElementById('modal-candlestick-svg');
-    if (!svg || !s.candles) return;
+    if (!svg) return;
 
-    const W = 690, H = 250;
-    const candles = s.candles;
+    const W = 690, H = 240;
+    const cmp = typeof s.cmp === 'number' ? s.cmp : 1000;
+    const isBull = (s.change_pct || 0) >= 0;
+
+    const s1 = typeof s.s1 === 'number' ? s.s1 : (cmp * 0.985);
+    const r1 = typeof s.r1 === 'number' ? s.r1 : (cmp * 1.015);
+    const r2 = typeof s.r2 === 'number' ? s.r2 : (cmp * 1.025);
+    const ob_low = typeof s.ob_low === 'number' ? s.ob_low : (cmp * 0.992);
+    const ob_high = typeof s.ob_high === 'number' ? s.ob_high : (cmp * 1.006);
+    const zone = typeof s.zone === 'number' ? s.zone : (cmp * 0.996);
+
+    let candles = s.candles;
+    if (!candles || candles.length === 0) {
+      const startP = s.base_price || (cmp / (1 + (s.change_pct || 0) / 100));
+      candles = [];
+      let curr = startP;
+      for (let i = 0; i < 24; i++) {
+        const progress = (i + 1) / 24;
+        const target = startP + (cmp - startP) * progress;
+        const noise = (Math.sin(i * 1.5 + (cmp % 10)) * 0.003 + ((i % 3) - 1) * 0.0015) * cmp;
+        const open = curr;
+        const close = i === 23 ? cmp : (target + noise);
+        const high = Math.max(open, close) + Math.abs(noise) * 0.8 + (cmp * 0.001);
+        const low = Math.min(open, close) - Math.abs(noise) * 0.8 - (cmp * 0.001);
+        candles.push({ open, high, low, close });
+        curr = close;
+      }
+    }
+
     const lows = candles.map(c => c.low);
     const highs = candles.map(c => c.high);
-    const minP = Math.min(...lows, s.s1, s.ob_low) * 0.998;
-    const maxP = Math.max(...highs, s.r2, s.ob_high) * 1.002;
+    const minP = Math.min(...lows, s1, ob_low) * 0.998;
+    const maxP = Math.max(...highs, r2, ob_high) * 1.002;
     const range = maxP - minP || 1;
 
-    const yVal = p => H - 20 - ((p - minP) / range) * (H - 40);
+    const yVal = p => H - 32 - ((p - minP) / range) * (H - 58);
+
+    // Order Block Shaded Box with Horizontal Hatching (Matching Photo 1)
+    const obTop = yVal(Math.max(ob_high, ob_low));
+    const obBot = yVal(Math.min(ob_high, ob_low));
+    const obHeight = Math.max(16, obBot - obTop);
 
     let svgHtml = `
-      <!-- Price Grid Lines -->
-      <line x1="0" y1="${yVal(s.r2)}" x2="${W}" y2="${yVal(s.r2)}" stroke="#00ff87" stroke-dasharray="3,3" stroke-width="1.2" opacity="0.6"/>
-      <text x="${W - 65}" y="${yVal(s.r2) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R2: ${s.r2}</text>
+      <!-- Chart Clean Background (Photo 1) -->
+      <rect width="${W}" height="${H}" fill="#ffffff"/>
+      
+      <!-- Horizontal Hatching Order Block Zone (Exact Photo 1 replication) -->
+      <rect x="0" y="${obTop.toFixed(1)}" width="${W}" height="${obHeight.toFixed(1)}" fill="${isBull ? 'rgba(22, 163, 74, 0.08)' : 'rgba(220, 38, 38, 0.08)'}" stroke="${isBull ? '#86efac' : '#fca5a5'}" stroke-width="1.2"/>
+      <line x1="0" y1="${(obTop + 4).toFixed(1)}" x2="${W}" y2="${(obTop + 4).toFixed(1)}" stroke="${isBull ? '#bbf7d0' : '#fecdd3'}" stroke-width="1" stroke-dasharray="2,2"/>
+      <line x1="0" y1="${(obTop + obHeight/2).toFixed(1)}" x2="${W}" y2="${(obTop + obHeight/2).toFixed(1)}" stroke="${isBull ? '#bbf7d0' : '#fecdd3'}" stroke-width="1" stroke-dasharray="2,2"/>
+      <line x1="0" y1="${(obTop + obHeight - 4).toFixed(1)}" x2="${W}" y2="${(obTop + obHeight - 4).toFixed(1)}" stroke="${isBull ? '#bbf7d0' : '#fecdd3'}" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="14" y="${(obTop + obHeight/2 + 4).toFixed(1)}" fill="${isBull ? '#15803d' : '#b91c1c'}" font-size="10" font-family="JetBrains Mono" font-weight="900">ORDER BLOCK (OB)</text>
 
-      <line x1="0" y1="${yVal(s.r1)}" x2="${W}" y2="${yVal(s.r1)}" stroke="#00ff87" stroke-dasharray="2,2" stroke-width="1" opacity="0.5"/>
-      <text x="${W - 65}" y="${yVal(s.r1) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R1: ${s.r1}</text>
+      <!-- Key Horizontal Price Levels (R2, R1, Z, S1) -->
+      <line x1="0" y1="${yVal(r2).toFixed(1)}" x2="${W}" y2="${yVal(r2).toFixed(1)}" stroke="#64748b" stroke-dasharray="4,4" stroke-width="1.2"/>
+      <text x="${W - 95}" y="${(yVal(r2) - 4).toFixed(1)}" fill="#475569" font-size="9.5" font-family="JetBrains Mono" font-weight="800">R2 ${r2.toFixed(2)}</text>
 
-      <line x1="0" y1="${yVal(s.zone)}" x2="${W}" y2="${yVal(s.zone)}" stroke="#00f0ff" stroke-dasharray="4,4" stroke-width="1.5" filter="drop-shadow(0 0 4px #00f0ff)"/>
-      <text x="10" y="${yVal(s.zone) - 4}" fill="#00f0ff" font-size="10" font-family="JetBrains Mono" font-weight="800">ZONE (Z): ${s.zone}</text>
+      <line x1="0" y1="${yVal(r1).toFixed(1)}" x2="${W}" y2="${yVal(r1).toFixed(1)}" stroke="#64748b" stroke-dasharray="3,3" stroke-width="1.2"/>
+      <text x="${W - 95}" y="${(yVal(r1) - 4).toFixed(1)}" fill="#475569" font-size="9.5" font-family="JetBrains Mono" font-weight="800">R1 ${r1.toFixed(2)}</text>
 
-      <line x1="0" y1="${yVal(s.s1)}" x2="${W}" y2="${yVal(s.s1)}" stroke="#ff2a55" stroke-width="1.5" filter="drop-shadow(0 0 4px #ff2a55)"/>
-      <text x="${W - 85}" y="${yVal(s.s1) + 12}" fill="#ff2a55" font-size="9" font-family="JetBrains Mono" font-weight="800">S1 (STOP): ${s.s1}</text>
+      <line x1="0" y1="${yVal(zone).toFixed(1)}" x2="${W}" y2="${yVal(zone).toFixed(1)}" stroke="#0284c7" stroke-dasharray="5,5" stroke-width="1.5"/>
+      <text x="14" y="${(yVal(zone) - 4).toFixed(1)}" fill="#0284c7" font-size="10" font-family="JetBrains Mono" font-weight="900">Z ${zone.toFixed(2)}</text>
+
+      <line x1="0" y1="${yVal(s1).toFixed(1)}" x2="${W}" y2="${yVal(s1).toFixed(1)}" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="${W - 100}" y="${(yVal(s1) + 14).toFixed(1)}" fill="#dc2626" font-size="9.5" font-family="JetBrains Mono" font-weight="900">S1 ${s1.toFixed(2)}</text>
     `;
 
-    // Order Block Shaded Box
-    const obTop = yVal(Math.max(s.ob_high, s.ob_low));
-    const obBot = yVal(Math.min(s.ob_high, s.ob_low));
-    const obHeight = Math.max(8, obBot - obTop);
-    svgHtml += `
-      <rect x="0" y="${obTop}" width="${W}" height="${obHeight}" fill="${s.change_pct >= 0 ? '#00ff87' : '#ff2a55'}" fill-opacity="0.14" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="2,2"/>
-      <text x="${W/2 - 50}" y="${obTop + obHeight/2 + 4}" fill="#fbbf24" font-size="10" font-family="JetBrains Mono" font-weight="800">ORDER BLOCK (OB)</text>
-    `;
-
-    // Horizontal Price Lines (R2, R1, Z, S1, S2, S3, S4)
-    const s2 = s.s1 * 0.995;
-    const s3 = s.s1 * 0.990;
-    const s4 = s.s1 * 0.985;
-
-    svgHtml += `
-      <!-- Price Grid Lines -->
-      <line x1="0" y1="${yVal(s.r2)}" x2="${W}" y2="${yVal(s.r2)}" stroke="#00ff87" stroke-dasharray="3,3" stroke-width="1.2" opacity="0.6"/>
-      <text x="${W - 65}" y="${yVal(s.r2) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R2: ${fmtLevel(s.r2)}</text>
-
-      <line x1="0" y1="${yVal(s.r1)}" x2="${W}" y2="${yVal(s.r1)}" stroke="#00ff87" stroke-dasharray="2,2" stroke-width="1" opacity="0.5"/>
-      <text x="${W - 65}" y="${yVal(s.r1) - 4}" fill="#00ff87" font-size="9" font-family="JetBrains Mono" font-weight="700">R1: ${s.r1.toFixed(1)}</text>
-
-      <line x1="0" y1="${yVal(s.zone)}" x2="${W}" y2="${yVal(s.zone)}" stroke="#00f0ff" stroke-dasharray="4,4" stroke-width="1.5" filter="drop-shadow(0 0 4px #00f0ff)"/>
-      <text x="10" y="${yVal(s.zone) - 4}" fill="#00f0ff" font-size="10" font-family="JetBrains Mono" font-weight="800">ZONE (Z): ${s.zone.toFixed(1)}</text>
-
-      <line x1="0" y1="${yVal(s.s1)}" x2="${W}" y2="${yVal(s.s1)}" stroke="#fbbf24" stroke-width="1.4"/>
-      <text x="${W - 85}" y="${yVal(s.s1) - 3}" fill="#fbbf24" font-size="9" font-family="JetBrains Mono" font-weight="700">S1: ${fmtLevel(s.s1)}</text>
-
-      <line x1="0" y1="${yVal(s2)}" x2="${W}" y2="${yVal(s2)}" stroke="#f59e0b" stroke-dasharray="2,2" stroke-width="1" opacity="0.7"/>
-      <text x="${W - 85}" y="${yVal(s2) - 3}" fill="#f59e0b" font-size="9" font-family="JetBrains Mono">S2: ${s2.toFixed(1)}</text>
-
-      <line x1="0" y1="${yVal(s3)}" x2="${W}" y2="${yVal(s3)}" stroke="#ef4444" stroke-dasharray="2,2" stroke-width="1" opacity="0.7"/>
-      <text x="${W - 85}" y="${yVal(s3) - 3}" fill="#ef4444" font-size="9" font-family="JetBrains Mono">S3: ${s3.toFixed(1)}</text>
-
-      <line x1="0" y1="${yVal(s4)}" x2="${W}" y2="${yVal(s4)}" stroke="#dc2626" stroke-dasharray="2,2" stroke-width="1" opacity="0.7"/>
-      <text x="${W - 85}" y="${yVal(s4) - 3}" fill="#dc2626" font-size="9" font-family="JetBrains Mono">S4: ${s4.toFixed(1)}</text>
-    `;
-
-    // Candlesticks
-    const candleW = 12;
-    const step = (W - 120) / candles.length;
+    // Draw Smooth Dashed VWAP Curve Line Across Candles
+    const vwapPts = [];
+    const barW = Math.max(7, Math.floor((W - 80) / candles.length) - 4);
     candles.forEach((c, i) => {
-      const x = 30 + i * step;
-      const isGreen = c.close >= c.open;
-      const color = isGreen ? '#00ff87' : '#ff2a55';
-      const wickTop = yVal(c.high);
-      const wickBot = yVal(c.low);
-      const bodyTop = yVal(Math.max(c.open, c.close));
-      const bodyBot = yVal(Math.min(c.open, c.close));
-      const bodyH = Math.max(2, bodyBot - bodyTop);
+      const cx = 35 + i * (barW + 5);
+      const vwapY = yVal(c.close * 0.998);
+      vwapPts.push(`${cx.toFixed(1)},${vwapY.toFixed(1)}`);
+    });
+    svgHtml += `
+      <polyline points="${vwapPts.join(' ')}" fill="none" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3"/>
+    `;
+
+    // Draw Candlesticks (Green #16a34a / Red #dc2626 with precise bodies and wicks)
+    candles.forEach((c, i) => {
+      const cx = 35 + i * (barW + 5);
+      const isUp = c.close >= c.open;
+      const col = isUp ? '#16a34a' : '#dc2626';
+      const top = yVal(Math.max(c.open, c.close));
+      const bot = yVal(Math.min(c.open, c.close));
+      const h = Math.max(2, bot - top);
+      const wickT = yVal(c.high);
+      const wickB = yVal(c.low);
 
       svgHtml += `
-        <line x1="${(x + candleW/2).toFixed(1)}" y1="${wickTop.toFixed(1)}" x2="${(x + candleW/2).toFixed(1)}" y2="${wickBot.toFixed(1)}" stroke="${color}" stroke-width="1.2"/>
-        <rect x="${x.toFixed(1)}" y="${bodyTop.toFixed(1)}" width="${candleW}" height="${bodyH.toFixed(1)}" rx="1" fill="${color}" filter="drop-shadow(0 0 2px ${color})"/>
+        <!-- Wick -->
+        <line x1="${(cx + barW / 2).toFixed(1)}" y1="${wickT.toFixed(1)}" x2="${(cx + barW / 2).toFixed(1)}" y2="${wickB.toFixed(1)}" stroke="${col}" stroke-width="1.5"/>
+        <!-- Body -->
+        <rect x="${cx.toFixed(1)}" y="${top.toFixed(1)}" width="${barW}" height="${h.toFixed(1)}" fill="${col}" rx="1"/>
       `;
     });
 
-    // Time Axis at Bottom
-    const timeLabels = ['09:30', '10:30', '11:30', '12:30', '13:30', '14:30', '15:30'];
-    timeLabels.forEach((t, i) => {
-      const x = 30 + (i / (timeLabels.length - 1)) * (W - 120);
-      svgHtml += `<text x="${x.toFixed(1)}" y="${H - 4}" fill="#475569" font-size="8.5" font-family="JetBrains Mono" text-anchor="middle">${t}</text>`;
-    });
-
-    // Centered Lock Badge (from Image 2)
+    // Time Axis at Bottom (Matching Photo 1: 10:00, 11:00, 12:00, 13:00)
     svgHtml += `
-      <g style="cursor:pointer;" onclick="openUnlockModal()">
-        <rect x="${W/2 - 80}" y="${H/2 - 16}" width="160" height="32" rx="16" fill="rgba(8, 12, 22, 0.9)" stroke="#7c3aed" stroke-width="1.5" filter="drop-shadow(0 0 10px rgba(124, 58, 237, 0.5))"/>
-        <text x="${W/2}" y="${H/2 + 5}" fill="#fff" font-size="10.5" font-family="Inter Tight" font-weight="700" text-anchor="middle">🔒 ACCESS LOCKED</text>
-      </g>
+      <line x1="20" y1="${H - 18}" x2="${W - 20}" y2="${H - 18}" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="50" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">10:00</text>
+      <text x="${W * 0.35}" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">11:00</text>
+      <text x="${W * 0.65}" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">12:00</text>
+      <text x="${W - 85}" y="${H - 6}" fill="#94a3b8" font-size="9" font-family="JetBrains Mono" font-weight="700">13:00</text>
     `;
 
     svg.innerHTML = svgHtml;
   }
-
   window.toggleGuestBlur = function () {
     const isBlur = document.body.classList.toggle('guest-blur-active');
     const txt = document.getElementById('blurStateText');
