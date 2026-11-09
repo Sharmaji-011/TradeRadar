@@ -136,108 +136,277 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     setInterval(tickClientSideData, 2500);
   }
 
-  function updateLiveTickLabels() {
-    if (!MARKET_DATA || !MARKET_DATA.stocks) return;
-    Object.values(MARKET_DATA.stocks).forEach(s => {
-      const sign = s.change_pct > 0 ? '+' : '';
-      const color = s.change_pct >= 0 ? 'var(--bull-green)' : 'var(--bear-red)';
-      
-      const srcRow = document.getElementById(`src-item-${s.symbol}`);
-      if (srcRow) {
-        const chgEl = srcRow.querySelector('.source-chg');
-        if (chgEl) {
-          chgEl.textContent = `${sign}${s.change_pct.toFixed(2)}%`;
-          chgEl.style.color = color;
-        }
-      }
-      const bdItem = document.getElementById(`buildup-${s.symbol}`);
-      if (bdItem) {
-        const chgSpan = bdItem.querySelector('span[style*="font-family"]');
-        if (chgSpan) {
-          chgSpan.textContent = `${sign}${s.change_pct.toFixed(2)}%`;
-          chgSpan.style.color = color;
-        }
-      }
-      const mCard = document.getElementById(`master-${s.symbol}`);
-      if (mCard) {
-        const chgSpan = mCard.querySelector('.master-card-head span[style*="font-family"]');
-        if (chgSpan) {
-          chgSpan.textContent = `${sign}${s.change_pct.toFixed(2)}%`;
-          chgSpan.style.color = color;
-        }
+  
+  // ---------------- DATE-ANCHORED 24H DAILY RESET & LIVE FEED ----------------
+  function getDailySessionAnchorKey() {
+    const d = new Date();
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+  }
+
+  // Universal daily baseline reset for ALL sectors and elements (Crypto, Metals, US, Indian Market)
+  function initMarketDailyBasePrices(data) {
+    if (!data || !data.stocks) return;
+    const today = getDailySessionAnchorKey();
+    const daySeed = today.split('-').reduce((acc, part) => (acc * 33 + parseInt(part, 10)) % 1000003, 17);
+
+    let dailyCache = {};
+    try {
+      const raw = localStorage.getItem('traderadar_daily_session_' + today);
+      if (raw) dailyCache = JSON.parse(raw);
+    } catch(e) {}
+
+    Object.values(data.stocks).forEach((st, idx) => {
+      const sym = st.symbol;
+      if (!st.original_base) st.original_base = st.base_price || st.cmp;
+
+      // Deterministic day-by-day variation so every calendar day starts fresh with unique values
+      const symHash = sym.split('').reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 10007, idx + 1);
+      const dayFactor = 1 + (((daySeed * symHash) % 500) - 250) / 10000;
+      st.base_price = +(st.original_base * dayFactor).toFixed(st.original_base > 100 ? 2 : 4);
+
+      if (dailyCache && dailyCache[sym] && typeof dailyCache[sym].change_pct === 'number') {
+        st.cmp = dailyCache[sym].cmp;
+        st.change_pct = dailyCache[sym].change_pct;
+      } else {
+        // Daily reset: fresh baseline return at the start of each new 24h day
+        const intradaySeed = ((daySeed * (symHash + 13)) % 700) - 350; // -3.5% to +3.5%
+        const intradayPct = intradaySeed / 100;
+        st.cmp = +(st.base_price * (1 + intradayPct / 100)).toFixed(st.base_price > 100 ? 2 : 4);
+        st.change_pct = parseFloat(intradayPct.toFixed(2));
       }
     });
+  }
 
-    // Re-sort left stock rail DOM elements strictly Bullish to Bearish
-    const srcList = document.getElementById('ob-source-list');
-    if (srcList) {
-      const rows = Array.from(srcList.children);
-      rows.sort((a, b) => {
-        const symA = a.dataset.sym;
-        const symB = b.dataset.sym;
-        const pctA = (MARKET_DATA.stocks[symA]?.change_pct) || 0;
-        const pctB = (MARKET_DATA.stocks[symB]?.change_pct) || 0;
-        return pctB - pctA;
-      });
-      rows.forEach(r => srcList.appendChild(r));
+  // Live 24H Crypto Feed (Binance public CORS ticker API)
+  async function fetchLiveCryptoTickers() {
+    try {
+      const symbols = [
+        "BTCUSDT","ETHUSDT","SOLUSDT","DOGEUSDT","SUIUSDT","WIFUSDT",
+        "XRPUSDT","BNBUSDT","ADAUSDT","AVAXUSDT","LINKUSDT","NEARUSDT",
+        "APTUSDT","TRXUSDT","DOTUSDT","ATOMUSDT","LTCUSDT","SHIBUSDT",
+        "PEPEUSDT","FETUSDT","RENDERUSDT"
+      ];
+      const url = `https://api.binance.com/api/v3/ticker/24hr?symbols=${encodeURIComponent(JSON.stringify(symbols))}`;
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const list = await res.json();
+      if (!Array.isArray(list)) return;
+
+      if (CURRENT_MARKET === 'crypto' && MARKET_DATA && MARKET_DATA.stocks) {
+        list.forEach(t => {
+          const sym = t.symbol.replace('USDT', '');
+          const stock = MARKET_DATA.stocks[sym];
+          if (stock) {
+            stock.cmp = parseFloat(t.lastPrice);
+            stock.change_pct = parseFloat(parseFloat(t.priceChangePercent).toFixed(2));
+            if (t.openPrice) stock.base_price = parseFloat(t.openPrice);
+          }
+        });
+      }
+    } catch(e) {}
+  }
+
+  // Live 24H Metals Feed (PAXG spot gold on Binance)
+  async function fetchLiveMetalsTickers() {
+    try {
+      const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=PAXGUSDT');
+      if (!res.ok) return;
+      const t = await res.json();
+      if (t && t.lastPrice && MARKET_DATA && MARKET_DATA.stocks) {
+        if (MARKET_DATA.stocks['GOLD']) {
+          MARKET_DATA.stocks['GOLD'].cmp = parseFloat(t.lastPrice);
+          MARKET_DATA.stocks['GOLD'].change_pct = parseFloat(parseFloat(t.priceChangePercent).toFixed(2));
+          if (t.openPrice) MARKET_DATA.stocks['GOLD'].base_price = parseFloat(t.openPrice);
+        }
+      }
+    } catch(e) {}
+  }
+
+  // ---------------- STRICT DYNAMIC CATEGORIZATION & RE-ALLOCATION ----------------
+  // Positives strictly on Buy side (>= 0%), Negatives strictly on Sell side (< 0%)
+  window.renderDynamicPipelineDecks = renderDynamicPipelineDecks;
+  function renderDynamicPipelineDecks(data) {
+    if (!data || !data.stocks) return;
+
+    let allMarketStocks = Object.values(data.stocks);
+    if (CURRENT_OB_SECTOR && CURRENT_OB_SECTOR !== 'ALL') {
+      const q = CURRENT_OB_SECTOR.toUpperCase();
+      const secFiltered = allMarketStocks.filter(s => (s.sector || '').toUpperCase().includes(q));
+      if (secFiltered.length > 0) {
+        allMarketStocks = secFiltered;
+      }
     }
 
-    // Re-sort and render Master Cards so Cards 1-3 are strictly top Bullish and 4-6 are Bearish
+    // STRICT FILTER: ZERO NEGATIVES ON BUY SIDE, ZERO POSITIVES ON SELL SIDE!
+    const bullStocks = allMarketStocks.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    const bearStocks = allMarketStocks.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0));
+
+    // Update breadth counters
+    const bBull = document.getElementById('ob-breadth-bull');
+    const bBear = document.getElementById('ob-breadth-bear');
+    if (bBull) bBull.textContent = bullStocks.length;
+    if (bBear) bBear.textContent = bearStocks.length;
+
+    // 1. Buy Side Pipeline Decks (Ranks 04-08, 09-13, 14-18)
+    const buyTop10 = bullStocks.slice(3, 13);
+    const colLong1 = document.getElementById('col-long-buildup-1');
+    const colLong2 = document.getElementById('col-long-buildup-2');
+    const colShortCov = document.getElementById('col-short-covering');
+
+    if (colLong1) {
+      colLong1.innerHTML = buyTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'LONG BUILD-UP')).join('');
+    }
+    if (colLong2) {
+      colLong2.innerHTML = buyTop10.slice(5, 10).map((s, i) => createBuildupItemHtml(s, i + 9, 'LONG BUILD-UP')).join('');
+    }
+    const buyExt = bullStocks.slice(13, 18);
+    if (colShortCov) {
+      colShortCov.innerHTML = buyExt.map((s, i) => createBuildupItemHtml(s, i + 14, 'SHORT COVERING')).join('');
+    }
+
+    // 2. Sell Side Pipeline Decks (Ranks 04-08, 09-13, 14-18)
+    const sellTop10 = bearStocks.slice(3, 13);
+    const colShortBd1 = document.getElementById('col-short-buildup-1');
+    const colShortBd2 = document.getElementById('col-short-buildup-2');
+    const colLongUnw = document.getElementById('col-long-unwinding');
+
+    if (colShortBd1) {
+      colShortBd1.innerHTML = sellTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'SHORT BUILD-UP')).join('');
+    }
+    if (colShortBd2) {
+      colShortBd2.innerHTML = sellTop10.slice(5, 10).map((s, i) => createBuildupItemHtml(s, i + 9, 'SHORT BUILD-UP')).join('');
+    }
+    const sellExt = bearStocks.slice(13, 18);
+    if (colLongUnw) {
+      colLongUnw.innerHTML = sellExt.map((s, i) => createBuildupItemHtml(s, i + 14, 'LONG UNWINDING')).join('');
+    }
+
+    // 3. Right Master Picks (Top 3 Bull on top, Top 3 Bear on bottom)
     const masterPicks = document.getElementById('ob-master-picks');
     if (masterPicks) {
-      const allStocks = Object.values(MARKET_DATA.stocks);
-      const topBull = allStocks.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
-      const topBear = allStocks.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0)).slice(0, 3);
-      const topPicks = [...topBull, ...topBear];
-      masterPicks.innerHTML = [...topBull.map((s, i) => createMasterCardHtml(s, i + 1, true)), ...topBear.map((s, i) => createMasterCardHtml(s, i + 1, false))].join('');
+      const topBull3 = bullStocks.slice(0, 3);
+      const topBear3 = bearStocks.slice(0, 3);
+      masterPicks.innerHTML = [
+        '<div class="master-deck-subhead bull">▲ BUY SIDE · TOP 3 PERFORMERS</div>',
+        ...topBull3.map((s, i) => createMasterCardHtml(s, i + 1, true)),
+        '<div class="master-deck-subhead bear" style="margin-top:6px;">▼ SELL SIDE · TOP 3 PERFORMERS</div>',
+        ...topBear3.map((s, i) => createMasterCardHtml(s, i + 1, false))
+      ].join('');
+    }
+
+    // 4. Left Momentum Rail - Synchronize and dynamic re-sort
+    const srcList = document.getElementById('ob-source-list');
+    if (srcList) {
+      let stockEntries = allMarketStocks.slice();
+      if (CURRENT_SOURCE_FILTER === 'bull') {
+        stockEntries = bullStocks;
+      } else if (CURRENT_SOURCE_FILTER === 'bear') {
+        stockEntries = bearStocks;
+      } else {
+        stockEntries = stockEntries.sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+      }
+
+      const currentSyms = Array.from(srcList.children).map(c => c.dataset.sym).join(',');
+      const targetSyms = stockEntries.map(s => s.symbol).join(',');
+      if (currentSyms !== targetSyms) {
+        srcList.innerHTML = stockEntries.map(s => {
+          const isHovered = s.symbol === HOVERED_SYMBOL;
+          return `
+            <div class="source-row ${isHovered ? 'active' : ''}" 
+                 id="src-item-${s.symbol}"
+                 data-sym="${s.symbol}"
+                 onmouseenter="showStockHover('${s.symbol}', this, event, 'compact')"
+                 onmouseleave="hideStockHover()"
+                 onclick="openStockModal('${s.symbol}')">
+              <span class="source-sym">${s.symbol}</span>
+              <span class="source-chg" style="color: ${s.change_pct >= 0 ? 'var(--bull-green)' : 'var(--bear-red)'}">
+                ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%</span>
+            </div>
+          `;
+        }).join('');
+      } else {
+        stockEntries.forEach(s => {
+          const row = document.getElementById(`src-item-${s.symbol}`);
+          if (row) {
+            const chgEl = row.querySelector('.source-chg');
+            if (chgEl) {
+              const sign = s.change_pct > 0 ? '+' : '';
+              chgEl.textContent = `${sign}${s.change_pct.toFixed(2)}%`;
+              chgEl.style.color = s.change_pct >= 0 ? 'var(--bull-green)' : 'var(--bear-red)';
+            }
+          }
+        });
+      }
+    }
+
+    // 5. Update active laser conduit
+    if (typeof renderLaserTrajectory === 'function') {
+      renderLaserTrajectory(HOVERED_SYMBOL);
     }
   }
+
+  let lastExternalApiFetch = 0;
 
   async function tickClientSideData() {
     if (!MARKET_DATA || !MARKET_DATA.stocks) return;
 
-    if (CURRENT_MARKET === 'crypto' && typeof fetch !== 'undefined') {
-      try {
-        const pairs = ['BTC-USD', 'ETH-USD', 'SOL-USD', 'DOGE-USD'];
-        const statsPromises = pairs.map(p =>
-          fetch(`https://api.exchange.coinbase.com/products/${p}/stats`)
-            .then(r => r.ok ? r.json() : null)
-            .then(data => ({ sym: p.split('-')[0], data }))
-            .catch(() => null)
-        );
-        const results = await Promise.all(statsPromises);
-        results.forEach(res => {
-          if (res && res.data && res.data.last && MARKET_DATA.stocks[res.sym]) {
-            const st = MARKET_DATA.stocks[res.sym];
-            st.cmp = parseFloat(res.data.last);
-            const open = parseFloat(res.data.open) || st.base_price;
-            st.change_pct = parseFloat((((st.cmp - open) / open) * 100).toFixed(2));
-          }
-        });
-      } catch (e) {}
-    }
-
-    const symKeys = Object.keys(MARKET_DATA.stocks);
-    for (let k = 0; k < 2; k++) {
-      const randSym = symKeys[Math.floor(Math.random() * symKeys.length)];
-      const stock = MARKET_DATA.stocks[randSym];
-      if (stock) {
-        const deltaPct = (Math.random() - 0.49) * 0.08;
-        stock.cmp = +(stock.cmp * (1 + deltaPct / 100)).toFixed(stock.cmp > 100 ? 2 : 4);
+    const now = Date.now();
+    // Fetch live 24h ticker feed from Binance every 5 seconds
+    if (now - lastExternalApiFetch > 5000) {
+      lastExternalApiFetch = now;
+      if (CURRENT_MARKET === 'crypto') {
+        await fetchLiveCryptoTickers();
+      } else if (CURRENT_MARKET === 'metals') {
+        await fetchLiveMetalsTickers();
       }
     }
 
-    const now = new Date();
-    MARKET_DATA.timestamp = now.toTimeString().split(' ')[0];
+    // Continuous real-time micro live tick updates for all markets
+    const symKeys = Object.keys(MARKET_DATA.stocks);
+    const tickQty = Math.min(6, symKeys.length);
+    for (let k = 0; k < tickQty; k++) {
+      const randSym = symKeys[Math.floor(Math.random() * symKeys.length)];
+      const stock = MARKET_DATA.stocks[randSym];
+      if (stock && stock.base_price) {
+        // Realistic micro movement around 24h session
+        const delta = (Math.random() - 0.492) * 0.12;
+        stock.cmp = +(stock.cmp * (1 + delta / 100)).toFixed(stock.cmp > 100 ? 2 : 4);
+        stock.change_pct = parseFloat((((stock.cmp - stock.base_price) / stock.base_price) * 100).toFixed(2));
+      }
+    }
 
-    // If orderblock screen is currently active, update tick labels without wiping the DOM
+    const d = new Date();
+    MARKET_DATA.timestamp = d.toTimeString().split(' ')[0];
+
+    // Persist today's live session state in localStorage
+    try {
+      const today = getDailySessionAnchorKey();
+      const stateToSave = {};
+      symKeys.forEach(k => {
+        stateToSave[k] = { cmp: MARKET_DATA.stocks[k].cmp, change_pct: MARKET_DATA.stocks[k].change_pct };
+      });
+      localStorage.setItem('traderadar_daily_session_' + today, JSON.stringify(stateToSave));
+    } catch(e) {}
+
+    // Update top_bullish and top_bearish for entire app
+    const allS = Object.values(MARKET_DATA.stocks);
+    MARKET_DATA.top_bullish = allS.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+    MARKET_DATA.top_bearish = allS.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0));
+
+    // Update screen 1 & 2 if active
+    renderDashboardPicks(MARKET_DATA.top_bullish, MARKET_DATA.top_bearish);
+
+    // If orderblock screen is currently active, dynamically re-partition and move stocks!
     const obTab = document.getElementById('tab-orderblock');
     if (obTab && obTab.classList.contains('active')) {
-      updateLiveTickLabels();
+      renderDynamicPipelineDecks(MARKET_DATA);
     }
   }
 
-  // Scale / Zoom Controller for HUD fitting
+  function updateLiveTickLabels() {
+    if (MARKET_DATA) renderDynamicPipelineDecks(MARKET_DATA);
+  }
+
   window.setOBViewScale = function(scaleStr, btnEl) {
     const scale = parseInt(scaleStr, 10) || 85;
     const view = document.getElementById('view-orderblock');
@@ -341,7 +510,18 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
 
   function updateMarketState(data) {
     MARKET_DATA = data;
-    
+    window.MARKET_DATA = data;
+
+    // Always initialize dynamic daily base prices and reset baseline for every sector
+    initMarketDailyBasePrices(data);
+
+    // Dynamically synchronize top_bullish and top_bearish strictly by percentage sign
+    if (data && data.stocks) {
+      const allS = Object.values(data.stocks);
+      data.top_bullish = allS.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
+      data.top_bearish = allS.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0));
+    }
+
     // Sync market switcher buttons in UI
     const curMkt = data.market || 'crypto';
     document.querySelectorAll('.mkt-tab').forEach(btn => {
@@ -588,97 +768,12 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   // ---------------- 4. CYBERPUNK ORDER BLOCK HUD (SCREEN 3) ----------------
   function renderOrderBlockView(data) {
     const srcList = document.getElementById('ob-source-list');
-    const masterPicks = document.getElementById('ob-master-picks');
-
     if (!srcList || !data.stocks) return;
 
-    // Filter stocks by Sector if selected
-    let allMarketStocks = Object.values(data.stocks);
-    if (CURRENT_OB_SECTOR && CURRENT_OB_SECTOR !== 'ALL') {
-      const q = CURRENT_OB_SECTOR.toUpperCase();
-      const secFiltered = allMarketStocks.filter(s => (s.sector || '').toUpperCase().includes(q));
-      if (secFiltered.length > 0) {
-        allMarketStocks = secFiltered;
-      }
-    }
+    initMarketDailyBasePrices(data);
+    renderDynamicPipelineDecks(data);
 
-    // Sort Momentum elements (Bullish descending, Bearish descending)
-    const bullStocks = allMarketStocks.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
-    const bearStocks = allMarketStocks.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
-
-    // 1. Stage 1: Left List (All Momentum Elements)
-    let stockEntries = allMarketStocks.slice();
-    if (CURRENT_SOURCE_FILTER === 'bull') {
-      stockEntries = bullStocks;
-    } else if (CURRENT_SOURCE_FILTER === 'bear') {
-      stockEntries = bearStocks;
-    } else {
-      stockEntries = stockEntries.sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
-    }
-    srcList.scrollTop = 0;
-    srcList.innerHTML = stockEntries.map(s => {
-      const isHovered = s.symbol === HOVERED_SYMBOL;
-      return `
-        <div class="source-row ${isHovered ? 'active' : ''}" 
-             id="src-item-${s.symbol}"
-             data-sym="${s.symbol}"
-             onmouseenter="showStockHover('${s.symbol}', this, event, 'compact')"
-             onmouseleave="hideStockHover()"
-             onclick="openStockModal('${s.symbol}')">
-          <span class="source-sym">${s.symbol}</span>
-          <span class="source-chg" style="color: ${s.change_pct >= 0 ? 'var(--bull-green)' : 'var(--bear-red)'}">
-            ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%</span>
-        </div>
-      `;
-    }).join('');
-
-    // Update breadth counters for active sector / universe
-    const bBull = document.getElementById('ob-breadth-bull');
-    const bBear = document.getElementById('ob-breadth-bear');
-    if (bBull) bBull.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.advance || bullStocks.length) : bullStocks.length;
-    if (bBear) bBear.textContent = (data.status && CURRENT_OB_SECTOR === 'ALL') ? (data.status.decline || bearStocks.length) : bearStocks.length;
-
-    // 2. Stage 2: Central Pipeline — NEXT TOP 10 PERFORMERS (Buy Side and Sell Side)
-    // In video reference:
-    // Top 3 Master Performers are Ranks 01, 02, 03.
-    // The next Top 10 Performers are Ranks 04 through 13.
-    const buyTop10 = (bullStocks.length > 3 ? bullStocks.slice(3, 13) : bullStocks.slice(0, 10));
-    const sellTop10 = (bearStocks.length > 3 ? bearStocks.slice(3, 13) : bearStocks.slice(0, 10));
-
-    const colLong1 = document.getElementById('col-long-buildup-1');
-    const colLong2 = document.getElementById('col-long-buildup-2');
-    const colShortCov = document.getElementById('col-short-covering');
-    const colShortBd1 = document.getElementById('col-short-buildup-1');
-    const colShortBd2 = document.getElementById('col-short-buildup-2');
-    const colLongUnw = document.getElementById('col-long-unwinding');
-
-    // Buy Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
-    if (colLong1) colLong1.innerHTML = buyTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'LONG BUILD-UP')).join('');
-    if (colLong2) colLong2.innerHTML = (buyTop10.length > 5 ? buyTop10.slice(5, 10) : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'LONG BUILD-UP')).join('');
-    // Col 3: Extended Pipeline / Short Covering (Ranks 14-18)
-    const buyExt = bullStocks.slice(13, 18);
-    if (colShortCov) colShortCov.innerHTML = (buyExt.length > 0 ? buyExt : buyTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'SHORT COVERING')).join('');
-
-    // Sell Side Pipeline: 5 cards in Col 1 (Ranks 04-08) + 5 cards in Col 2 (Ranks 09-13) = 10 Performers!
-    if (colShortBd1) colShortBd1.innerHTML = sellTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'SHORT BUILD-UP')).join('');
-    if (colShortBd2) colShortBd2.innerHTML = (sellTop10.length > 5 ? sellTop10.slice(5, 10) : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 9, 'SHORT BUILD-UP')).join('');
-    // Col 3: Extended Pipeline / Long Unwinding (Ranks 14-18)
-    const sellExt = bearStocks.slice(13, 18);
-    if (colLongUnw) colLongUnw.innerHTML = (sellExt.length > 0 ? sellExt : sellTop10.slice(0, 5)).map((s, i) => createBuildupItemHtml(s, i + 14, 'LONG UNWINDING')).join('');
-
-    // 3. Stage 3: Far Right — TOP 3 MASTER PERFORMERS (3 Buy on top + 3 Sell on bottom)
-    if (masterPicks) {
-      const topBull3 = bullStocks.slice(0, 3);
-      const topBear3 = bearStocks.slice(0, 3);
-      masterPicks.innerHTML = [
-        '<div class="master-deck-subhead bull">▲ BUY SIDE · TOP 3 PERFORMERS</div>',
-        ...topBull3.map((s, i) => createMasterCardHtml(s, i + 1, true)),
-        '<div class="master-deck-subhead bear" style="margin-top:6px;">▼ SELL SIDE · TOP 3 PERFORMERS</div>',
-        ...topBear3.map((s, i) => createMasterCardHtml(s, i + 1, false))
-      ].join('');
-    }
-
-  // Populate Top Scatter Radar Dots
+    // Populate Top Scatter Radar Dots
     renderTopScatterDots();
 
     // Render Full SVG Neural Canvas with 70+ live background flow lines
@@ -970,7 +1065,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   }
 
 
-  function createBuildupItemHtml(s, rankNum) {
+  function createBuildupItemHtml(s, rankNum, catOverride) {
     if (!s) return '';
     const isBull = (typeof isBullSide !== 'undefined') ? isBullSide : (s.change_pct >= 0);
     const isHovered = s.symbol === HOVERED_SYMBOL;
