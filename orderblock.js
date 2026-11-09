@@ -225,6 +225,51 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   // ---------------- STRICT DYNAMIC CATEGORIZATION & RE-ALLOCATION ----------------
   // Positives strictly on Buy side (>= 0%), Negatives strictly on Sell side (< 0%)
   window.renderDynamicPipelineDecks = renderDynamicPipelineDecks;
+  
+  // Institutional Web Audio Migration Chime & Tracking
+  const LAST_KNOWN_SIDES = {};
+  let audioCtx = null;
+
+  function playMigrationChime(isBull) {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.type = 'sine';
+      const now = audioCtx.currentTime;
+      if (isBull) {
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.18); // A5
+      } else {
+        osc.frequency.setValueAtTime(440, now); // A4
+        osc.frequency.exponentialRampToValueAtTime(329.63, now + 0.18); // E4
+      }
+      gain.gain.setValueAtTime(0.09, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      osc.start(now);
+      osc.stop(now + 0.36);
+    } catch(e) {}
+  }
+
+  function triggerMigrationFlash(sym, isBull) {
+    playMigrationChime(isBull);
+    setTimeout(() => {
+      const cls = isBull ? 'migration-pulse-bull' : 'migration-pulse-bear';
+      ['buildup-' + sym, 'master-' + sym, 'src-item-' + sym].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.remove('migration-pulse-bull', 'migration-pulse-bear');
+          void el.offsetWidth; // trigger reflow
+          el.classList.add(cls);
+          setTimeout(() => el.classList.remove(cls), 2000);
+        }
+      });
+    }, 40);
+  }
+
   function renderDynamicPipelineDecks(data) {
     if (!data || !data.stocks) return;
 
@@ -238,6 +283,16 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     }
 
     // STRICT FILTER: ZERO NEGATIVES ON BUY SIDE, ZERO POSITIVES ON SELL SIDE!
+    
+    // Check for stock migration across Buy/Sell threshold (0%)
+    allMarketStocks.forEach(s => {
+      const curSide = (s.change_pct || 0) >= 0 ? 'bull' : 'bear';
+      if (LAST_KNOWN_SIDES[s.symbol] && LAST_KNOWN_SIDES[s.symbol] !== curSide) {
+        triggerMigrationFlash(s.symbol, curSide === 'bull');
+      }
+      LAST_KNOWN_SIDES[s.symbol] = curSide;
+    });
+
     const bullStocks = allMarketStocks.filter(s => (s.change_pct || 0) >= 0).sort((a, b) => (b.change_pct || 0) - (a.change_pct || 0));
     const bearStocks = allMarketStocks.filter(s => (s.change_pct || 0) < 0).sort((a, b) => (a.change_pct || 0) - (b.change_pct || 0));
 
@@ -1071,6 +1126,8 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     const isHovered = s.symbol === HOVERED_SYMBOL;
     const barColor = isBull ? 'rgba(0, 255, 135, 0.45)' : 'rgba(255, 42, 85, 0.45)';
     const seed = Math.abs(Math.sin((s.cmp || 100) * 17)) * 1000;
+    const buyRatio = isBull ? Math.min(88, Math.max(54, 50 + Math.abs(s.change_pct || 1) * 3.8)) : Math.max(12, Math.min(46, 50 - Math.abs(s.change_pct || 1) * 3.8));
+    const sellRatio = 100 - buyRatio;
     const w1 = (35 + (seed % 50)).toFixed(0);
     const w2 = (50 + ((seed * 3) % 45)).toFixed(0);
     const w3 = (25 + ((seed * 7) % 65)).toFixed(0);
@@ -1090,11 +1147,10 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
             ${s.change_pct > 0 ? '+' : ''}${s.change_pct.toFixed(2)}%</span><!--
           -->
         </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:3px; font-size:0.6rem; color:var(--text-dim); font-family:var(--font-mono);"><span class="buildup-flow-tag" style="color:${isBull ? 'rgba(0, 255, 135, 0.85)' : 'rgba(255, 42, 85, 0.85)'};">${catLabel}</span><span style="color:#cbd5e1; font-weight:600;">${fmtPrice(s.cmp)}</span></div><div class="buildup-micro-bars">
-          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w1}%;"></div>
-          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w2}%;"></div>
-          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w3}%;"></div>
-          <div style="height:3px; border-radius:1px; background:${barColor}; width:${w4}%;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:3px; font-size:0.6rem; color:var(--text-dim); font-family:var(--font-mono);"><span class="buildup-flow-tag" style="color:${isBull ? 'rgba(0, 255, 135, 0.85)' : 'rgba(255, 42, 85, 0.85)'};">${catLabel}</span><span style="color:#cbd5e1; font-weight:600;">${fmtPrice(s.cmp)}</span></div><div class="vol-pressure-meter" title="Institutional Cumulative Volume Delta">
+          <div class="vol-pressure-fill-buy" style="width: ${buyRatio}%;"></div>
+          <div class="vol-pressure-fill-sell" style="width: ${sellRatio}%;"></div>
+          <span class="vol-pressure-label">${isBull ? 'BUY ' + buyRatio.toFixed(0) + '%' : 'SELL ' + sellRatio.toFixed(0) + '%'}</span>
         </div>
       </div>
     `;

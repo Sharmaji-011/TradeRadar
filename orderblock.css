@@ -1717,3 +1717,63 @@ body.app .page {
   border-color: #00f0ff;
   box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
 }
+
+/* ---------------- INSTITUTIONAL VOLUME PRESSURE METER ---------------- */
+.vol-pressure-meter {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 5px;
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.vol-pressure-fill-buy {
+  height: 100%;
+  background: linear-gradient(90deg, #00b050, #00ff87);
+  transition: width 0.3s ease;
+}
+.vol-pressure-fill-sell {
+  height: 100%;
+  background: linear-gradient(90deg, #ff2a55, #c01030);
+  transition: width 0.3s ease;
+}
+.vol-pressure-label {
+  position: absolute;
+  right: 2px;
+  top: -1px;
+  font-size: 0.52rem;
+  font-family: var(--font-mono);
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 700;
+  pointer-events: none;
+  text-shadow: 0 1px 2px #000;
+  letter-spacing: 0.2px;
+}
+
+/* ---------------- MIGRATION NEON PULSE ALERTS ---------------- */
+@keyframes neonMigrationPulseBull {
+  0% { box-shadow: 0 0 0 0 rgba(0, 255, 135, 0.95); border-color: #00ff87; }
+  35% { box-shadow: 0 0 26px 6px rgba(0, 255, 135, 0.85); border-color: #00ff87; transform: scale(1.02); }
+  70% { box-shadow: 0 0 14px 2px rgba(0, 255, 135, 0.5); }
+  100% { box-shadow: none; transform: scale(1); }
+}
+
+@keyframes neonMigrationPulseBear {
+  0% { box-shadow: 0 0 0 0 rgba(255, 42, 85, 0.95); border-color: #ff2a55; }
+  35% { box-shadow: 0 0 26px 6px rgba(255, 42, 85, 0.85); border-color: #ff2a55; transform: scale(1.02); }
+  70% { box-shadow: 0 0 14px 2px rgba(255, 42, 85, 0.5); }
+  100% { box-shadow: none; transform: scale(1); }
+}
+
+.migration-pulse-bull {
+  animation: neonMigrationPulseBull 1.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  z-index: 10 !important;
+}
+
+.migration-pulse-bear {
+  animation: neonMigrationPulseBear 1.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  z-index: 10 !important;
+}
