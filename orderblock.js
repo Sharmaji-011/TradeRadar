@@ -230,23 +230,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   const LAST_KNOWN_SIDES = {};
   let audioCtx = null;
 
-  function playMigrationChime(isBull) {
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.type = 'sine';
-      const now = audioCtx.currentTime;
-      if (isBull) {
-        osc.frequency.setValueAtTime(587.33, now); // D5
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.18); // A5
-      } else {
-        osc.frequency.setValueAtTime(440, now); // A4
-        osc.frequency.exponentialRampToValueAtTime(329.63, now + 0.18); // E4
-      }
+  function playMigrationChime(isBull) { /* Audio alerts removed per user instruction */ }
       gain.gain.setValueAtTime(0.09, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
       osc.start(now);
@@ -255,7 +239,7 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
   }
 
   function triggerMigrationFlash(sym, isBull) {
-    playMigrationChime(isBull);
+    // playMigrationChime(isBull);
     setTimeout(() => {
       const cls = isBull ? 'migration-pulse-bull' : 'migration-pulse-bear';
       ['buildup-' + sym, 'master-' + sym, 'src-item-' + sym].forEach(id => {
