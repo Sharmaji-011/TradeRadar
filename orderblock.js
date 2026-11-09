@@ -336,39 +336,42 @@ const OB_FALLBACK_DATA = {"crypto": {"market": "crypto", "currency": "$", "statu
     if (bBull) bBull.textContent = bullStocks.length;
     if (bBear) bBear.textContent = bearStocks.length;
 
-    // 1. Buy Side Pipeline Decks (Ranks 04-08, 09-13, 14-18)
-    const buyTop10 = bullStocks.slice(3, 13);
+    // Helper to get exactly 5 cards per column with zero gaps across any market size
+    function get5ColCards(pool, offset) {
+      if (!pool || pool.length === 0) return [];
+      const res = [];
+      for (let i = 0; i < 5; i++) {
+        const item = (offset + i < pool.length) ? pool[offset + i] : pool[(offset + i) % pool.length];
+        if (item) res.push(item);
+      }
+      return res;
+    }
+
+    // 1. Buy Side Pipeline Decks (Ranks 04-08, 09-13, 14-18) - 100% gap-free
     const colLong1 = document.getElementById('col-long-buildup-1');
     const colLong2 = document.getElementById('col-long-buildup-2');
     const colShortCov = document.getElementById('col-short-covering');
 
-    if (colLong1) {
-      colLong1.innerHTML = buyTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'LONG BUILD-UP')).join('');
-    }
-    if (colLong2) {
-      colLong2.innerHTML = buyTop10.slice(5, 10).map((s, i) => createBuildupItemHtml(s, i + 9, 'LONG BUILD-UP')).join('');
-    }
-    const buyExt = bullStocks.slice(13, 18);
-    if (colShortCov) {
-      colShortCov.innerHTML = buyExt.map((s, i) => createBuildupItemHtml(s, i + 14, 'SHORT COVERING')).join('');
-    }
+    const buyCards1 = get5ColCards(bullStocks.length > 3 ? bullStocks.slice(3) : bullStocks, 0);
+    const buyCards2 = get5ColCards(bullStocks.length > 3 ? bullStocks.slice(3) : bullStocks, 5);
+    const buyCards3 = get5ColCards(bullStocks.length > 3 ? bullStocks.slice(3) : bullStocks, 10);
 
-    // 2. Sell Side Pipeline Decks (Ranks 04-08, 09-13, 14-18)
-    const sellTop10 = bearStocks.slice(3, 13);
+    if (colLong1) colLong1.innerHTML = buyCards1.map((s, i) => createBuildupItemHtml(s, i + 4, 'LONG BUILD-UP')).join('');
+    if (colLong2) colLong2.innerHTML = buyCards2.map((s, i) => createBuildupItemHtml(s, i + 9, 'LONG BUILD-UP')).join('');
+    if (colShortCov) colShortCov.innerHTML = buyCards3.map((s, i) => createBuildupItemHtml(s, i + 14, 'SHORT COVERING')).join('');
+
+    // 2. Sell Side Pipeline Decks (Ranks 04-08, 09-13, 14-18) - 100% gap-free
     const colShortBd1 = document.getElementById('col-short-buildup-1');
     const colShortBd2 = document.getElementById('col-short-buildup-2');
     const colLongUnw = document.getElementById('col-long-unwinding');
 
-    if (colShortBd1) {
-      colShortBd1.innerHTML = sellTop10.slice(0, 5).map((s, i) => createBuildupItemHtml(s, i + 4, 'SHORT BUILD-UP')).join('');
-    }
-    if (colShortBd2) {
-      colShortBd2.innerHTML = sellTop10.slice(5, 10).map((s, i) => createBuildupItemHtml(s, i + 9, 'SHORT BUILD-UP')).join('');
-    }
-    const sellExt = bearStocks.slice(13, 18);
-    if (colLongUnw) {
-      colLongUnw.innerHTML = sellExt.map((s, i) => createBuildupItemHtml(s, i + 14, 'LONG UNWINDING')).join('');
-    }
+    const sellCards1 = get5ColCards(bearStocks.length > 3 ? bearStocks.slice(3) : bearStocks, 0);
+    const sellCards2 = get5ColCards(bearStocks.length > 3 ? bearStocks.slice(3) : bearStocks, 5);
+    const sellCards3 = get5ColCards(bearStocks.length > 3 ? bearStocks.slice(3) : bearStocks, 10);
+
+    if (colShortBd1) colShortBd1.innerHTML = sellCards1.map((s, i) => createBuildupItemHtml(s, i + 4, 'SHORT BUILD-UP')).join('');
+    if (colShortBd2) colShortBd2.innerHTML = sellCards2.map((s, i) => createBuildupItemHtml(s, i + 9, 'SHORT BUILD-UP')).join('');
+    if (colLongUnw) colLongUnw.innerHTML = sellCards3.map((s, i) => createBuildupItemHtml(s, i + 14, 'LONG UNWINDING')).join('');
 
     // 3. Right Master Picks (Top 3 Bull on top, Top 3 Bear on bottom)
     const masterPicks = document.getElementById('ob-master-picks');
