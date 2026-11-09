@@ -1777,3 +1777,126 @@ body.app .page {
   animation: neonMigrationPulseBear 1.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
   z-index: 10 !important;
 }
+
+/* ---------------- 🎯 PROBABILITY & ODDS ENGINE ---------------- */
+.probability-engine-card {
+  background: #090f1e;
+  border: 1px solid #1a2a44;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 10px 0 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+.prob-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.prob-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.76rem;
+  font-family: var(--font-mono);
+}
+.prob-pulse-icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ff87;
+  box-shadow: 0 0 10px #00ff87;
+  animation: probIconPulse 1.6s infinite;
+}
+@keyframes probIconPulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px #00ff87; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+.prob-edge-badge {
+  background: rgba(0, 255, 135, 0.12);
+  border: 1px solid #00ff87;
+  color: #00ff87;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.prob-ev {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+.prob-gauge-container {
+  width: 100%;
+}
+.prob-bar-track {
+  display: flex;
+  height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #030712;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+}
+.prob-bar-fill-target {
+  background: linear-gradient(90deg, #059669, #00ff87);
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.prob-bar-fill-sl {
+  background: linear-gradient(90deg, #dc2626, #ff2a55);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.prob-bar-text {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+.prob-factors-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.64rem;
+  font-family: var(--font-mono);
+  color: #94a3b8;
+  padding-top: 2px;
+}
+.card-prob-badge {
+  font-size: 0.58rem;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(0, 255, 135, 0.14);
+  color: #00ff87;
+  border: 1px solid rgba(0, 255, 135, 0.35);
+  margin-left: 6px;
+  white-space: nowrap;
+}
+.card-prob-badge.bear {
+  background: rgba(255, 42, 85, 0.14);
+  color: #ff2a55;
+  border-color: rgba(255, 42, 85, 0.35);
+}
